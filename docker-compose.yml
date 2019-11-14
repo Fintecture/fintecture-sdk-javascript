@@ -1,0 +1,20 @@
+version: "3.1"
+services:
+  sdk:
+    build: .
+    volumes:
+      - .:/fintecture_sdk
+    environment:
+      app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
+      redirect_uri: 'https://www.fintecture.com'
+      baseURL: 'http://server-local:443'
+
+  test:
+    build: .
+    command: 'npm run test'
+    volumes:
+      - .:/fintecture_sdk
+    environment:
+      app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
+      redirect_uri: 'https://www.fintecture.com'
+      baseURL: 'http://server-local:443'
