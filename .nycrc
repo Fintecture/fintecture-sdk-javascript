@@ -1,4 +1,15 @@
 {
     "extends": "@istanbuljs/nyc-config-typescript",
-    "all": true
+    "all": true,
+    "exclude":[
+      "**/node_modules/**",
+      "**/coverage/**",
+      "**/BaseUrls.ts",
+      "**/Endpoints.ts",
+      "**/*.[sS]pec.*",
+      "**/Crypto.ts",
+      "**/Connect.ts",
+      "**/interfaces/**",
+      **/spec/**
+    ]
 }
