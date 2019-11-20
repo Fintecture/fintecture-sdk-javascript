@@ -68,6 +68,15 @@ var Fintecture = /** @class */ (function () {
             });
         });
     };
+    Fintecture.applications = function (appId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var resources;
+            return __generator(this, function (_a) {
+                resources = new Resources_1.Resources();
+                return [2 /*return*/, resources.applications(appId)];
+            });
+        });
+    };
     return Fintecture;
 }());
 exports.Fintecture = Fintecture;

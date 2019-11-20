@@ -39,12 +39,7 @@ var ResourcesURLBuilder = /** @class */ (function () {
         }
     };
     ResourcesURLBuilder.getApplication = function (appId) {
-        if (appId) {
-            return "" + BaseUrls_1.BaseUrls.FINTECTUREAPIURL + Endpoints_1.Endpoints.APPLICATIONURL + "/" + appId;
-        }
-        else {
-            return "" + BaseUrls_1.BaseUrls.FINTECTUREAPIURL + Endpoints_1.Endpoints.APPLICATIONURL;
-        }
+        return "" + BaseUrls_1.BaseUrls.FINTECTUREAPIURL + Endpoints_1.Endpoints.APPLICATIONURL + "/" + appId;
     };
     return ResourcesURLBuilder;
 }());

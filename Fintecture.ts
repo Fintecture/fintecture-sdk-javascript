@@ -17,4 +17,9 @@ export class Fintecture {
         const resources: Resources = new Resources();
         return resources.testAccounts(appId, testAccountId);
     }
+
+    static async applications(appId: string) {
+        const resources: Resources = new Resources();
+        return resources.applications(appId);
+    }
 }

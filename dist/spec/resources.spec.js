@@ -54,20 +54,18 @@ describe('Resources', function () {
             app_id: appId
         },
     };
-    var banks_data = '';
-    var testaccounts_data = JSON.parse('{"data": [{"type":"testaccounts","id":1,"attributes":{"provider":"bbvaes","username":"078000000P"}, \ ' +
-        '"attributes.credentials":{"password":"123456","username":"078000000P"}}]}');
+    var response_data = '';
     it('#providers(appId)', function (done) {
         return __awaiter(this, void 0, void 0, function () {
             var body;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.PROVIDERSURL).reply(200, banks_data);
+                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.PROVIDERSURL).reply(200, response_data);
                         return [4 /*yield*/, Fintecture_1.Fintecture.providers(appId)];
                     case 1:
                         body = _a.sent();
-                        expect(body).toEqual(banks_data);
+                        expect(body).toEqual(response_data);
                         done();
                         return [2 /*return*/];
                 }
@@ -80,11 +78,11 @@ describe('Resources', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.PROVIDERSURL + "/agfbfr").reply(200, banks_data);
+                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.PROVIDERSURL + "/agfbfr").reply(200, response_data);
                         return [4 /*yield*/, Fintecture_1.Fintecture.providers(appId, 'agfbfr')];
                     case 1:
                         body = _a.sent();
-                        expect(body).toEqual(banks_data);
+                        expect(body).toEqual(response_data);
                         done();
                         return [2 /*return*/];
                 }
@@ -97,11 +95,11 @@ describe('Resources', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.TESTACCOUNTSURL).reply(200, testaccounts_data);
+                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.TESTACCOUNTSURL).reply(200, response_data);
                         return [4 /*yield*/, Fintecture_1.Fintecture.testAccounts(appId)];
                     case 1:
                         body = _a.sent();
-                        expect(body).toEqual(testaccounts_data);
+                        expect(body).toEqual(response_data);
                         done();
                         return [2 /*return*/];
                 }
@@ -114,11 +112,28 @@ describe('Resources', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.TESTACCOUNTSURL + "/1").reply(200, testaccounts_data);
+                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.TESTACCOUNTSURL + "/1").reply(200, response_data);
                         return [4 /*yield*/, Fintecture_1.Fintecture.testAccounts(appId, 1)];
                     case 1:
                         body = _a.sent();
-                        expect(body).toEqual(testaccounts_data);
+                        expect(body).toEqual(response_data);
+                        done();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    it('#applications(appId)', function (done) {
+        return __awaiter(this, void 0, void 0, function () {
+            var body;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        nock_1.default(baseURL, reqheaders).get(Endpoints_1.Endpoints.APPLICATIONURL + "/" + appId).reply(200, response_data);
+                        return [4 /*yield*/, Fintecture_1.Fintecture.applications(appId)];
+                    case 1:
+                        body = _a.sent();
+                        expect(body).toEqual(response_data);
                         done();
                         return [2 /*return*/];
                 }
