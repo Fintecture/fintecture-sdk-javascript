@@ -9,7 +9,7 @@ export class Authentication {
         this.axios = AuthServiceAxios;
     }
 
-    async getAuthorizeUrl(appId: string, redirectUri?: string, state?: any) {
+    async getAuthorizeUrl(appId: string, redirectUri: string, state: any) {
         return ResourcesURLBuilder.getAuthorizeFullURL(appId, redirectUri, state);
     }
 }

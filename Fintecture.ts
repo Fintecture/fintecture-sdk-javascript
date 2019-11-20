@@ -3,7 +3,7 @@ import { Resources } from './src/Resources';
 
 export class Fintecture {
 
-    static async getAuthorizeUrl(appId: string, redirectUri?: string, state?: any) {
+    static async getAuthorizeUrl(appId: string, redirectUri: string, state: any) {
         const authentication: Authentication = new Authentication();
         return authentication.getAuthorizeUrl(appId, redirectUri, state);
     }

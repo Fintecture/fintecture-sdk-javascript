@@ -62,7 +62,7 @@ describe('Authentication', function () {
                 switch (_a.label) {
                     case 0:
                         query = { response_type: 'code', app_id: appId, redirect_uri: redirectUri };
-                        nock_1.default(baseUrl, reqheaders).get(Endpoints_1.Endpoints.OAUTHTOKENAUTHORIZE).query(query).reply(302, undefined, { Location: redirectUri });
+                        nock_1.default(baseUrl, reqheaders).get(Endpoints_1.Endpoints.OAUTHTOKENAUTHORIZE).query(query).reply(302, undefined, { Location: code_url });
                         return [4 /*yield*/, Fintecture_1.Fintecture.getAuthorizeUrl(appId, redirectUri, state)];
                     case 1:
                         authUrl = _a.sent();

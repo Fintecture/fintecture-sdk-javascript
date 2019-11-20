@@ -4,16 +4,12 @@ import qs from 'qs';
 
 export class ResourcesURLBuilder {
 
-    static getAuthorizeFullURL(appId: string, redirectUri?: string, state?: any) {
-        let queryString: string = '';
-        let query: any = {
+    static getAuthorizeFullURL(appId: string, redirectUri: string, state: any) {
+        const queryString: string = `?${qs.stringify({
             app_id: appId,
-        };
-
-        if(redirectUri) query['redirect_uri'] = redirectUri;
-        if(state) query['state'] = state;
-
-        queryString = `?${qs.stringify(query)}`;
+            redirect_uri: redirectUri,
+            state: state
+        })}`;
 
         return `${BaseUrls.FINTECTUREOAUTHURL}${Endpoints.OAUTHTOKENAUTHORIZE}${queryString}`;
     }

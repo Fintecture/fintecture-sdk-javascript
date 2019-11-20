@@ -10,16 +10,11 @@ var ResourcesURLBuilder = /** @class */ (function () {
     function ResourcesURLBuilder() {
     }
     ResourcesURLBuilder.getAuthorizeFullURL = function (appId, redirectUri, state) {
-        var queryString = '';
-        var query = {};
-        if (appId)
-            query['app_id'] = appId;
-        if (redirectUri)
-            query['redirect_uri'] = redirectUri;
-        if (state)
-            query['state'] = state;
-        if (Object.entries(query).length > 0)
-            queryString = "?" + qs_1.default.stringify(query);
+        var queryString = "?" + qs_1.default.stringify({
+            app_id: appId,
+            redirect_uri: redirectUri,
+            state: state
+        });
         return "" + BaseUrls_1.BaseUrls.FINTECTUREOAUTHURL + Endpoints_1.Endpoints.OAUTHTOKENAUTHORIZE + queryString;
     };
     ResourcesURLBuilder.getProviderURL = function (providerID) {
