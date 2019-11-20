@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        "removeComments": false
+    },
+    "include": [
+        "src/**/*",
+        "spec", 
+        "spec/resources.spec.ts", 
+        "spec/authentication.spec.ts"
+    ],
+}

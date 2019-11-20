@@ -7,14 +7,18 @@ services:
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       redirect_uri: 'https://www.fintecture.com'
-      baseURL: 'http://server-local:443'
+      oauth_url: 'http://server-local:443'
+      api_url: 'http://server-local:443'
+      connect_url: 'http://localhost:4201'
 
   test:
     build: .
-    command: 'npm run test'
+    command: 'bash -c "npm install && npm install typescript -g && tsc --build && npm run coverage"'
     volumes:
       - .:/fintecture_sdk
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       redirect_uri: 'https://www.fintecture.com'
-      baseURL: 'http://server-local:443'
+      oauth_url: 'http://localhost:3000'
+      api_url: 'http://localhost:3000'
+      connect_url: 'http://localhost:4201'

@@ -1,17 +1,17 @@
-const uuidv4 = require('uuid/v4');
-const crypto = require('crypto');
+import { v4 as uuidv4 } from 'uuid';
+import { createSign } from 'crypto';
 
-module.exports.generateUUID = function () {
+export function generateUUID() {
     uuidv4().replace(/-/g, '');
 }
 
-module.exports.signPayload = function (payload, privateKey, algorithm) {
+export function signPayload(payload, privateKey, algorithm) {
     if (typeof payload == 'object')
-        body = JSON.stringify(body);
+        payload = JSON.stringify(payload);
 
     if (!algorithm || algorithm === 'rsa-sha256') {
         try {
-            let signature = crypto.createSign('RSA-SHA256');
+            let signature = createSign('RSA-SHA256');
             signature.update(payload);
             return signature.sign(privateKey);
 
