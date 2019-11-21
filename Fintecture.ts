@@ -1,5 +1,6 @@
 import { Authentication } from './src/Authentication';
 import { Resources } from './src/Resources';
+import { Connect } from './src/Connect';
 
 export class Fintecture {
 
@@ -21,5 +22,10 @@ export class Fintecture {
     static async applications(appId: string) {
         const resources: Resources = new Resources();
         return resources.applications(appId);
+    }
+
+    static async getConnectUrl(paymentsParams: any, type: string, appId: string, appSecret: string, privateKey: string, redirectUri: string, originUri: string, state?: string, version?: string){
+        const connect: Connect = new Connect(appId, appSecret, privateKey, redirectUri, originUri, state, version);
+        return connect.getConnectUrl(paymentsParams, type);
     }
 }

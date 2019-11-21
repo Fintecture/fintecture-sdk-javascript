@@ -7,9 +7,7 @@
       "**/BaseUrls.ts",
       "**/Endpoints.ts",
       "**/*.[sS]pec.*",
-      "**/Crypto.ts",
-      "**/Connect.ts",
-      "**/interfaces/**",
-      **/spec/**
+      "**/spec/**",
+      "**/interfaces/**"
     ]
 }

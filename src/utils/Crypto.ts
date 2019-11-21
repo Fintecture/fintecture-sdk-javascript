@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { createSign } from 'crypto';
+import { createSign, createPrivateKey, privateDecrypt } from 'crypto';
 
 export function generateUUID() {
-    uuidv4().replace(/-/g, '');
+    return uuidv4().replace(/-/g, '');
 }
 
-export function signPayload(payload, privateKey, algorithm) {
+export function signPayload(payload: any, privateKey: string, algorithm: string): string {
     if (typeof payload == 'object')
         payload = JSON.stringify(payload);
 
@@ -13,8 +13,8 @@ export function signPayload(payload, privateKey, algorithm) {
         try {
             let signature = createSign('RSA-SHA256');
             signature.update(payload);
-            return signature.sign(privateKey);
-
+            signature.end();
+            return signature.sign(privateKey).toString('base64');
         } catch (error) {
             throw new Error("error during signature");
         }
@@ -22,3 +22,15 @@ export function signPayload(payload, privateKey, algorithm) {
 
     throw new Error("invalid signature algorithm")
 }
+
+// export function decryptPrivate(digest: string, privateKey: string) {
+//     const key = createPrivateKey(privateKey);
+
+//     var signature = privateDecrypt(
+//         {
+//             'key': key, //buffer
+//             'padding': Constants.RSA_NO_PADDING
+//         },
+//         Buffer.from(digest, 'hex')
+//     ).toString().substr(192);
+// }

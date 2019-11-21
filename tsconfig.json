@@ -12,6 +12,8 @@
         "src/**/*",
         "spec", 
         "spec/resources.spec.ts", 
-        "spec/authentication.spec.ts"
+        "spec/authentication.spec.ts",
+        "spec/connect.spec.ts",
+        "spec/crypto.spec.ts"
     ],
 }
