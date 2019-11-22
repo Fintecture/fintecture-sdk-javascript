@@ -2,12 +2,14 @@ import nock from 'nock';
 import path from 'path';
 import dotenv from 'dotenv';
 
-import { Fintecture } from './../Fintecture';
+import { Resources } from './../fintecture_client';
 import { Endpoints } from './../src/utils/URLBuilders/Endpoints';
+
+dotenv.config({path: path.join(__dirname, '.env')});
 
 describe('Resources', function () {
 
-    dotenv.config({path: path.join(__dirname, '.env')});
+    const resources = new Resources();
     const appId = process.env.app_id || '';
     const baseURL = process.env.api_url || '';
     const reqheaders = {
@@ -20,35 +22,35 @@ describe('Resources', function () {
 
     it('#providers(appId)', async function (done) {
         nock(baseURL, reqheaders).get(Endpoints.PROVIDERSURL).reply(200, response_data);
-        const body = await Fintecture.providers(appId);
+        const body = await resources.providers(appId);
         expect(body).toEqual(response_data);
         done();
     });
 
     it('#providers(appId, providerId)', async function (done) {
         nock(baseURL, reqheaders).get(`${Endpoints.PROVIDERSURL}/agfbfr`).reply(200, response_data);
-        const body = await Fintecture.providers(appId, 'agfbfr');
+        const body = await resources.providers(appId, 'agfbfr');
         expect(body).toEqual(response_data);
         done();
     });
 
     it('#testAccounts(appId)', async function (done) {
         nock(baseURL, reqheaders).get(Endpoints.TESTACCOUNTSURL).reply(200, response_data);
-        const body = await Fintecture.testAccounts(appId);
+        const body = await resources.testAccounts(appId);
         expect(body).toEqual(response_data);
         done();
     });
 
     it('#testAccounts(appId, testAccountId)', async function (done) {
         nock(baseURL, reqheaders).get(`${Endpoints.TESTACCOUNTSURL}/1`).reply(200, response_data);
-        const body = await Fintecture.testAccounts(appId, 1);
+        const body = await resources.testAccounts(appId, 1);
         expect(body).toEqual(response_data);
         done();
     });
 
     it('#applications(appId)', async function(done){
         nock(baseURL, reqheaders).get(`${Endpoints.APPLICATIONURL}/${appId}`).reply(200, response_data);
-        const body = await Fintecture.applications(appId);
+        const body = await resources.applications(appId);
         expect(body).toEqual(response_data);
         done();
     });

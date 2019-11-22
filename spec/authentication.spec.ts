@@ -3,12 +3,14 @@ import path from 'path';
 import dotenv from 'dotenv';
 import qs from 'qs';
 
-import { Fintecture } from './../Fintecture';
+import { Authentication } from './../fintecture_client';
 import { Endpoints } from './../src/utils/URLBuilders/Endpoints';
 import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 
+dotenv.config({path: path.join(__dirname, '.env')});
+
 describe('Authentication', function () {
-    dotenv.config({path: path.join(__dirname, '.env')});
+    const authentication = new Authentication();
     const appId = process.env.app_id || '';
     const redirectUri = process.env.redirect_uri || '';
     const baseUrl = process.env.oauth_url || '';
@@ -20,7 +22,7 @@ describe('Authentication', function () {
     it('#authorize(app_id, redirect_uri, state)', async function (done) {
         const query = {response_type: 'code', app_id: appId, redirect_uri: redirectUri};
         nock(baseUrl, reqheaders).get(Endpoints.OAUTHTOKENAUTHORIZE).query(query).reply(302, undefined, {Location: code_url});
-        let authUrl = await Fintecture.getAuthorizeUrl(appId, redirectUri, state);
+        let authUrl = await authentication.getAuthorizeUrl(appId, redirectUri, state);
         expect(authUrl).toEqual(mockAuthUrl);
         done();
     });

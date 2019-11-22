@@ -1,68 +1,95 @@
-import { generateUUID, signPayload } from '../src/utils/Crypto';
+import * as crypto from 'crypto';
 
-const privateKey = `-----BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUp
-wmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ5
-1s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZwIDAQABAoGAFijko56+qGyN8M0RVyaRAXz++xTqHBLh
-3tx4VgMtrQ+WEgCjhoTwo23KMBAuJGSYnRmoBZM3lMfTKevIkAidPExvYCdm5dYq3XToLkkLv5L2
-pIIVOFMDG+KESnAFV7l2c+cnzRMW0+b6f8mR1CJzZuxVLL6Q02fvLi55/mbSYxECQQDeAw6fiIQX
-GukBI4eMZZt4nscy2o12KyYner3VpoeE+Np2q+Z3pvAMd/aNzQ/W9WaI+NRfcxUJrmfPwIGm63il
-AkEAxCL5HQb2bQr4ByorcMWm/hEP2MZzROV73yF41hPsRC9m66KrheO9HPTJuo3/9s5p+sqGxOlF
-L0NDt4SkosjgGwJAFklyR1uZ/wPJjj611cdBcztlPdqoxssQGnh85BzCj/u3WqBpE2vjvyyvyI5k
-X6zk7S0ljKtt2jny2+00VsBerQJBAJGC1Mg5Oydo5NwD6BiROrPxGo2bpTbu/fhrT8ebHkTz2epl
-U9VQQSQzY1oZMVX8i1m5WUTLPz2yLJIBQVdXqhMCQBGoiuSoSjafUhV7i1cEGpb88h5NBYZzWXGZ
-37sJ5QsW+sJyoNde3xH8vdXhzU7eT82D6X/scw9RZz+/6rCJ4p0=
------END RSA PRIVATE KEY-----`;
-const mockSignature = "F7BupSyiBUzTfGh8ayiQe1fjqQXqZHAOTcRTwtf0AXfPBhgmMD8l+AIsbOtJu0jbz+kQWT0fPDRkONH1RmEh5tUEyoyntEqXQlcDoaZYa4KqYdJGfTw5r38Mr2EI/1tLRI4omP2T2eqNB1o1Rcs6+201+FLPisEIhJdU0eeNT4k=";
+import * as UtilsCrypto from '../src/utils/Crypto';
+
+const mockSignature = "QVEX1W0EGwsTWGAwdNmh1pY/p/QIaw2Owz/jRuQpvmwl+FN84+fLwZUs8Ts3BYbkON5xaVv3UA/eqO+6JfOfCg4IUSMNzgDK0Ibpy02eqz8WMtSUHjto9D35RbzqxbBhL/UNK0igqkv+fqxzBYsjEJi5UQX1CXyV+Bn6vHQCkLqqYiitxWy8BtdJ+W2YChb74eyhZzmdGfTfwUO5H3OlhSGcRubclkO+yeL6gIr/XWGIfuT9jtK2UYzLffLelIDc9mxBFuhXdl+3iddm/YkYb2pxayZKgXtnzRYsiz1GhlWoMcbNdToNauGuIe0aeYAX77BlLY4P4IT7got224sLig==";
+const privateKey: string = process.env.app_private_key;
+const publicKey: string = process.env.app_public_key;
+const payload = {payment: 'payment'};
+
 
 describe('Crypto', function () {
     
     it('#signPayload(payload, privateKey, algorithm) with all parameters', function () {
         const algorithm = 'rsa-sha256';
-        const payload = JSON.stringify({payment: 'payment'});
+        const payloadStr = JSON.stringify(payload);
 
-        const signature = signPayload(payload, privateKey, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, privateKey, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
     it('#signPayload(payload, privateKey, algorithm) without algorithm', function () {
         const algorithm = null;
-        const payload = JSON.stringify({payment: 'payment'});
+        const payloadStr = JSON.stringify(payload);
 
-        const signature = signPayload(payload, privateKey, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, privateKey, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
     it('#signPayload(payload, privateKey, algorithm) payload as an object', function () {
         const algorithm = 'rsa-sha256';
-        const payload = {payment: 'payment'};
 
-        const signature = signPayload(payload, privateKey, algorithm);
+        const signature = UtilsCrypto.signPayload(payload, privateKey, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
     it('#signPayload(payload, privateKey, algorithm) invalid signature algorithm', function () {
         const algorithm = 'sha256';
-        const payload = JSON.stringify({payment: 'payment'});
+        const payloadStr = JSON.stringify(payload);
 
-        expect( () => {signPayload(payload, privateKey, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
+        expect( () => {UtilsCrypto.signPayload(payloadStr, privateKey, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
     });
 
     it('#signPayload(payload, privateKey, algorithm) error during signature', function () {
         const algorithm = 'rsa-sha256';
-        const payload = {payment: 'payment'};
 
-        expect( () => {signPayload(payload, null, algorithm)} ).toThrow(new Error("error during signature"));
+        expect( () => {UtilsCrypto.signPayload(payload, null, algorithm)} ).toThrow(new Error("error during signature"));
     });
 
     it('#generateUUID()', function () {
-        const uuid = generateUUID();
+        const uuid = UtilsCrypto.generateUUID();
 
         expect( uuid.length ).toEqual(32)
         expect( typeof uuid ).toEqual('string');
         
+    });
+
+    it('#hashBase64(plainText)', () => {
+        const mockHashed = 'n4bQgYhMfWWaL+qgxVrQFaO/TxsrC4Is0V1sFbDwCgg=';
+        const hashBase64 = UtilsCrypto.hashBase64('test');
+
+        expect(hashBase64).toEqual(mockHashed);
+    });
+
+    it('#decryptPrivate(digest, privateKey)', () => {
+        const plainText = 'test';
+        let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
+
+        let key = {
+            key: publicKey,
+            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
+        }
+        let message = Buffer.from(digest);
+        let encrypted = crypto.publicEncrypt(key, message).toString("base64");
+        let decrypted = UtilsCrypto.decryptPrivate(encrypted, privateKey);
+
+        expect(decrypted).toEqual(digest);
+    });
+
+    it('#decryptPrivate(digest, privateKey) Error', () => {
+        const plainText = 'test';
+        let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
+
+        let key = {
+            key: publicKey,
+            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
+        }
+        let message = Buffer.from(digest);
+        let encrypted = crypto.publicEncrypt(key, message).toString("base64");
+        
+        expect( () => {UtilsCrypto.decryptPrivate(encrypted, '')} ).toThrow(new Error("an error occurred while decrypting"));
     });
 });

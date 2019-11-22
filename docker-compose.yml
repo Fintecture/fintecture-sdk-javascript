@@ -52,3 +52,13 @@ services:
         Mqo3BZADRlcr0AKP2TYSBCNcEBmBHCI9GfIRCPFR1eK+IciRyqjcz7kYlZ0YyfjF
         r3xIiGe3JhVHqyTRE+maKu0=
         -----END PRIVATE KEY-----
+      app_public_key: |
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhKHBrl6fQAPh//KNnsU
+        UZArFOPYfAjlLgrYxyYBC+Fs/Zim9bWe8PcswWGfr8jkjGzBaHLyB2UGnLqdXGF+
+        vuSf13B/EAyUan6v3a//98TMGB/sRQVS/Eeguh6Int7KMOMdZPooTiGfkDDqA00f
+        nUj51q2I8yi2uqxEiR5Qa80OUIKvCp8JoiJ5EzGatX8jmNHwU3SbopK+/8RJ0AZe
+        OD/4KkMxHokupDrMKF1Z+Q4UFEskEjH05q4brMJ3P1HeX2gW0M9WXoLDXHmOkuv2
+        /PZSOL3I+kgrm7g1lBCFaJ4L4oxdeKf8v1CFNMtSbULCv+bZrUjW6ApzTZLigNO/
+        cwIDAQAB
+        -----END PUBLIC KEY-----

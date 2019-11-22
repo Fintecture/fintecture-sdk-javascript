@@ -8,6 +8,7 @@
       "**/Endpoints.ts",
       "**/*.[sS]pec.*",
       "**/spec/**",
-      "**/interfaces/**"
+      "**/interfaces/**",
+      "**/fintecture_client.ts"
     ]
 }
