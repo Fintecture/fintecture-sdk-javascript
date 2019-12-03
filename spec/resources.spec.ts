@@ -10,8 +10,8 @@ dotenv.config({path: path.join(__dirname, '.env')});
 describe('Resources', function () {
 
     const resources = new Resources();
-    const appId = process.env.app_id || '';
-    const baseURL = process.env.api_url || '';
+    const appId = process.env.app_id || '3f12a5c0-f719-4c14-9eac-08ed99290109';
+    const baseURL = process.env.api_url || 'http://localhost:3000';
     const reqheaders = {
         reqheaders: {
             accept: 'application/json',

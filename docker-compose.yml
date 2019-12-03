@@ -13,16 +13,19 @@ services:
 
   test:
     build: .
-    command: 'bash -c "npm install && npm install typescript -g && tsc --build && npm run coverage"'
+    command: 'bash -c "npm install typescript -g && tsc --build && npm run coverage"'
     volumes:
       - .:/fintecture_sdk
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       app_secret: '93ea0128-8258-4b1d-9109-b4899a98677b'
+      merchant_app_id_test: '1b96c253-1944-4986-a467-df2152ddffdb'
+      merchant_app_secret_test: 'f03fec5f-4d38-437f-914d-817337550fab'
       redirect_uri: 'https://www.fintecture.com'
       oauth_url: 'http://localhost:3000'
       api_url: 'http://localhost:3000'
       connect_url: 'http://localhost:4201'
+      PIS_PROVIDER_ID_TEST: 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr'
       app_private_key: |
         -----BEGIN PRIVATE KEY-----
         MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCeEocGuXp9AA+H
