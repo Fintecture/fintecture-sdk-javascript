@@ -4,21 +4,21 @@ import { BaseUrls } from'./BaseUrls';
 export class ResourcesURLBuilder {
     static getProviderURL(providerID?: string) {
         if (providerID) {
-            return `${BaseUrls.FINTECTUREAPIURL}${Endpoints.PROVIDERSURL}/${providerID}`;
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.PROVIDERSURL}/${providerID}`;
         } else {
-            return `${BaseUrls.FINTECTUREAPIURL}${Endpoints.PROVIDERSURL}`;
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.PROVIDERSURL}`;
         }
     }
 
-    static getTestAccountsURL(testAccountId?: number) {
+    static getTestAccountsURL(testAccountId?: string) {
         if (testAccountId) {
-            return `${BaseUrls.FINTECTUREAPIURL}${Endpoints.TESTACCOUNTSURL}/${testAccountId}`;
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.TESTACCOUNTSURL}/${testAccountId}`;
         } else {
-            return `${BaseUrls.FINTECTUREAPIURL}${Endpoints.TESTACCOUNTSURL}`;
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.TESTACCOUNTSURL}`;
         }
     }
 
-    static getApplication(appId: string) {
-        return `${BaseUrls.FINTECTUREAPIURL}${Endpoints.APPLICATIONURL}/${appId}`;
+    static getApplication() {
+        return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.APPLICATIONURL}`;
     }
 }

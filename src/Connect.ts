@@ -2,69 +2,74 @@ import qs from 'qs';
 
 import * as UtilsCrypto from './utils/Crypto.js';
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
-import { instance as ApiServiceAxios } from './services/ApiService';
-import { State, Payload, Data, Attributes, Meta } from './interfaces/connect/ConnectInterfaces';
-import { ConnectConfig } from './interfaces/connect/ConfigInterface'
+import * as connectService from './services/ConnectService';
+import { ConnectConfig, State, Payload, Data, Attributes, Meta } from './interfaces/connect/ConnectInterface';
+import { Config } from './interfaces/ConfigInterface'
+import { Constants } from './utils/Constants.js';
+import { eventNames } from 'cluster';
 
 export class Connect {
 
     public axios: any;
-    public config: ConnectConfig;
+    public config: Config;
+    public connectConfig: ConnectConfig;
 
     private signature_type: string;
 
     // constructor(app_id: string, app_secret: string, private_key: string, redirect_uri: string, origin_uri: string, state?: string, version?: string){
-    constructor(config: ConnectConfig){
-        this.axios = ApiServiceAxios;
+    constructor(config: Config){
+        this.axios = connectService;
         this.config = config;
         this.signature_type = 'rsa-sha256';
     }
 
- 
     /**
      * Generates a connect URL based on the payment parameters
      * 
      * @param {payment} State 
      */
-    async getConnectUrl(paymentParams: any, type: string) {
+    async getPisConnectUrl(accessToken: string, connectConfig: any) {
 
-        this._validatePaymentIntegrity(paymentParams, type);
+        this.config = this._validateConfigIntegrity(this.config);
+        this.connectConfig = this._validateConnectConfigIntegrity(connectConfig);
 
-        if (!paymentParams.end_to_end_id)
-            paymentParams.end_to_end_id = UtilsCrypto.generateUUID();
+        if (!connectConfig.end_to_end_id)
+            connectConfig.end_to_end_id = UtilsCrypto.generateUUID();
         
-        const payload: Payload = this._buildPayload(paymentParams);
+        const payload: Payload = this._buildPayload(connectConfig);
 
         let state: State = {
-            app_id: this.config.appId,
-            app_secret: this.config.appSecret,
+            app_id: this.config.app_id,
+            access_token: accessToken,
             signature_type: this.signature_type,
-            signature: this._buildSignature(payload, this.config.privateKey, this.signature_type),
-            redirect_uri: this.config.redirectUri,
-            origin_uri: this.config.originUri,
-            state: this.config.state ? this.config.state: '',
-            order_id: paymentParams.order_id,
-            payload: payload,
-            version: this.config.version,
+            signature: this._buildSignature(payload, this.config.private_key, this.signature_type),
+            redirect_uri: connectConfig.redirect_uri,
+            origin_uri: connectConfig.origin_uri,
+            state: connectConfig.state ? connectConfig.state: '',
+            order_id: connectConfig.communication,
+            payload: payload
         }
 
-        return `${BaseUrls.FINTECTURECONNECTURL}/${type}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`;
+        let url = `${this.config.env==Constants.SANDBOXENVIRONMENT?BaseUrls.FINTECTURECONNECTURL_SBX:BaseUrls.FINTECTURECONNECTURL_PRD}/pis`
+
+        return `${url}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`;
     }
 
-    verifyUrlParameters(parameters: any, privateKey: string) {
+    verifyUrlParameters(queryString: any) {
 
-        this._validatePostPaymentIntegrity(parameters);
+        this.config = this._validateConfigIntegrity(this.config);
+        this._validatePostPaymentIntegrity(queryString);
 
-        const decrypted: string = UtilsCrypto.decryptPrivate(parameters.s, privateKey);
+        const decrypted: string = UtilsCrypto.decryptPrivate(queryString.s, this.config.private_key);
 
         const testString: string = qs.stringify({
-            app_id: this.config.appId,
-            app_secret: this.config.appSecret,
-            session_id: parameters.session_id,
-            status: parameters.status,
-            customer_id: parameters.customer_id,
-            provider: parameters.provider,
-            state: parameters.state
+            app_id: this.config.app_id,
+            app_secret: this.config.app_secret,
+            session_id: queryString.session_id,
+            status: queryString.status,
+            customer_id: queryString.customer_id,
+            provider: queryString.provider,
+            state: queryString.state
         });
 
         const localDigest: string = UtilsCrypto.hashBase64(testString);
@@ -73,33 +78,34 @@ export class Connect {
     }
 
 
-    _validatePaymentIntegrity(paymentParams: any, type: string) {
-        if (!paymentParams.amount) this._trowInvalidPaymentPayload();
-        if (!paymentParams.currency) this._trowInvalidPaymentPayload();
-        if (!paymentParams.order_id) this._trowInvalidPaymentPayload();
-        if (!paymentParams.customer_id) this._trowInvalidPaymentPayload();
-        if (!paymentParams.customer_full_name) this._trowInvalidPaymentPayload();
-        if (!paymentParams.customer_email) this._trowInvalidPaymentPayload();
-        if (!paymentParams.customer_ip) this._trowInvalidPaymentPayload();
-        if (type !== 'pis' && type !== 'ais') this._trowInvalidPaymentPayload();
+    _validateConnectConfigIntegrity(connectConfig: any) {
+        if (!connectConfig.amount) throw Error('amount not set');
+        if (isNaN(connectConfig.amount)) throw Error('amount must be a number');
+        if (!(connectConfig.amount>=1)) throw Error('amount must be greater than 1');
+        if (!connectConfig.currency) throw Error('currency not set');
+        if (!connectConfig.customer_id && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer identifier must be set');
+        if (!connectConfig.customer_full_name && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer full name must be set');
+        if (!connectConfig.customer_email && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer email must be set');
+        if (!connectConfig.customer_ip && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer ip must be set');
+
+        if (['pis', 'ais'].includes(connectConfig.type)) throw Error('type must be either ais or pis');
+
+        connectConfig.order_id = connectConfig.communication;
+        
+        return <ConnectConfig>connectConfig; 
     }
 
-    _validatePostPaymentIntegrity(parameters: any) {
-        if (typeof parameters != 'object') throw new Error(`invalid parameter format, the parameter must be an object instead a ${typeof parameters}`);
-        if (!parameters.s) this._trowInvalidPostPaymentParameter();
-        if (!parameters.state) this._trowInvalidPostPaymentParameter();
-        if (!parameters.status) this._trowInvalidPostPaymentParameter();
-        if (!parameters.session_id) this._trowInvalidPostPaymentParameter();
-        if (!parameters.customer_id) this._trowInvalidPostPaymentParameter();
-        if (!parameters.provider) this._trowInvalidPostPaymentParameter();
-    }
-
-    _trowInvalidPaymentPayload(){
-        throw Error("invalid payment payload");
+    _validatePostPaymentIntegrity(queryString: any) {
+        if (typeof queryString != 'object') throw new Error(`invalid parameter format, the parameter must be an object instead a ${typeof queryString}`);
+        if (!queryString.s) this._trowInvalidPostPaymentParameter();
+        if (!queryString.status) this._trowInvalidPostPaymentParameter();
+        if (!queryString.session_id) this._trowInvalidPostPaymentParameter();
+        if (!queryString.customer_id) this._trowInvalidPostPaymentParameter();
+        if (!queryString.provider) this._trowInvalidPostPaymentParameter();
     }
 
     _trowInvalidPostPaymentParameter() {
-        throw Error("invalid post payment parameter");
+        throw Error("missing query string");
     }
 
     _buildSignature(payment: any, privateKey: string, algorithm: string): string {
@@ -132,6 +138,14 @@ export class Connect {
         }
 
         return payload;
+    }
+
+    _validateConfigIntegrity(config) {
+        if (!config.private_key) {
+            throw Error('private_key must be set to use this function');
+        }
+
+        return <Config>config;
     }
 
 }

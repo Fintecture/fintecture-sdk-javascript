@@ -2,56 +2,44 @@ import nock from 'nock';
 import path from 'path';
 import dotenv from 'dotenv';
 
-import { Resources } from './../fintecture_client';
+import { FintectureClient } from '../fintecture-client';
 import { Endpoints } from './../src/utils/URLBuilders/Endpoints';
+import { TestConfig } from './constants/config';
+import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 
 dotenv.config({path: path.join(__dirname, '.env')});
 
 describe('Resources', function () {
 
-    const resources = new Resources();
-    const appId = process.env.app_id || '3f12a5c0-f719-4c14-9eac-08ed99290109';
-    const baseURL = process.env.api_url || 'http://localhost:3000';
-    const reqheaders = {
-        reqheaders: {
-            accept: 'application/json',
-            app_id: appId
-        },
-    };
-    let response_data = '';
+    const client = new FintectureClient({ app_id: TestConfig.app_id_openbanking, app_secret: TestConfig.app_secret_openbanking });
 
-    it('#providers(appId)', async function (done) {
-        nock(baseURL, reqheaders).get(Endpoints.PROVIDERSURL).reply(200, response_data);
-        const body = await resources.providers(appId);
-        expect(body).toEqual(response_data);
+    it('#providers()', async function (done) {
+        const body = await client.getProviders();
+        expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#providers(appId, providerId)', async function (done) {
-        nock(baseURL, reqheaders).get(`${Endpoints.PROVIDERSURL}/agfbfr`).reply(200, response_data);
-        const body = await resources.providers(appId, 'agfbfr');
-        expect(body).toEqual(response_data);
+    it('#providers(providerId)', async function (done) {
+        const body = await client.getProviders('agfbfr');
+        expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#testAccounts(appId)', async function (done) {
-        nock(baseURL, reqheaders).get(Endpoints.TESTACCOUNTSURL).reply(200, response_data);
-        const body = await resources.testAccounts(appId);
-        expect(body).toEqual(response_data);
+    it('#testAccounts()', async function (done) {
+        const body = await client.getTestAccounts();
+        expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#testAccounts(appId, testAccountId)', async function (done) {
-        nock(baseURL, reqheaders).get(`${Endpoints.TESTACCOUNTSURL}/1`).reply(200, response_data);
-        const body = await resources.testAccounts(appId, 1);
-        expect(body).toEqual(response_data);
+    it('#testAccounts(testAccountId)', async function (done) {
+        const body = await client.getTestAccounts('1');
+        expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#applications(appId)', async function(done){
-        nock(baseURL, reqheaders).get(`${Endpoints.APPLICATIONURL}/${appId}`).reply(200, response_data);
-        const body = await resources.applications(appId);
-        expect(body).toEqual(response_data);
+    it('#application()', async function(done){
+        const body = await client.getApplication();
+        expect(typeof body).toEqual('object');
         done();
     });
 });

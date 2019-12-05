@@ -9,6 +9,6 @@
       "**/*.[sS]pec.*",
       "**/spec/**",
       "**/interfaces/**",
-      "**/fintecture_client.ts"
+      "**/fintecture-client.ts"
     ]
 }

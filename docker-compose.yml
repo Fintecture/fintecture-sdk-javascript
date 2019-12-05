@@ -7,9 +7,9 @@ services:
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       redirect_uri: 'https://www.fintecture.com'
-      oauth_url: 'http://server-local:443'
-      api_url: 'http://server-local:443'
-      connect_url: 'http://localhost:4201'
+      FINTECTUREOAUTHURL_DEV: 'http://server-local:443'
+      FINTECTUREAPIURL_DEV: 'http://server-local:443'
+      FINTECTURECONNECTURL_DEV: 'http://localhost:4201'
 
   test:
     build: .
@@ -22,9 +22,9 @@ services:
       merchant_app_id_test: '1b96c253-1944-4986-a467-df2152ddffdb'
       merchant_app_secret_test: 'f03fec5f-4d38-437f-914d-817337550fab'
       redirect_uri: 'https://www.fintecture.com'
-      oauth_url: 'http://localhost:3000'
-      api_url: 'http://localhost:3000'
-      connect_url: 'http://localhost:4201'
+      FINTECTUREOAUTHURL_DEV: 'http://localhost:3000'
+      FINTECTUREAPIURL_DEV: 'http://localhost:3000'
+      FINTECTURECONNECTURL_DEV: 'http://localhost:4201'
       PIS_PROVIDER_ID_TEST: 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr'
       app_private_key: |
         -----BEGIN PRIVATE KEY-----

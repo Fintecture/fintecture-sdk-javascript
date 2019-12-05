@@ -1,7 +1,8 @@
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import {instance as axiosInstance} from './services/ApiService';
+import { Config } from './interfaces/ConfigInterface';
+import * as apiService from './services/ApiService';
 
 /**
  * Class responsible for performing AIS calls in Fintecture API.
@@ -9,61 +10,101 @@ import {instance as axiosInstance} from './services/ApiService';
  * @export
  * @class Ais
  */
-export class Ais {
+export class AIS {
 
-    private axios;
+    private axiosInstance;
     private accessToken: string;
 
     /**
      * Creates an instance of Ais.
      */
-    constructor(){
-        this.axios = axiosInstance;
+    constructor(config: Config) {
+        this.axiosInstance = this._getAxiosInstance(config.env);
+    }
+
+    /**
+     * This API is used to authenticate your customer to his Bank.
+     * Banks can provide different ways of authentication, we implement
+     * both the redirection model and the decoupled model (using the customers smartphone),
+     * subject to the whether the bank has implemented them. By calling
+     * this API and defining the authentication model, you will receive an
+     * API to call which either redirects the customer to his bank or triggers
+     * an authentication request on his smartphone's bank app.
+     *
+     * @param {string} accessToken
+     * @param {string} providerId
+     * @returns {Promise<object>}
+     */
+    async authenticate(accessToken: string, providerId: string): Promise<object> {
+        const headers = {
+            accept: 'application/json',
+            authorization: `Bearer ${accessToken}`
+        }
+
+        const response = await this.axiosInstance.get(`/provider/${providerId}/auth`, { headers: headers });
+        return response;
     }
 
     /**
      * This endpoint returns all information regarding the customer's account(s)
      *
+     * @param {string} accessToken
      * @param {string} customerId
-     * @param {object} queryParameters
-     * @param {string} accountsId (optional)
+     * @param {object} queryParameters (optional)
      * @returns {Promise<object>}
      */
-    async getAccounts(customerId: string, queryParameters: object, accountsId?: string): Promise<object> {
-        this.axios.default.headers.push({ Authorization: `Bearer ${this._getAccessToken()}` });
+    async getAccounts(accessToken: string, customerId: string, queryParameters?: object): Promise<object> {
+        const headers = {
+            accept: 'application/json',
+            authorization: `Bearer ${accessToken}`
+        }
 
-        return await this.axios.get(`${Endpoints.AISCUSTOMER}/${customerId}${accountsId?'/accounts/'+accountsId+'/':''}${queryParameters?'?'+qs.stringify(queryParameters):''}`)
-            .then((response) =>{ return response.data; })
+        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+
+        return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accounts${(queryParameters ? '?' + qs.stringify(queryParameters) : '')}`, { headers: headers })
+            .then((response) => { return response.data; })
     }
 
     /**
      * This endpoint lists all transactions on the given account
      *
+     * @param {string} accessToken
      * @param {string} customerId
-     * @param {string} accountsId
-     * @param {object} queryParameters
+     * @param {string} accountId
+     * @param {object} queryParameters (optional)
      * @returns {Promise<object>}
      */
-    async getTransactions(customerId: string, accountsId: string, queryParameters: object): Promise<object> {
-        this.axios.default.headers.push({ Authorization: `Bearer ${this._getAccessToken()}` });
+    async getTransactions(accessToken: string, customerId: string, accountId: string, queryParameters?: object): Promise<object> {
+        const headers = {
+            accept: 'application/json',
+            authorization: `Bearer ${accessToken}`
+        }
 
-        return await this.axios.get(`${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountsId}/transactions/${queryParameters?'?'+qs.stringify(queryParameters):''}`)
-            .then((response) =>{ return response.data; })
+        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+
+        return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions/${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
+            .then((response) => { return response.data; })
     }
 
     /**
      * This endpoint retrieves all personal information of the clients such as name,
      * address and contact details for all the beneficiary owners.
      *
+     * @param {string} accessToken
      * @param {string} customerId
-     * @param {object} queryParameters
+     * @param {object} queryParameters (optional)
      * @returns {Promise<object>}
      */
-    async getAccountHolders(customerId: string, queryParameters: object): Promise<object> {
-        this.axios.default.headers.push({ Authorization: `Bearer ${this._getAccessToken()}` });
+    async getAccountHolders(accessToken: string, customerId: string, queryParameters: object): Promise<object> {
+        const headers = {
+            accept: 'application/json',
+            authorization: `Bearer ${accessToken}`
+        }
 
-        return await this.axios.get(`${Endpoints.AISCUSTOMER}/${customerId}/accountholders/${queryParameters?'?'+qs.stringify(queryParameters):''}`)
-            .then((response) =>{ return response.data; })
+        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+
+        return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accountholders/${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
+            .then((response) => { return response.data; })
     }
 
     /**
@@ -74,7 +115,7 @@ export class Ais {
     _hasAccessToken(): boolean {
         return !!this.accessToken;
     }
-    
+
     /**
      * Get the value of accessToken
      * 
@@ -82,5 +123,18 @@ export class Ais {
      */
     _getAccessToken(): string {
         return this.accessToken;
+    }
+
+    /**
+     * Private function that creates an instance of api
+     * axios. This instance of axios include all the common headers
+     * params.
+     *
+     * @param {string} appSecret
+     * @returns {axios}
+     */
+    _getAxiosInstance(env) {
+        let axiosInstance = apiService.getInstance(env);
+        return axiosInstance;
     }
 }

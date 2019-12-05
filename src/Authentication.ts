@@ -1,9 +1,14 @@
 import qs from 'qs';
 import axios from 'axios';
+import dotenv from 'dotenv';
+import { resolve } from 'path';
 
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import * as my_axios from './services/AuthenticationService';
+import { Config } from './interfaces/ConfigInterface';
+import * as authService from './services/AuthenticationService';
+
+dotenv.config({path: resolve(__dirname, '../.env')});
 
 /**
  * Class responsible for performing authentication with Fintecture
@@ -13,28 +18,32 @@ import * as my_axios from './services/AuthenticationService';
  */
 export class Authentication {
 
+    private axiosInstance;
     private appId: string; 
+    private appSecret: string; 
 
     /**
      * Creates an instance of Authentication.
      *
      * @param {string} appId
      */
-    constructor(appId: string){
-        this.appId = appId;
+    constructor(config:Config){
+        this.appId = config.app_id;
+        this.appSecret = config.app_secret;
+        this.axiosInstance = this._getAxiosInstance(config.env);
     }
 
     /**
      * The authorize endpoint is used to validate your app_id and redirect_uri
-     * as indicated in the console. If successful, the endpoint redirects the
-     * user to the redirect_uri and provides a code to be exchanged for the
-     * access_token.
+     * as indicated in the console. If successful, the endpoint returns a URL which
+     * you should redirect  theuser to the redirect_uri and provides a code to 
+     * be exchanged for the access_token.
      *
      * @param {string} redirectUri
      * @param {any} state
-     * @returns {Promise<object>}
+     * @returns {string}
      */
-    async authorize(redirectUri: string, state?: any): Promise<object> {
+    authorize(redirectUri: string, state?: any): string {
         const queryString: string = `?${qs.stringify({
             response_type: 'code',
             app_id: this.appId,
@@ -42,8 +51,7 @@ export class Authentication {
             state: state
         })}`;
 
-        const response =  await axios.get(`${BaseUrls.FINTECTUREOAUTHURL}${Endpoints.OAUTHTOKENAUTHORIZE}${queryString}`);
-        return response;
+        return `${BaseUrls.FINTECTUREOAUTHURL_SBX}${Endpoints.OAUTHTOKENAUTHORIZE}${queryString}`;
     }
 
     /**
@@ -54,11 +62,10 @@ export class Authentication {
      * @param {string} authCode (optional)
      * @returns {Promise<object>}
      */
-    async accessToken(appSecret: string, authCode?: string): Promise<object> {
-        let axiosInstance = this._setAxiosInstance(appSecret);
-        let data: string = this._setAccessTokenData(authCode);
+    async accessToken(authCode?: string): Promise<object> {
+        let data: string = this._getAccessTokenData(authCode);
 
-        const response = await axiosInstance.post(Endpoints.OAUTHACCESSTOKEN, data);
+        const response = await this.axiosInstance.post(Endpoints.OAUTHACCESSTOKEN, data);
 
         return response.data;
     }
@@ -71,36 +78,12 @@ export class Authentication {
      * @param {string} refreshToken
      * @returns {Promise<object>}
      */
-    async refreshToken(appSecret: string, refreshToken: string): Promise<object> {
-        let axiosInstance = this._setAxiosInstance(appSecret);
-        let data: string = this._setRefreshTokenData(refreshToken);
+    async refreshToken(refreshToken: string): Promise<object> {
+        let data: string = this._getRefreshTokenData(refreshToken);
 
-        const response = await axiosInstance.post(Endpoints.OAUTHREFRESHTOKEN, data);
+        const response = await this.axiosInstance.post(Endpoints.OAUTHREFRESHTOKEN, data);
 
         return response.data;
-    }
-
-    /**
-     * This API is used to authenticate your customer to his Bank.
-     * Banks can provide different ways of authentication, we implement
-     * both the redirection model and the decoupled model (using the customers smartphone),
-     * subject to the whether the bank has implemented them. By calling
-     * this API and defining the authentication model, you will receive an
-     * API to call which either redirects the customer to his bank or triggers
-     * an authentication request on his smartphone's bank app.
-     *
-     * @param {string} accessToken
-     * @param {string} providerId
-     * @returns {Promise<object>}
-     */
-    async authenticate(accessToken: string, providerId: string): Promise<object> {
-        const headers = {
-            accept: 'application/json',
-            authorization: `Bearer ${accessToken}`
-        }
-
-        const response =  await axios.get(`${BaseUrls.FINTECTUREOAUTHURL}/provider/${providerId}/auth`, { headers: headers });
-        return response;
     }
 
     /**
@@ -110,7 +93,7 @@ export class Authentication {
      * @param {string} authCode (optional)
      * @returns {string}
      */
-    _setAccessTokenData(authCode?: string): string {
+    _getAccessTokenData(authCode?: string): string {
         let data: object = {
             scope: 'PIS',
             app_id: this.appId,
@@ -134,7 +117,7 @@ export class Authentication {
      * @param {string} refreshToken
      * @returns {string}
      */
-    _setRefreshTokenData(refreshToken: string): string {
+    _getRefreshTokenData(refreshToken: string): string {
         return qs.stringify({
             refresh_token: refreshToken,
             grant_type: 'refresh_token'
@@ -149,9 +132,9 @@ export class Authentication {
      * @param {string} appSecret
      * @returns {axios}
      */
-    _setAxiosInstance(appSecret: string) {
-        const clienToken = this._setClientToken(appSecret);
-        let axiosInstance =  my_axios.getInstance(clienToken);
+    _getAxiosInstance(env) {
+        const clienToken = this._getClientToken();
+        let axiosInstance =  authService.getInstance(env, clienToken);
         return axiosInstance;
     }
 
@@ -162,26 +145,8 @@ export class Authentication {
      * @param {string} appSecret
      * @returns {string}
      */
-    _setClientToken(appSecret: string): string {
-        this._checkIfParameterExists({appSecret: appSecret});
-        
-        return Buffer.from(this.appId + ':' + appSecret).toString('base64');
-    }
-
-    /**
-     * Private function that checks if a list of parameters are included
-     *
-     * @param {object} parameters
-     */
-    _checkIfParameterExists(parameters: object): void{
-        let errors: Array<string> = [];
-
-        for( let key in parameters){
-            if(!parameters[key])
-                errors.push(`invalid ${key} parameter`)
-        }
-            
-        if(errors.length) this._trowErrors(errors);
+    _getClientToken(): string {
+        return Buffer.from(this.appId + ':' + this.appSecret).toString('base64');
     }
 
     /**

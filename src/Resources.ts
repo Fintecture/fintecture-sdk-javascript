@@ -1,26 +1,48 @@
 import { ResourcesURLBuilder } from './utils/URLBuilders/ResourcesURLBuilder';
-import { instance as ApiServiceAxios } from './services/ApiService';
+import * as apiService from './services/ApiService';
+import { eventNames } from 'cluster';
+import { Constants } from './utils/Constants';
 
 export class Resources {
 
-    public axios;
+    private axiosInstance;
+    private appId;
+    private config;
 
-    constructor(){
-        this.axios = ApiServiceAxios;
+    constructor(config){
+        this.axiosInstance = this._getAxiosInstance(config.env);
+        this.appId = config.app_id;
+        this.config = config;
     }
 
-    async providers(appId: string, providerId?: string) {
-        const response: any = await this.axios.get(ResourcesURLBuilder.getProviderURL(providerId), {headers: {app_id: appId, Accept: 'application/json'}});
+    async providers(providerId?: string) {
+
+        this.axiosInstance.defaults.headers['app_id'] = this.appId;
+
+        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getProviderURL(providerId));
         return response.data;
     }
 
-    async testAccounts(appId: string, testAccountId?: number){
-        const response: any = await this.axios.get(ResourcesURLBuilder.getTestAccountsURL(testAccountId), {headers: {app_id: appId}});
+    async testAccounts(testAccountId?: string){
+
+        if (this.config.env==Constants.PRODUCTIONENVIRONMENT) throw new Error("testAccounts only available in sandbox");
+
+        this.axiosInstance.defaults.headers['app_id'] = this.appId;
+
+        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getTestAccountsURL(testAccountId));
         return response.data;
     }
 
-    async applications(appId: string){
-        const response: any = await this.axios.get(ResourcesURLBuilder.getApplication(appId), {headers: {app_id: appId}});
+    async application(){
+
+        this.axiosInstance.defaults.headers['app_id'] = this.appId;
+
+        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getApplication());
         return response.data;
+    }
+
+    _getAxiosInstance(env) {
+        let axiosInstance = apiService.getInstance(env);
+        return axiosInstance;
     }
 }

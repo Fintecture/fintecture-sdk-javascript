@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Constants } from '../utils/Constants'; 
 import { BaseUrls } from '../utils/URLBuilders/BaseUrls';
 
-export const getInstance = (clientToken: string) => {
+export const getInstance = (env: string, clientToken: string) => {
     return axios.create({
         headers: {
             "Accept": 'application/json',
@@ -10,6 +10,6 @@ export const getInstance = (clientToken: string) => {
             "Authorization": `Basic ${clientToken}`,
             "Content-Type": 'application/x-www-form-urlencoded',
         }, 
-        baseURL: BaseUrls.FINTECTUREOAUTHURL
+        baseURL: (env==Constants.SANDBOXENVIRONMENT)?BaseUrls.FINTECTUREOAUTHURL_SBX:BaseUrls.FINTECTUREOAUTHURL_PRD
     });
 }
