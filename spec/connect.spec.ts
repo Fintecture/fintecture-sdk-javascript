@@ -7,7 +7,7 @@ import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 import { ConnectConfig } from './../src/interfaces/connect/ConnectInterface';
 import { TestConfig } from './constants/config';
 
-const ConnectConfigMin: ConnectConfig = {
+const connectConfigMin: ConnectConfig = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
@@ -15,7 +15,7 @@ const ConnectConfigMin: ConnectConfig = {
     origin_uri: 'https://www.google.com/shop',
 };
 
-const ConnectConfigFull: ConnectConfig = {
+const connectConfigFull: ConnectConfig = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
@@ -35,9 +35,11 @@ describe('Connect', function () {
     it('#PIS getPisConnectUrl', async function (done) {
         const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/pis?state=';
         let tokens: any = await client.getAccessToken();
-        let connectUrlMin = await client.getPisConnectUrl(tokens.access_token, ConnectConfigMin);
+        let connectUrlMin = await client.getPisConnectUrl(tokens.access_token, connectConfigMin);
+        console.log("==>> connectUrlMin", connectUrlMin)
         expect(connectUrlMin).toContain(mockConnectUrl);
-        let connectUrlFull = await client.getPisConnectUrl(tokens.access_token, ConnectConfigFull);
+        let connectUrlFull = await client.getPisConnectUrl(tokens.access_token, connectConfigFull);
+        console.log("==>> connectUrlFull", connectUrlFull)
         expect(connectUrlFull).toContain(mockConnectUrl);
         expect(connectUrlFull.length).toBeGreaterThan(connectUrlMin.length)
         done();
@@ -56,7 +58,7 @@ describe('Connect', function () {
     it('#PIS getConnectUrl Error no amount', async function (done) {
         let errorMessage = 'No error thrown.';
 
-        let ConnectUrlFulltemp = Object.assign({}, ConnectConfigFull);
+        let ConnectUrlFulltemp = Object.assign({}, connectConfigFull);
         delete ConnectUrlFulltemp['amount'];
 
         try {
@@ -73,7 +75,7 @@ describe('Connect', function () {
     it('#PIS getConnectUrl Error no currency', async function (done) {
         let errorMessage = 'No error thrown.';
 
-        let ConnectUrlFulltemp = Object.assign({}, ConnectConfigFull);
+        let ConnectUrlFulltemp = Object.assign({}, connectConfigFull);
         delete ConnectUrlFulltemp['currency'];
 
         try {

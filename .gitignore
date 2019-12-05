@@ -5,3 +5,8 @@
 /.vscode
 /dist
 .DS_Store
+Dockerfile
+docker-compose.yml
+.nycrc
+readme.txt
+package-lock.json
