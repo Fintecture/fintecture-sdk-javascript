@@ -5,8 +5,10 @@
   "main": "fintecture-client.ts",
   "scripts": {
     "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
-    "coverage": "nyc -r text -r lcov -r text-summary -e .ts npm run test"
+    "coverage": "nyc -r text -r lcov -r text-summary -e .ts npm run test",
+    "lint": "tslint -p tsconfig.json"
   },
+  "files": ["dist/**/*"],
   "author": "Fintecture.com",
   "license": "MIT",
   "dependencies": {
