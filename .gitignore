@@ -9,4 +9,3 @@ Dockerfile
 docker-compose.yml
 .nycrc
 readme.txt
-package-lock.json

@@ -34,27 +34,6 @@ export class Authentication {
     }
 
     /**
-     * The authorize endpoint is used to validate your app_id and redirect_uri
-     * as indicated in the console. If successful, the endpoint returns a URL which
-     * you should redirect  theuser to the redirect_uri and provides a code to 
-     * be exchanged for the access_token.
-     *
-     * @param {string} redirectUri
-     * @param {any} state
-     * @returns {string}
-     */
-    authorize(redirectUri: string, state?: any): string {
-        const queryString: string = `?${qs.stringify({
-            response_type: 'code',
-            app_id: this.appId,
-            redirect_uri: redirectUri,
-            state: state
-        })}`;
-
-        return `${BaseUrls.FINTECTUREOAUTHURL_SBX}${Endpoints.OAUTHTOKENAUTHORIZE}${queryString}`;
-    }
-
-    /**
      * The accesstoken API is used to exchange the code received
      * in the /authorize API for an access_token.
      *

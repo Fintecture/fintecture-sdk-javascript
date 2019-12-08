@@ -35,10 +35,6 @@ export class FintectureClient {
         this.ais = new AIS(this.config);
     }
 
-    getAuthoritationUrl(redirectUri: string, state?: any): string {
-        return this.authentication.authorize(redirectUri, state);
-    }
-
     async getAccessToken(authCode?: string): Promise<object> {
         return this.authentication.accessToken(authCode);
     }
@@ -59,19 +55,19 @@ export class FintectureClient {
         return this.resources.testAccounts(testAccountId);
     }
 
-    async getProviderAuthUrl(accessToken: string, providerId: string): Promise<object> {
-        return this.ais.authenticate(accessToken, providerId);
+    async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string): Promise<object> {
+        return this.ais.authorize(accessToken, providerId, redirectUri);
     }
 
-    async getAccounts(accessToken: string, customerId: string, options: any): Promise<object> {
+    async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {
         return this.ais.getAccounts(accessToken, customerId, options);
     }
 
-    async getTransactions(accessToken: string, customerId: string, accountId, options: any): Promise<object> {
+    async getTransactions(accessToken: string, customerId: string, accountId, options?: any): Promise<object> {
         return this.ais.getTransactions(accessToken, customerId, accountId, options);
     }
 
-    async getAccountHolders(accessToken: string, customerId: string, options: any): Promise<object> {
+    async getAccountHolders(accessToken: string, customerId: string, options?: any): Promise<object> {
         return this.ais.getAccountHolders(accessToken, customerId, options);
     }
 

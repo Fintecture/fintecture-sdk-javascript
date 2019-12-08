@@ -14,12 +14,14 @@ export class AIS {
 
     private axiosInstance;
     private accessToken: string;
+    private config: Config;
 
     /**
      * Creates an instance of Ais.
      */
     constructor(config: Config) {
         this.axiosInstance = this._getAxiosInstance(config.env);
+        this.config = config;
     }
 
     /**
@@ -35,14 +37,41 @@ export class AIS {
      * @param {string} providerId
      * @returns {Promise<object>}
      */
-    async authenticate(accessToken: string, providerId: string): Promise<object> {
+    async authorize(accessToken: string, providerId: string, redirectUri: string): Promise<object> {
+        
+        if (accessToken)
+            return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri);
+        else
+            return await this._authorizeWithAppId(providerId, redirectUri);
+    }
+
+    async _authorizeWithAccesToken(accessToken: string, providerId: string, redirectUri: string): Promise<object> {
         const headers = {
             accept: 'application/json',
             authorization: `Bearer ${accessToken}`
         }
 
-        const response = await this.axiosInstance.get(`/provider/${providerId}/auth`, { headers: headers });
-        return response;
+        const queryParameters = {
+            redirect_uri: redirectUri
+        }
+
+        const response = await this.axiosInstance.get(`/provider/${providerId}/authorize?` + qs.stringify(queryParameters), { headers: headers });
+        return response.data;
+    }
+
+    async _authorizeWithAppId(providerId: string, redirectUri: string): Promise<object> {
+        const headers = {
+            accept: 'application/json',
+            app_id: `${this.config.app_id}`
+        }
+
+        const queryParameters = {
+            response_type: 'code',
+            redirect_uri: redirectUri
+        }
+
+        const response = await this.axiosInstance.get(`/ais/v1/provider/${providerId}/authorize?` + qs.stringify(queryParameters), { headers: headers });
+        return response.data;
     }
 
     /**
@@ -59,7 +88,7 @@ export class AIS {
             authorization: `Bearer ${accessToken}`
         }
 
-        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+        //this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
 
         return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accounts${(queryParameters ? '?' + qs.stringify(queryParameters) : '')}`, { headers: headers })
             .then((response) => { return response.data; })
@@ -80,7 +109,7 @@ export class AIS {
             authorization: `Bearer ${accessToken}`
         }
 
-        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+        //this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
 
         return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions/${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
             .then((response) => { return response.data; })
@@ -101,7 +130,7 @@ export class AIS {
             authorization: `Bearer ${accessToken}`
         }
 
-        this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
+        //this.axiosInstance.default.headers.push({ Authorization: `Bearer ${accessToken}` });
 
         return await this.axiosInstance.get(`${Endpoints.AISCUSTOMER}/${customerId}/accountholders/${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
             .then((response) => { return response.data; })

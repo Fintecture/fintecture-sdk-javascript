@@ -12,7 +12,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 export class TestConfig {
     public static readonly app_id_openbanking: string = '3f12a5c0-f719-4c14-9eac-08ed99290109';
     public static readonly app_secret_openbanking: string = '93ea0128-8258-4b1d-9109-b4899a98677b';
-    public static readonly app_redirect_uri_openbanking: string = 'https://www.fintecture.com';
+    public static readonly app_redirect_uri: string = 'https://www.fintecture.com';
     public static readonly app_id_merchant: string = '1b96c253-1944-4986-a467-df2152ddffdb';
     public static readonly app_secret_merchant: string = 'f03fec5f-4d38-437f-914d-817337550fab';
     public static readonly app_priv_key_openbanking: string = `-----BEGIN PRIVATE KEY-----
