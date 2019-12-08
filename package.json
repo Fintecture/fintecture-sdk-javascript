@@ -9,7 +9,9 @@
     "coverage": "nyc -r text -r lcov -r text-summary -e .ts npm run test",
     "lint": "tslint -p tsconfig.json"
   },
-  "files": ["dist/**/*"],
+  "files": [
+    "dist/**/*"
+  ],
   "author": "Fintecture.com",
   "license": "MIT",
   "dependencies": {
