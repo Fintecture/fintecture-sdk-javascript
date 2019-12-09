@@ -36,10 +36,8 @@ describe('Connect', function () {
         const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/pis?state=';
         let tokens: any = await client.getAccessToken();
         let connectUrlMin = await client.getPisConnectUrl(tokens.access_token, connectConfigMin);
-        console.log("==>> connectUrlMin", connectUrlMin)
         expect(connectUrlMin).toContain(mockConnectUrl);
         let connectUrlFull = await client.getPisConnectUrl(tokens.access_token, connectConfigFull);
-        console.log("==>> connectUrlFull", connectUrlFull)
         expect(connectUrlFull).toContain(mockConnectUrl);
         expect(connectUrlFull.length).toBeGreaterThan(connectUrlMin.length)
         done();
