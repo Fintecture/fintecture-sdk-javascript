@@ -43,16 +43,16 @@ export class FintectureClient {
         return this.authentication.refreshToken(refreshToken);
     }
 
-    async getProviders(providerId?: string): Promise<object> {
-        return this.resources.providers(providerId);
+    async getProviders(options?: object): Promise<object> {
+        return this.resources.providers(options);
     }
 
     async getApplication(): Promise<object> {
         return this.resources.application();
     }
 
-    async getTestAccounts(testAccountId?: string): Promise<object> {
-        return this.resources.testAccounts(testAccountId);
+    async getTestAccounts(options?: object): Promise<object> {
+        return this.resources.testAccounts(options);
     }
 
     async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string): Promise<object> {
@@ -108,7 +108,7 @@ export class FintectureClient {
             throw Error('private_key must be a string');
         }
 
-        if (config.env && ['sandbox', 'production'].includes(this.config.env)) {
+        if (config.env && ['sandbox', 'production'].includes(config.env)) {
             throw Error('environment is badly configured.');
         }
 

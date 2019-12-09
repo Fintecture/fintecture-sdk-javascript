@@ -19,8 +19,29 @@ describe('Resources', function () {
         done();
     });
 
-    it('#providers(providerId)', async function (done) {
-        const body = await client.getProviders('agfbfr');
+    it('#providers(options) PIS', async function (done) {
+        let options = {
+            'filter[pis]': 'sepa',
+            'filter[country]': 'FR',
+            'filter[psu_type]': 'retail',
+            'sort[full_name]': 'asc'
+        };
+
+        const body = await client.getProviders(options);
+        expect(typeof body).toEqual('object');
+        done();
+    });
+
+    
+    it('#providers(options) AIS', async function (done) {
+        let options = {
+            'filter[ais]': 'accounts',
+            'filter[country]': 'FR',
+            'filter[psu_type]': 'retail',
+            'sort[full_name]': 'asc'
+        };
+
+        const body = await client.getProviders(options);
         expect(typeof body).toEqual('object');
         done();
     });
@@ -31,8 +52,12 @@ describe('Resources', function () {
         done();
     });
 
-    it('#testAccounts(testAccountId)', async function (done) {
-        const body = await client.getTestAccounts('1');
+    it('#testAccounts(options)', async function (done) {
+        let options = {
+            'sort[provider]': 'asc'
+        };
+
+        const body = await client.getTestAccounts(options);
         expect(typeof body).toEqual('object');
         done();
     });

@@ -1,18 +1,20 @@
 import { Endpoints } from './Endpoints';
 import { BaseUrls } from'./BaseUrls';
+import qs from 'qs';
 
 export class ResourcesURLBuilder {
-    static getProviderURL(providerID?: string) {
-        if (providerID) {
-            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.PROVIDERSURL}/${providerID}`;
+    
+    static getProviderURL(options?: object) {
+        if (options && typeof options == 'object') {
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.PROVIDERSURL}${options ? '?' + qs.stringify(options) : ''}`;
         } else {
             return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.PROVIDERSURL}`;
         }
     }
 
-    static getTestAccountsURL(testAccountId?: string) {
-        if (testAccountId) {
-            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.TESTACCOUNTSURL}/${testAccountId}`;
+    static getTestAccountsURL(options?: object) {
+        if (options && typeof options == 'object') {
+            return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.TESTACCOUNTSURL}${options ? '?' + qs.stringify(options) : ''}`;
         } else {
             return `${BaseUrls.FINTECTUREAPIURL_SBX}${Endpoints.TESTACCOUNTSURL}`;
         }

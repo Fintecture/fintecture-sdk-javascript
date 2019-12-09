@@ -15,21 +15,21 @@ export class Resources {
         this.config = config;
     }
 
-    async providers(providerId?: string) {
+    async providers(options) {
 
         this.axiosInstance.defaults.headers['app_id'] = this.appId;
 
-        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getProviderURL(providerId));
+        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getProviderURL(options));
         return response.data;
     }
 
-    async testAccounts(testAccountId?: string){
+    async testAccounts(options){
 
         if (this.config.env==Constants.PRODUCTIONENVIRONMENT) throw new Error("testAccounts only available in sandbox");
 
         this.axiosInstance.defaults.headers['app_id'] = this.appId;
 
-        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getTestAccountsURL(testAccountId));
+        const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getTestAccountsURL(options));
         return response.data;
     }
 
