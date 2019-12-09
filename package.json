@@ -1,6 +1,6 @@
 {
   "name": "fintecture-client",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Fintecture Open Banking API Gateway enabling secure bank connections and payments",
   "main": "dist/fintecture-client.js",
   "types": "dist/fintecture-client.d.ts",
@@ -9,9 +9,6 @@
     "coverage": "nyc -r text -r lcov -r text-summary -e .ts npm run test",
     "lint": "tslint -p tsconfig.json"
   },
-  "files": [
-    "dist/**/*"
-  ],
   "author": "Fintecture.com",
   "license": "MIT",
   "dependencies": {
@@ -34,5 +31,6 @@
     "ts-node": "^8.5.2",
     "tslint": "^5.20.1",
     "typescript": "^3.7.2"
-  }
+  },
+  "files": ["dist/**/*"]
 }

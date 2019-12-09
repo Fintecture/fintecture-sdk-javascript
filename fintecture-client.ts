@@ -108,7 +108,7 @@ export class FintectureClient {
             throw Error('private_key must be a string');
         }
 
-        if (config.env && ['sandbox', 'production'].includes(config.env)) {
+        if (config.env && !['sandbox', 'production'].includes(config.env)) {
             throw Error('environment is badly configured.');
         }
 
