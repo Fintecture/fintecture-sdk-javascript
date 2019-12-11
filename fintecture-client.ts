@@ -55,7 +55,7 @@ export class FintectureClient {
         return this.resources.testAccounts(options);
     }
 
-    async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string): Promise<object> {
+    async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
         return this.ais.authorize(accessToken, providerId, redirectUri);
     }
 
@@ -106,6 +106,14 @@ export class FintectureClient {
 
         if (config.private_key && typeof config.private_key != 'string') {
             throw Error('private_key must be a string');
+        }
+
+        if (config.private_key && !(config.private_key.indexOf('-----BEGIN PRIVATE KEY-----') > 0)) {
+            throw Error('private_key is in a wrong format');
+        }
+
+        if (config.private_key && !(config.private_key.indexOf('-----END PRIVATE KEY-----') > 0)) {
+            throw Error('private_key is in a wrong format');
         }
 
         if (config.env && !['sandbox', 'production'].includes(config.env)) {

@@ -1,11 +1,34 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
+import { Config } from '../interfaces/ConfigInterface';
+import { Constants } from './Constants';
 
 export function generateUUID() {
     return uuidv4().replace(/-/g, '');
 }
 
-export function signPayload(payload: any, privateKey: string, algorithm: string): string {
+export function generateUUIDv4() {
+    return uuidv4();
+}
+
+export function createSignatureHeader(headers: object, config: Config) {
+    let signingString = '';
+    let headerString = '';
+
+    Constants.SIGNEDHEADERPARAMETERLIST.forEach((param) => {
+        if (headers[param]) {
+            let p = param.toLowerCase();
+            signingString = signingString ? signingString + '\n' : signingString;
+            signingString = signingString + p + ': ' + headers[param];
+            headerString = headerString ? headerString + ' ' + p : p;
+        }
+    });
+
+    let signature = signPayload(signingString, config.private_key);
+    return 'keyId="' + config.app_id + '",algorithm="rsa-sha256",headers="' + headerString + '",signature="' + signature + '"';
+}
+
+export function signPayload(payload: any, privateKey: string, algorithm?: string): string {
     if (typeof payload == 'object')
         payload = JSON.stringify(payload);
 
