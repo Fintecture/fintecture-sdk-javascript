@@ -2,3 +2,10 @@
 /coverage/
 /.nyc_output/
 /.idea
+/.vscode
+/dist
+.DS_Store
+Dockerfile
+docker-compose.yml
+.nycrc
+readme.txt

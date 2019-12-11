@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        "removeComments": false,
+        "declaration": true
+    },
+    "include": [
+        "src/**/*",
+        "spec", 
+        "spec/resources.spec.ts", 
+        "spec/authentication.spec.ts",
+        "spec/connect.spec.ts",
+        "spec/crypto.spec.ts"
+    ],
+}

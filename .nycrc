@@ -1,0 +1,14 @@
+{
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "exclude":[
+      "**/node_modules/**",
+      "**/coverage/**",
+      "**/BaseUrls.ts",
+      "**/Endpoints.ts",
+      "**/*.[sS]pec.*",
+      "**/spec/**",
+      "**/interfaces/**",
+      "**/fintecture-client.ts"
+    ]
+}
