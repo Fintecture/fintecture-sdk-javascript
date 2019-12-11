@@ -15,7 +15,7 @@ export class TestConfig {
     public static readonly app_redirect_uri: string = 'https://www.fintecture.com';
     public static readonly app_id_merchant: string = '1b96c253-1944-4986-a467-df2152ddffdb';
     public static readonly app_secret_merchant: string = 'f03fec5f-4d38-437f-914d-817337550fab';
-    public static readonly app_priv_key_openbanking: string = `-----BEGIN PRIVATE KEY-----
+    public static readonly app_priv_key_merchant: string = `-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCeEocGuXp9AA+H
 /8o2exRRkCsU49h8COUuCtjHJgEL4Wz9mKb1tZ7w9yzBYZ+vyOSMbMFocvIHZQac
 up1cYX6+5J/XcH8QDJRqfq/dr//3xMwYH+xFBVL8R6C6Hoie3sow4x1k+ihOIZ+Q
@@ -43,7 +43,7 @@ OHkL0TyG6qQ/31nnuLW5Ej1xQtuElQVWj/KZK5AJrusXSUEUzqPMR7MvMSclURyV
 Mqo3BZADRlcr0AKP2TYSBCNcEBmBHCI9GfIRCPFR1eK+IciRyqjcz7kYlZ0YyfjF
 r3xIiGe3JhVHqyTRE+maKu0=
 -----END PRIVATE KEY-----`;
-    public static readonly app_pub_key_openbanking: string = `-----BEGIN PUBLIC KEY-----
+    public static readonly app_pub_key_merchant: string = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhKHBrl6fQAPh//KNnsU
 UZArFOPYfAjlLgrYxyYBC+Fs/Zim9bWe8PcswWGfr8jkjGzBaHLyB2UGnLqdXGF+
 vuSf13B/EAyUan6v3a//98TMGB/sRQVS/Eeguh6Int7KMOMdZPooTiGfkDDqA00f

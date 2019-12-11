@@ -13,7 +13,7 @@ describe('Crypto', function () {
         const algorithm = 'rsa-sha256';
         const payloadStr = JSON.stringify(payload);
 
-        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_openbanking, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
@@ -22,7 +22,7 @@ describe('Crypto', function () {
         const algorithm = null;
         const payloadStr = JSON.stringify(payload);
 
-        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_openbanking, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
@@ -30,7 +30,7 @@ describe('Crypto', function () {
     it('#signPayload(payload, privateKey, algorithm) payload as an object', function () {
         const algorithm = 'rsa-sha256';
 
-        const signature = UtilsCrypto.signPayload(payload, TestConfig.app_priv_key_openbanking, algorithm);
+        const signature = UtilsCrypto.signPayload(payload, TestConfig.app_priv_key_merchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
@@ -39,7 +39,7 @@ describe('Crypto', function () {
         const algorithm = 'sha256';
         const payloadStr = JSON.stringify(payload);
 
-        expect( () => {UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_openbanking, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
+        expect( () => {UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
     });
 
     it('#signPayload(payload, privateKey, algorithm) error during signature', function () {
@@ -68,12 +68,12 @@ describe('Crypto', function () {
         let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
 
         let key = {
-            key: TestConfig.app_priv_key_openbanking,
+            key: TestConfig.app_priv_key_merchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
         let message = Buffer.from(digest);
         let encrypted = crypto.publicEncrypt(key, message).toString("base64");
-        let decrypted = UtilsCrypto.decryptPrivate(encrypted, TestConfig.app_priv_key_openbanking);
+        let decrypted = UtilsCrypto.decryptPrivate(encrypted, TestConfig.app_priv_key_merchant);
 
         expect(decrypted).toEqual(digest);
     });
@@ -83,7 +83,7 @@ describe('Crypto', function () {
         let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
 
         let key = {
-            key: TestConfig.app_priv_key_openbanking,
+            key: TestConfig.app_priv_key_merchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
         let message = Buffer.from(digest);

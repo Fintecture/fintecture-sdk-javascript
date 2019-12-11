@@ -108,11 +108,11 @@ export class FintectureClient {
             throw Error('private_key must be a string');
         }
 
-        if (config.private_key && !(config.private_key.indexOf('-----BEGIN PRIVATE KEY-----') > 0)) {
+        if (config.private_key && !(config.private_key.indexOf('-----BEGIN PRIVATE KEY-----') >= 0)) {
             throw Error('private_key is in a wrong format');
         }
 
-        if (config.private_key && !(config.private_key.indexOf('-----END PRIVATE KEY-----') > 0)) {
+        if (config.private_key && !(config.private_key.indexOf('-----END PRIVATE KEY-----') >= 0)) {
             throw Error('private_key is in a wrong format');
         }
 

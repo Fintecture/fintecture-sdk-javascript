@@ -29,7 +29,7 @@ const connectConfigFull: ConnectConfig = {
     state: 'somestate'
 };
 
-const client = new FintectureClient({ app_id: TestConfig.app_id_merchant, app_secret: TestConfig.app_secret_merchant, private_key: TestConfig.app_priv_key_openbanking });
+const client = new FintectureClient({ app_id: TestConfig.app_id_merchant, app_secret: TestConfig.app_secret_merchant, private_key: TestConfig.app_priv_key_merchant });
 
 describe('Connect', function () {
     it('#PIS getPisConnectUrl', async function (done) {
@@ -111,7 +111,7 @@ describe('Connect', function () {
         let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
         //RSA based public key encryption (max 245 bytes)
         let key = {
-            key: TestConfig.app_pub_key_openbanking,
+            key: TestConfig.app_pub_key_merchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
         let message = Buffer.from(digest);
@@ -147,7 +147,7 @@ describe('Connect', function () {
         let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
         //RSA based public key encryption (max 245 bytes)
         let key = {
-            key: TestConfig.app_pub_key_openbanking,
+            key: TestConfig.app_pub_key_merchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
         let message = Buffer.from(digest);
