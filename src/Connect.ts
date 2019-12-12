@@ -88,8 +88,6 @@ export class Connect {
         if (!connectConfig.customer_email && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer email must be set');
         if (!connectConfig.customer_ip && this.config.env == Constants.PRODUCTIONENVIRONMENT) throw Error('customer ip must be set');
 
-        if (['pis', 'ais'].includes(connectConfig.type)) throw Error('type must be either ais or pis');
-
         connectConfig.order_id = connectConfig.communication;
         
         return <ConnectConfig>connectConfig; 

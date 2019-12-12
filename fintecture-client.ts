@@ -56,7 +56,7 @@ export class FintectureClient {
     }
 
     async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
-        return this.ais.authorize(accessToken, providerId, redirectUri);
+        return this.ais.authorize(accessToken, providerId, redirectUri, state);
     }
 
     async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {
