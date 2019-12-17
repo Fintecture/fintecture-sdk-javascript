@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
-import { Config } from '../interfaces/ConfigInterface';
+import { IConfig } from '../interfaces/ConfigInterface';
 import { Constants } from './Constants';
 
 export function generateUUID() {
@@ -11,31 +11,33 @@ export function generateUUIDv4() {
   return uuidv4();
 }
 
-export function createSignatureHeader(headers: any, config: Config) {
+export function createSignatureHeader(headers: any, config: IConfig) {
   let signingString = '';
   let headerString = '';
 
   Constants.SIGNEDHEADERPARAMETERLIST.forEach(param => {
     if (headers[param]) {
-      let p = param.toLowerCase();
+      const p = param.toLowerCase();
       signingString = signingString ? signingString + '\n' : signingString;
       signingString = signingString + p + ': ' + headers[param];
       headerString = headerString ? headerString + ' ' + p : p;
     }
   });
 
-  let signature = signPayload(signingString, config.private_key);
+  const signature = signPayload(signingString, config.private_key);
   return (
     'keyId="' + config.app_id + '",algorithm="rsa-sha256",headers="' + headerString + '",signature="' + signature + '"'
   );
 }
 
 export function signPayload(payload: any, privateKey: string, algorithm?: string): string {
-  if (typeof payload == 'object') payload = JSON.stringify(payload);
+  if (typeof payload === 'object') {
+    payload = JSON.stringify(payload);
+  }
 
   if (!algorithm || algorithm === 'rsa-sha256') {
     try {
-      let signature = crypto.createSign('RSA-SHA256');
+      const signature = crypto.createSign('RSA-SHA256');
       signature.update(payload);
       signature.end();
       return signature.sign(privateKey).toString('base64');
@@ -48,12 +50,11 @@ export function signPayload(payload: any, privateKey: string, algorithm?: string
 }
 
 export function decryptPrivate(digest: string, privateKey: string): string {
-  let digestBytes = Buffer.from(digest, 'base64');
-  let crypto_constants: any = crypto['constants'];
-  let padding: any = crypto_constants.RSA_PKCS1_OAEP_PADDING;
-  let key = {
-    key: privateKey, //buffer
-    padding: padding,
+  const digestBytes = Buffer.from(digest, 'base64');
+  const cryptoConstants: any = crypto['constants'];
+  const key = {
+    key: privateKey, // buffer
+    padding: cryptoConstants.RSA_PKCS1_OAEP_PADDING,
   };
 
   try {

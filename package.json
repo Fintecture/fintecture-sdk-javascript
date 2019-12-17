@@ -4,9 +4,18 @@
   "description": "Fintecture Open Banking API Gateway enabling secure bank connections and payments",
   "main": "lib/fintecture-client.js",
   "types": "lib/fintecture-client.d.ts",
-  "repository": "https://github.com/Fintecture/fintecture-sdk-javascript.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fintecture/fintecture-sdk-javascript.git"
+  },
+  "keywords": ["Fintecture", "Fintech", "Banking", "Bank", "Pay", "Payments"],
   "scripts": {
     "prepublish": "npm run build",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm run lint",
+    "preversion" : "npm run lint",
+    "version" : "npm run format && git add -A src",
+    "postversion" : "git push && git push --tags",
     "build": "npm run clean && tsc -p .",
     "clean": "rm -rf build",
     "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",

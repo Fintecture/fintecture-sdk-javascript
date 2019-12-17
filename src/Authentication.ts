@@ -4,7 +4,7 @@ import * as path from 'path';
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { Config } from './interfaces/ConfigInterface';
+import { IConfig } from './interfaces/ConfigInterface';
 import * as authService from './services/AuthenticationService';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -25,7 +25,7 @@ export class Authentication {
    *
    * @param {string} appId
    */
-  constructor(config: Config) {
+  constructor(config: IConfig) {
     this.appId = config.app_id;
     this.appSecret = config.app_secret;
     this.axiosInstance = this._getAxiosInstance(config.env);
@@ -39,8 +39,8 @@ export class Authentication {
    * @param {string} authCode (optional)
    * @returns {Promise<object>}
    */
-  async accessToken(authCode?: string): Promise<object> {
-    let data: string = this._getAccessTokenData(authCode);
+  public async accessToken(authCode?: string): Promise<object> {
+    const data: string = this._getAccessTokenData(authCode);
 
     const response = await this.axiosInstance.post(Endpoints.OAUTHACCESSTOKEN, data);
 
@@ -55,8 +55,8 @@ export class Authentication {
    * @param {string} refreshToken
    * @returns {Promise<object>}
    */
-  async refreshToken(refreshToken: string): Promise<object> {
-    let data: string = this._getRefreshTokenData(refreshToken);
+  public async refreshToken(refreshToken: string): Promise<object> {
+    const data: string = this._getRefreshTokenData(refreshToken);
 
     const response = await this.axiosInstance.post(Endpoints.OAUTHREFRESHTOKEN, data);
 
@@ -70,7 +70,7 @@ export class Authentication {
    * @param {string} authCode (optional)
    * @returns {string}
    */
-  _getAccessTokenData(authCode?: string): string {
+  private _getAccessTokenData(authCode?: string): string {
     let data: object = {
       scope: 'PIS',
       app_id: this.appId,
@@ -94,7 +94,7 @@ export class Authentication {
    * @param {string} refreshToken
    * @returns {string}
    */
-  _getRefreshTokenData(refreshToken: string): string {
+  private _getRefreshTokenData(refreshToken: string): string {
     return qs.stringify({
       refresh_token: refreshToken,
       grant_type: 'refresh_token',
@@ -109,10 +109,10 @@ export class Authentication {
    * @param {string} appSecret
    * @returns {axios}
    */
-  _getAxiosInstance(env) {
+  private _getAxiosInstance(env) {
     const clienToken = this._getClientToken();
-    let axiosInstance = authService.getInstance(env, clienToken);
-    return axiosInstance;
+
+    return authService.getInstance(env, clienToken);
   }
 
   /**
@@ -122,17 +122,17 @@ export class Authentication {
    * @param {string} appSecret
    * @returns {string}
    */
-  _getClientToken(): string {
+  private _getClientToken(): string {
     return Buffer.from(this.appId + ':' + this.appSecret).toString('base64');
   }
 
   /**
    * Private function that throw a list of errors in the same error object.
    *
-   * @param {Array<string>} parameters
+   * @param {string[]} parameters
    * @returns {Error}
    */
-  _trowErrors(errors: Array<string>): Error {
+  private _trowErrors(errors: string[]): Error {
     throw Error(errors.join(', '));
   }
 }

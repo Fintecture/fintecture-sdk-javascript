@@ -1,6 +1,5 @@
 import { ResourcesURLBuilder } from './utils/URLBuilders/ResourcesURLBuilder';
 import * as apiService from './services/ApiService';
-import { eventNames } from 'cluster';
 import { Constants } from './utils/Constants';
 
 export class Resources {
@@ -14,15 +13,17 @@ export class Resources {
     this.config = config;
   }
 
-  async providers(options) {
+  public async providers(options) {
     this.axiosInstance.defaults.headers['app_id'] = this.appId;
 
     const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getProviderURL(options));
     return response.data;
   }
 
-  async testAccounts(options) {
-    if (this.config.env == Constants.PRODUCTIONENVIRONMENT) throw new Error('testAccounts only available in sandbox');
+  public async testAccounts(options) {
+    if (this.config.env === Constants.PRODUCTIONENVIRONMENT) {
+      throw new Error('testAccounts only available in sandbox');
+    }
 
     this.axiosInstance.defaults.headers['app_id'] = this.appId;
 
@@ -30,15 +31,14 @@ export class Resources {
     return response.data;
   }
 
-  async application() {
+  public async application() {
     this.axiosInstance.defaults.headers['app_id'] = this.appId;
 
     const response: any = await this.axiosInstance.get(ResourcesURLBuilder.getApplication());
     return response.data;
   }
 
-  _getAxiosInstance(env) {
-    let axiosInstance = apiService.getInstance(env);
-    return axiosInstance;
+  private _getAxiosInstance(env) {
+    return apiService.getInstance(env);
   }
 }

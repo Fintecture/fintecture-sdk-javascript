@@ -7,48 +7,48 @@ const mockSignature = "QVEX1W0EGwsTWGAwdNmh1pY/p/QIaw2Owz/jRuQpvmwl+FN84+fLwZUs8
 const payload = {payment: 'payment'};
 
 
-describe('Crypto', function () {
+describe('Crypto', () => {
     
-    it('#signPayload(payload, privateKey, algorithm) with all parameters', function () {
+    it('#signPayload(payload, privateKey, algorithm) with all parameters', () => {
         const algorithm = 'rsa-sha256';
         const payloadStr = JSON.stringify(payload);
 
-        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.appPrivKeyMerchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
-    it('#signPayload(payload, privateKey, algorithm) without algorithm', function () {
+    it('#signPayload(payload, privateKey, algorithm) without algorithm', () => {
         const algorithm = null;
         const payloadStr = JSON.stringify(payload);
 
-        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm);
+        const signature = UtilsCrypto.signPayload(payloadStr, TestConfig.appPrivKeyMerchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
-    it('#signPayload(payload, privateKey, algorithm) payload as an object', function () {
+    it('#signPayload(payload, privateKey, algorithm) payload as an object', () => {
         const algorithm = 'rsa-sha256';
 
-        const signature = UtilsCrypto.signPayload(payload, TestConfig.app_priv_key_merchant, algorithm);
+        const signature = UtilsCrypto.signPayload(payload, TestConfig.appPrivKeyMerchant, algorithm);
 
         expect(signature).toEqual(mockSignature);
     });
 
-    it('#signPayload(payload, privateKey, algorithm) invalid signature algorithm', function () {
+    it('#signPayload(payload, privateKey, algorithm) invalid signature algorithm', () => {
         const algorithm = 'sha256';
         const payloadStr = JSON.stringify(payload);
 
-        expect( () => {UtilsCrypto.signPayload(payloadStr, TestConfig.app_priv_key_merchant, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
+        expect( () => {UtilsCrypto.signPayload(payloadStr, TestConfig.appPrivKeyMerchant, algorithm)} ).toThrow(new Error("invalid signature algorithm"));
     });
 
-    it('#signPayload(payload, privateKey, algorithm) error during signature', function () {
+    it('#signPayload(payload, privateKey, algorithm) error during signature', () => {
         const algorithm = 'rsa-sha256';
 
         expect( () => {UtilsCrypto.signPayload(payload, null, algorithm)} ).toThrow(new Error("error during signature"));
     });
 
-    it('#generateUUID()', function () {
+    it('#generateUUID()', () => {
         const uuid = UtilsCrypto.generateUUID();
 
         expect( uuid.length ).toEqual(32)
@@ -65,29 +65,29 @@ describe('Crypto', function () {
 
     it('#decryptPrivate(digest, privateKey)', () => {
         const plainText = 'test';
-        let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
+        const digest =  crypto.createHash('sha256').update(plainText).digest('base64');
 
-        let key = {
-            key: TestConfig.app_priv_key_merchant,
+        const key = {
+            key: TestConfig.appPrivKeyMerchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
-        let message = Buffer.from(digest);
-        let encrypted = crypto.publicEncrypt(key, message).toString("base64");
-        let decrypted = UtilsCrypto.decryptPrivate(encrypted, TestConfig.app_priv_key_merchant);
+        const message = Buffer.from(digest);
+        const encrypted = crypto.publicEncrypt(key, message).toString("base64");
+        const decrypted = UtilsCrypto.decryptPrivate(encrypted, TestConfig.appPrivKeyMerchant);
 
         expect(decrypted).toEqual(digest);
     });
 
     it('#decryptPrivate(digest, privateKey) Error', () => {
         const plainText = 'test';
-        let digest =  crypto.createHash('sha256').update(plainText).digest('base64');
+        const digest =  crypto.createHash('sha256').update(plainText).digest('base64');
 
-        let key = {
-            key: TestConfig.app_priv_key_merchant,
+        const key = {
+            key: TestConfig.appPrivKeyMerchant,
             padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
         }
-        let message = Buffer.from(digest);
-        let encrypted = crypto.publicEncrypt(key, message).toString("base64");
+        const message = Buffer.from(digest);
+        const encrypted = crypto.publicEncrypt(key, message).toString("base64");
         
         expect( () => {UtilsCrypto.decryptPrivate(encrypted, '')} ).toThrow(new Error("an error occurred while decrypting"));
     });

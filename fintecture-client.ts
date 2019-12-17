@@ -1,10 +1,11 @@
+import { AIS } from './src/AIS';
+import { Authentication } from './src/Authentication';
+import { IConfig } from './src/interfaces/ConfigInterface'
+
 import { Constants } from './src/utils/Constants';
 import { Connect } from './src/Connect';
-import { Resources } from './src/Resources';
-import { Authentication } from './src/Authentication';
 import { PIS } from './src/PIS';
-import { AIS } from './src/AIS';
-import { Config } from './src/interfaces/ConfigInterface'
+import { Resources } from './src/Resources';
 /**
  * Class responsible to centralize and dispatch all calls to the different Fintecture services
  *
@@ -13,18 +14,18 @@ import { Config } from './src/interfaces/ConfigInterface'
  */
 export class FintectureClient {
 
-    config: Config;
-    connect: Connect;
-    resources: Resources;
-    authentication: Authentication;
-    pis: PIS;
-    ais: AIS;
+    private config: IConfig;
+    private connect: Connect;
+    private resources: Resources;
+    private authentication: Authentication;
+    private pis: PIS;
+    private ais: AIS;
 
     /**
      * Create an instance of the fintecture client
      * @param {Object=} config - configuration parameters
      */
-    constructor(config: Object) {
+    constructor(config: object) {
 
         this.config = this._validateConfigIntegrity(config);
 
@@ -35,63 +36,63 @@ export class FintectureClient {
         this.ais = new AIS(this.config);
     }
 
-    async getAccessToken(authCode?: string): Promise<object> {
+    public async getAccessToken(authCode?: string): Promise<object> {
         return this.authentication.accessToken(authCode);
     }
 
-    async refreshAccessToken(refreshToken: string): Promise<object> {
+    public async refreshAccessToken(refreshToken: string): Promise<object> {
         return this.authentication.refreshToken(refreshToken);
     }
 
-    async getProviders(options?: object): Promise<object> {
+    public async getProviders(options?: object): Promise<object> {
         return this.resources.providers(options);
     }
 
-    async getApplication(): Promise<object> {
+    public async getApplication(): Promise<object> {
         return this.resources.application();
     }
 
-    async getTestAccounts(options?: object): Promise<object> {
+    public async getTestAccounts(options?: object): Promise<object> {
         return this.resources.testAccounts(options);
     }
 
-    async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
+    public async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
         return this.ais.authorize(accessToken, providerId, redirectUri, state);
     }
 
-    async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {
+    public async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {
         return this.ais.getAccounts(accessToken, customerId, options);
     }
 
-    async getTransactions(accessToken: string, customerId: string, accountId, options?: any): Promise<object> {
+    public async getTransactions(accessToken: string, customerId: string, accountId, options?: any): Promise<object> {
         return this.ais.getTransactions(accessToken, customerId, accountId, options);
     }
 
-    async getAccountHolders(accessToken: string, customerId: string, options?: any): Promise<object> {
+    public async getAccountHolders(accessToken: string, customerId: string, options?: any): Promise<object> {
         return this.ais.getAccountHolders(accessToken, customerId, options);
     }
 
-    async paymentInitiate(accessToken: string, providerId: string, payload: any, redirectUri: string, state?: string): Promise<object> {
+    public async paymentInitiate(accessToken: string, providerId: string, payload: any, redirectUri: string, state?: string): Promise<object> {
         return this.pis.initiate(accessToken, providerId, payload, redirectUri, state);
     }
 
-    async paymentConfirmation(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+    public async paymentConfirmation(accessToken: string, customerId: string, sessionId: string): Promise<object> {
         return this.pis.confirm(accessToken, customerId, sessionId);
     }
 
-    async getPayment(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+    public async getPayment(accessToken: string, customerId: string, sessionId: string): Promise<object> {
         return this.pis.getPayments(accessToken, customerId, sessionId);
     }
 
-    async getPisConnectUrl(accessToken: string, connectConfig: any): Promise<string> {
+    public async getPisConnectUrl(accessToken: string, connectConfig: any): Promise<string> {
         return this.connect.getPisConnectUrl(accessToken, connectConfig);
     }
 
-    verifyConnectUrlParameters(queryString): boolean {
+    public verifyConnectUrlParameters(queryString): boolean {
         return this.connect.verifyUrlParameters(queryString);
     }
 
-    _validateConfigIntegrity(config) {
+    private _validateConfigIntegrity(config) {
         if (!config.app_id) {
             throw Error('app_id is not configured');
         }
@@ -100,11 +101,11 @@ export class FintectureClient {
             throw Error('app_secret is not configured');
         }
 
-        if (!config.private_key && config.env == Constants.PRODUCTIONENVIRONMENT) {
+        if (!config.private_key && config.env === Constants.PRODUCTIONENVIRONMENT) {
             throw Error('private_key must be a string');
         }
 
-        if (config.private_key && typeof config.private_key != 'string') {
+        if (config.private_key && typeof config.private_key !== 'string') {
             throw Error('private_key must be a string');
         }
 
@@ -124,7 +125,7 @@ export class FintectureClient {
             config.env = Constants.DEFAULTENVIRONMENT;
         }
 
-        return <Config>config;
+        return config as IConfig;
     }
 
 }

@@ -7,34 +7,33 @@ import { TestConfig } from './constants/config';
 
 const AISproviderIdTest = process.env.AIS_PROVIDER_ID_TEST || 'cmmcfr';
 
-AISproviderIdTest.split(',').forEach(function (providerId) {
+AISproviderIdTest.split(',').forEach( (providerId) => {
     providerId = providerId.trim();
 
-    describe(`AIS - get fintecture access token - `, function () {
-        const client = new FintectureClient({ app_id: TestConfig.app_id_openbanking, app_secret: TestConfig.app_secret_openbanking });
-        const redirectUri = TestConfig.app_redirect_uri;
-        const state = 'somestate';
+    describe(`AIS - get fintecture access token - `, () => {
+        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
+        const redirectUri = TestConfig.appRedirectUri;
         let accessToken;
         let customerId;
 
-        beforeAll(async function (done) {
+        beforeAll(async (done) => {
 
-            let providerAuth: any = await client.getProviderAuthUrl(null, providerId, redirectUri);
+            const providerAuth: any = await client.getProviderAuthUrl(null, providerId, redirectUri);
             request({
                 url: providerAuth.url,
                 method: 'GET',
                 followRedirect: false
-            }, function (error, response, body) {
-                let redirectUrl = response.headers["location"];
+            }, (error, response, body) => {
+                const redirectUrl = response.headers["location"];
                 request({
                     url: redirectUrl,
                     method: 'GET',
                     followRedirect: false
-                }, async function (error, response, body) {
-                    let params = qs.parse(URL.parse(response.headers["location"]).query);
+                }, async (error, response, body) => {
+                    const params = qs.parse(URL.parse(response.headers["location"]).query);
                     customerId = params.customer_id;
-                    let code = params.code;
-                    let tokens:any = await client.getAccessToken(code);
+                    const code = params.code;
+                    const tokens:any = await client.getAccessToken(code);
 
                     accessToken = tokens.access_token;
                     expect(!!accessToken).toBe(true);
@@ -48,24 +47,17 @@ AISproviderIdTest.split(',').forEach(function (providerId) {
 
         let account;
 
-        it(`get provider ${providerId} AIS account `, async function (done) {
-
+        it(`get provider ${providerId} AIS account `, async (done) => {
             const accounts: any = await client.getAccounts(accessToken, customerId);
             account = accounts.data[0].id
             expect(accounts.data.length).toBeGreaterThan(0);
             done();
         });
 
-        it(`get provider ${providerId} AIS auth URL with app_id `, async function (done) {
-
+        it(`get provider ${providerId} AIS auth URL with app_id `, async (done) => {
             const transactions: any = await client.getTransactions(accessToken, customerId, account);
             expect(transactions.data.length).toBeGreaterThan(0);
             done();
         });
     });
 });
-
-function _getCode(location) {
-    let params = qs.parse(URL.parse(location).query);
-    return params.code;
-}

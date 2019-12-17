@@ -10,6 +10,6 @@ export const getInstance = (env: string, clientToken: string) => {
       Authorization: `Basic ${clientToken}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    baseURL: env == Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREOAUTHURL_SBX : BaseUrls.FINTECTUREOAUTHURL_PRD,
+    baseURL: env === Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREOAUTHURL_SBX : BaseUrls.FINTECTUREOAUTHURL_PRD,
   });
 };

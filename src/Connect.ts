@@ -1,23 +1,23 @@
 import * as UtilsCrypto from './utils/Crypto.js';
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
 import * as connectService from './services/ConnectService';
-import { ConnectConfig, State, Payload, Data, Attributes, Meta } from './interfaces/connect/ConnectInterface';
-import { Config } from './interfaces/ConfigInterface';
+import { IConnectConfig, IState, IPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { IConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
 import { eventNames } from 'cluster';
 
 export class Connect {
   public axios: any;
-  public config: Config;
-  public connectConfig: ConnectConfig;
+  public config: IConfig;
+  public connectConfig: IConnectConfig;
 
-  private signature_type: string;
+  private signatureType: string;
 
   // constructor(app_id: string, app_secret: string, private_key: string, redirect_uri: string, origin_uri: string, state?: string, version?: string){
-  constructor(config: Config) {
+  constructor(config: IConfig) {
     this.axios = connectService;
     this.config = config;
-    this.signature_type = 'rsa-sha256';
+    this.signatureType = 'rsa-sha256';
   }
 
   /**
@@ -25,28 +25,30 @@ export class Connect {
    *
    * @param {payment} State
    */
-  async getPisConnectUrl(accessToken: string, connectConfig: any) {
+  public async getPisConnectUrl(accessToken: string, connectConfig: any) {
     this.config = this._validateConfigIntegrity(this.config);
     this.connectConfig = this._validateConnectConfigIntegrity(connectConfig);
 
-    if (!connectConfig.end_to_end_id) connectConfig.end_to_end_id = UtilsCrypto.generateUUID();
+    if (!connectConfig.end_to_end_id) {
+      connectConfig.end_to_end_id = UtilsCrypto.generateUUID();
+    }
 
-    const payload: Payload = this._buildPayload(connectConfig);
+    const payload: IPayload = this._buildPayload(connectConfig);
 
-    let state: State = {
+    const state: IState = {
       app_id: this.config.app_id,
       access_token: accessToken,
-      signature_type: this.signature_type,
-      signature: this._buildSignature(payload, this.config.private_key, this.signature_type),
+      signature_type: this.signatureType,
+      signature: this._buildSignature(payload, this.config.private_key, this.signatureType),
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
       state: connectConfig.state ? connectConfig.state : '',
       order_id: connectConfig.communication,
-      payload: payload,
+      payload,
     };
 
-    let url = `${
-      this.config.env == Constants.SANDBOXENVIRONMENT
+    const url = `${
+      this.config.env === Constants.SANDBOXENVIRONMENT
         ? BaseUrls.FINTECTURECONNECTURL_SBX
         : BaseUrls.FINTECTURECONNECTURL_PRD
     }/pis`;
@@ -54,101 +56,126 @@ export class Connect {
     return `${url}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`;
   }
 
-  verifyUrlParameters(queryString: any) {
+  public verifyUrlParameters(queryString: any) {
     this.config = this._validateConfigIntegrity(this.config);
     this._validatePostPaymentIntegrity(queryString);
 
     const decrypted: string = UtilsCrypto.decryptPrivate(queryString.s, this.config.private_key);
 
-    var testParams = {
+    const testParams = {
       app_id: this.config.app_id,
       app_secret: this.config.app_secret,
       session_id: queryString.session_id,
       status: queryString.status,
       customer_id: queryString.customer_id,
       provider: queryString.provider,
-      state: queryString.state
+      state: queryString.state,
     };
-    let testParamsArr = []
-    for (var key in testParams){
-      testParamsArr.push(key + "=" + testParams[key]);
+    const testParamsArr = [];
+    for (const key in testParams) {
+      if (testParams.hasOwnProperty(key)) {
+        testParamsArr.push(key + '=' + testParams[key]);
+      }
     }
     const testParamsString = testParamsArr.join('&');
-    var localDigest = UtilsCrypto.hashBase64(testParamsString);
+    const localDigest = UtilsCrypto.hashBase64(testParamsString);
 
     return decrypted === localDigest;
   }
 
-  _validateConnectConfigIntegrity(connectConfig: any) {
-    if (!connectConfig.amount) throw Error('amount not set');
-    if (isNaN(connectConfig.amount)) throw Error('amount must be a number');
-    if (!(connectConfig.amount >= 1)) throw Error('amount must be greater than 1');
-    if (!connectConfig.currency) throw Error('currency not set');
-    if (!connectConfig.customer_id && this.config.env == Constants.PRODUCTIONENVIRONMENT)
+  private _validateConnectConfigIntegrity(connectConfig: any) {
+    if (!connectConfig.amount) {
+      throw Error('amount not set');
+    }
+    if (isNaN(connectConfig.amount)) {
+      throw Error('amount must be a number');
+    }
+    if (!(connectConfig.amount >= 1)) {
+      throw Error('amount must be greater than 1');
+    }
+    if (!connectConfig.currency) {
+      throw Error('currency not set');
+    }
+    if (!connectConfig.customer_id && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
       throw Error('customer identifier must be set');
-    if (!connectConfig.customer_full_name && this.config.env == Constants.PRODUCTIONENVIRONMENT)
+    }
+    if (!connectConfig.customer_full_name && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
       throw Error('customer full name must be set');
-    if (!connectConfig.customer_email && this.config.env == Constants.PRODUCTIONENVIRONMENT)
+    }
+    if (!connectConfig.customer_email && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
       throw Error('customer email must be set');
-    if (!connectConfig.customer_ip && this.config.env == Constants.PRODUCTIONENVIRONMENT)
+    }
+    if (!connectConfig.customer_ip && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
       throw Error('customer ip must be set');
+    }
 
     connectConfig.order_id = connectConfig.communication;
 
-    return <ConnectConfig>connectConfig;
+    return connectConfig as IConnectConfig;
   }
 
-  _validatePostPaymentIntegrity(queryString: any) {
-    if (typeof queryString != 'object')
+  private _validatePostPaymentIntegrity(queryString: any) {
+    if (typeof queryString !== 'object') {
       throw new Error(`invalid parameter format, the parameter must be an object instead a ${typeof queryString}`);
-    if (!queryString.s) this._trowInvalidPostPaymentParameter();
-    if (!queryString.status) this._trowInvalidPostPaymentParameter();
-    if (!queryString.session_id) this._trowInvalidPostPaymentParameter();
-    if (!queryString.customer_id) this._trowInvalidPostPaymentParameter();
-    if (!queryString.provider) this._trowInvalidPostPaymentParameter();
+    }
+    if (!queryString.s) {
+      this._trowInvalidPostPaymentParameter();
+    }
+    if (!queryString.status) {
+      this._trowInvalidPostPaymentParameter();
+    }
+    if (!queryString.session_id) {
+      this._trowInvalidPostPaymentParameter();
+    }
+    if (!queryString.customer_id) {
+      this._trowInvalidPostPaymentParameter();
+    }
+    if (!queryString.provider) {
+      this._trowInvalidPostPaymentParameter();
+    }
   }
 
-  _trowInvalidPostPaymentParameter() {
+  private _trowInvalidPostPaymentParameter() {
     throw Error('missing query string');
   }
 
-  _buildSignature(payment: any, privateKey: string, algorithm: string): string {
+  private _buildSignature(payment: any, privateKey: string, algorithm: string): string {
     return UtilsCrypto.signPayload(payment, privateKey, algorithm);
   }
 
-  _buildPayload(payment: any) {
-    let attributes: Attributes = {
+  private _buildPayload(payment: any) {
+    const attributes: IAttributes = {
       amount: payment.amount,
       currency: payment.currency,
       communication: `${payment.order_id}`,
       end_to_end_id: payment.end_to_end_id,
     };
 
-    let meta: Meta = {
+    const meta: IMeta = {
       psu_local_id: payment.customer_id,
       psu_name: payment.customer_full_name,
       psu_email: payment.customer_email,
       psu_ip: payment.customer_ip,
     };
 
-    let data: Data = {
+    const data: IData = {
       type: 'SEPA',
-      attributes: attributes,
+      attributes,
     };
 
-    let payload: Payload = {
-      data: data,
-      meta: meta,
+    const payload: IPayload = {
+      data,
+      meta,
     };
 
     return payload;
   }
 
-  _validateConfigIntegrity(config) {
+  private _validateConfigIntegrity(config) {
     if (!config.private_key) {
       throw Error('private_key must be set to use this function');
     }
 
-    return <Config>config;
+    return config as IConfig;
   }
 }

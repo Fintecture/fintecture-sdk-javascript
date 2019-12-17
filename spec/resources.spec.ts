@@ -1,26 +1,23 @@
-import nock from 'nock';
 import path from 'path';
 import dotenv from 'dotenv';
 
 import { FintectureClient } from '../fintecture-client';
-import { Endpoints } from './../src/utils/URLBuilders/Endpoints';
 import { TestConfig } from './constants/config';
-import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 
 dotenv.config({path: path.join(__dirname, '.env')});
 
-describe('Resources', function () {
+describe('Resources',  () => {
 
-    const client = new FintectureClient({ app_id: TestConfig.app_id_openbanking, app_secret: TestConfig.app_secret_openbanking });
+    const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
 
-    it('#providers()', async function (done) {
+    it('#providers()', async (done) => {
         const body = await client.getProviders();
         expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#providers(options) PIS', async function (done) {
-        let options = {
+    it('#providers(options) PIS', async (done) => {
+        const options = {
             'filter[pis]': 'sepa',
             'filter[country]': 'FR',
             'filter[psu_type]': 'retail',
@@ -33,8 +30,8 @@ describe('Resources', function () {
     });
 
     
-    it('#providers(options) AIS', async function (done) {
-        let options = {
+    it('#providers(options) AIS', async (done) => {
+        const options = {
             'filter[ais]': 'accounts',
             'filter[country]': 'FR',
             'filter[psu_type]': 'retail',
@@ -46,14 +43,14 @@ describe('Resources', function () {
         done();
     });
 
-    it('#testAccounts()', async function (done) {
+    it('#testAccounts()', async (done) => {
         const body = await client.getTestAccounts();
         expect(typeof body).toEqual('object');
         done();
     });
 
-    it('#testAccounts(options)', async function (done) {
-        let options = {
+    it('#testAccounts(options)', async (done) => {
+        const options = {
             'sort[provider]': 'asc'
         };
 
@@ -62,7 +59,7 @@ describe('Resources', function () {
         done();
     });
 
-    it('#application()', async function(done){
+    it('#application()', async (done) => {
         const body = await client.getApplication();
         expect(typeof body).toEqual('object');
         done();

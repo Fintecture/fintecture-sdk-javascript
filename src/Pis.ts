@@ -1,6 +1,6 @@
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { Confirmation } from './interfaces/pis/ConfirmationInterface';
-import { Config } from './interfaces/ConfigInterface';
+import { IConfirmation } from './interfaces/pis/ConfirmationInterface';
+import { IConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
 /**
@@ -17,7 +17,7 @@ export class PIS {
    *
    * @param {Config} config
    */
-  constructor(config: Config) {
+  constructor(config: IConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
   }
 
@@ -31,7 +31,7 @@ export class PIS {
    * @param {string} state (optional)
    * @returns {Promise<object>}
    */
-  async initiate(
+  public async initiate(
     accessToken: string,
     providerId: string,
     payload: object,
@@ -56,7 +56,7 @@ export class PIS {
    * @param {Confirmation} resource
    * @returns {Promise<object>}
    */
-  async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+  public async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
     this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
     this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
@@ -76,7 +76,7 @@ export class PIS {
    * @param {string} sessionId
    * @returns {Promise<object>}
    */
-  async getPayments(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+  public async getPayments(accessToken: string, customerId: string, sessionId: string): Promise<object> {
     this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
     const response = await this.axiosInstance.get(`${Endpoints.PISCUSTOMER}/${customerId}/payments/${sessionId}`);
@@ -92,18 +92,15 @@ export class PIS {
    * @param {string} appSecret
    * @returns {axios}
    */
-  _getAxiosInstance(env) {
-    let axiosInstance = apiService.getInstance(env);
-    return axiosInstance;
+  private _getAxiosInstance(env) {
+    return apiService.getInstance(env);
   }
 
-  _buildConfirmation(sessionId) {
-    let confirm: Confirmation = {
+  private _buildConfirmation(sessionId) {
+    return {
       meta: {
         session_id: sessionId,
       },
-    };
-
-    return confirm;
+    } as IConfirmation;
   }
 }

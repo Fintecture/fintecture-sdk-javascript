@@ -1,7 +1,7 @@
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { Config } from './interfaces/ConfigInterface';
+import { IConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
 /**
@@ -12,13 +12,12 @@ import * as apiService from './services/ApiService';
  */
 export class AIS {
   private axiosInstance;
-  private accessToken: string;
-  private config: Config;
+  private config: IConfig;
 
   /**
    * Creates an instance of Ais.
    */
-  constructor(config: Config) {
+  constructor(config: IConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
     this.config = config;
   }
@@ -36,45 +35,17 @@ export class AIS {
    * @param {string} providerId
    * @returns {Promise<object>}
    */
-  async authorize(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
-    if (accessToken) return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri, state);
-    else return await this._authorizeWithAppId(providerId, redirectUri, state);
-  }
-
-  async _authorizeWithAccesToken(
+  public async authorize(
     accessToken: string,
     providerId: string,
     redirectUri: string,
     state?: string,
   ): Promise<object> {
-    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
-
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
-
-    const queryParameters = {
-      redirect_uri: redirectUri,
-    };
-
-    if (state) queryParameters['state'] = state;
-
-    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers: headers });
-    return response.data;
-  }
-
-  async _authorizeWithAppId(providerId: string, redirectUri: string, state?: string): Promise<object> {
-    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
-
-    const headers = apiService.getHeaders('get', url, null, this.config);
-
-    const queryParameters = {
-      response_type: 'code',
-      redirect_uri: redirectUri,
-    };
-
-    if (state) queryParameters['state'] = state;
-
-    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers: headers });
-    return response.data;
+    if (accessToken) {
+      return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri, state);
+    } else {
+      return await this._authorizeWithAppId(providerId, redirectUri, state);
+    }
   }
 
   /**
@@ -85,13 +56,13 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  async getAccounts(accessToken: string, customerId: string, queryParameters?: object): Promise<object> {
+  public async getAccounts(accessToken: string, customerId: string, queryParameters?: object): Promise<object> {
     const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts`;
 
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
 
     return await this.axiosInstance
-      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
+      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers })
       .then(response => {
         return response.data;
       });
@@ -106,7 +77,7 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  async getTransactions(
+  public async getTransactions(
     accessToken: string,
     customerId: string,
     accountId: string,
@@ -117,7 +88,7 @@ export class AIS {
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
 
     return await this.axiosInstance
-      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers: headers })
+      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers })
       .then(response => {
         return response.data;
       });
@@ -132,7 +103,7 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  async getAccountHolders(accessToken: string, customerId: string, queryParameters: object): Promise<object> {
+  public async getAccountHolders(accessToken: string, customerId: string, queryParameters: object): Promise<object> {
     const url = `${Endpoints.AISCUSTOMER}/${customerId}/accountholders`;
 
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
@@ -142,29 +113,11 @@ export class AIS {
         `${Endpoints.AISCUSTOMER}/${customerId}/accountholders${
           queryParameters ? '?' + qs.stringify(queryParameters) : ''
         }`,
-        { headers: headers },
+        { headers },
       )
       .then(response => {
         return response.data;
       });
-  }
-
-  /**
-   * Check if we have an accessToken
-   *
-   * @returns {boolean}
-   */
-  _hasAccessToken(): boolean {
-    return !!this.accessToken;
-  }
-
-  /**
-   * Get the value of accessToken
-   *
-   * @returns {string | null}
-   */
-  _getAccessToken(): string {
-    return this.accessToken;
   }
 
   /**
@@ -175,8 +128,47 @@ export class AIS {
    * @param {string} appSecret
    * @returns {axios}
    */
-  _getAxiosInstance(env) {
-    let axiosInstance = apiService.getInstance(env);
-    return axiosInstance;
+  private _getAxiosInstance(env) {
+    return apiService.getInstance(env);
+  }
+
+  private async _authorizeWithAccesToken(
+    accessToken: string,
+    providerId: string,
+    redirectUri: string,
+    state?: string,
+  ): Promise<object> {
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
+
+    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+    const queryParameters = {
+      redirect_uri: redirectUri,
+    };
+
+    if (state) {
+      queryParameters['state'] = state;
+    }
+
+    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
+    return response.data;
+  }
+
+  private async _authorizeWithAppId(providerId: string, redirectUri: string, state?: string): Promise<object> {
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
+
+    const headers = apiService.getHeaders('get', url, null, this.config);
+
+    const queryParameters = {
+      response_type: 'code',
+      redirect_uri: redirectUri,
+    };
+
+    if (state) {
+      queryParameters['state'] = state;
+    }
+
+    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
+    return response.data;
   }
 }

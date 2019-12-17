@@ -1,9 +1,9 @@
 /**
  *
- * @interface Confirmation
+ * @interface IConfirmation
  */
 
-export interface Confirmation {
+export interface IConfirmation {
   meta: {
     session_id: string;
   };

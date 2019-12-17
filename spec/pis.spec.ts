@@ -8,17 +8,11 @@ import { TestConfig } from './constants/config';
 
 dotenv.config({path: path.join(__dirname, '.env')});
 
-const appId = process.env.app_id || '3f12a5c0-f719-4c14-9eac-08ed99290109';
-const appSecret = process.env.app_secret || '93ea0128-8258-4b1d-9109-b4899a98677b';
-const merchantAppID = process.env.merchant_app_id_test || '1b96c253-1944-4986-a467-df2152ddffdb';
-const merchantAppSecret = process.env.merchant_app_secret_test || 'f03fec5f-4d38-437f-914d-817337550fab';
-const PISproviderIdTest = process.env.PIS_PROVIDER_ID_TEST || 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr';
-const successCallbackURL = BaseUrls.FINTECTUREAPIURL_SBX + '/provider/[provider_id]/auth/callback/success?state=[session_id]&psuAF=666'
-const errorCallbackURL = BaseUrls.FINTECTUREAPIURL_SBX + '/provider/[provider_id]/auth/callback/error?state=[session_id]'
-
+// const PISproviderIdTest = process.env.PIS_PROVIDER_ID_TEST || 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr';
+const PISproviderIdTest = '';
 const paymentRedirectURI = "http://www.fintecture.com";
 
-PISproviderIdTest.split(',').forEach(function (providerId) {
+PISproviderIdTest.split(',').forEach( (providerId) => {
 
     function dataPayload() {
         return {
@@ -57,26 +51,24 @@ PISproviderIdTest.split(',').forEach(function (providerId) {
 
     providerId = providerId.trim();
 
-    describe(`Get the Bank response once the payment is done for ${providerId}`, function () {
+    describe(`Get the Bank response once the payment is done for ${providerId}`, () => {
         
-        const client = new FintectureClient({ app_id: TestConfig.app_id_openbanking, app_secret: TestConfig.app_secret_openbanking });
+        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
         const state = 'somestate';
         let accessToken: string;
-        let successfulReportUrl: string;
-        let unsuccessfulReportUrl: string;
         let customerId: string;
         let sessionId: string;
         let url: string;
         let status: string;
 
-        beforeEach(async function (done) {
+        beforeEach(async (done) => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
             const token: any = await client.getAccessToken();
             accessToken = token.access_token;
             done();
         });
 
-        it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async function (done) {
+        it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async (done) => {
             const response: any = await client.paymentInitiate(accessToken, providerId, dataPayload(), paymentRedirectURI, state);
             customerId = response.meta.customer_id;
             sessionId = response.meta.session_id;
@@ -90,7 +82,7 @@ PISproviderIdTest.split(',').forEach(function (providerId) {
             done();
         });
 
-        // it(`#putConfirm(customer_id: string, resource: Confirmation) for ${providerId}`, async function (done) {
+        // it(`#putConfirm(customer_id: string, resource: Confirmation) for ${providerId}`, async (done) => {
         //     const resource: Confirmation = {
         //         meta: {
         //             session_id: sessionId
@@ -102,13 +94,13 @@ PISproviderIdTest.split(',').forEach(function (providerId) {
         // });
     });
 
-    describe(`Get the Bank response once the payment is done with merchant account for  ${providerId}`, function () {
-        beforeEach(function () {
+    describe(`Get the Bank response once the payment is done with merchant account for  ${providerId}`, () => {
+        beforeEach( () => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         });
 
-        it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async function (done) {
-            const client = new FintectureClient({ app_id: TestConfig.app_id_merchant, app_secret: TestConfig.app_secret_merchant });
+        it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async (done) => {
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant });
 
             const token: any = await client.getAccessToken();
             
@@ -117,8 +109,8 @@ PISproviderIdTest.split(',').forEach(function (providerId) {
             done();
         });
 
-        it(`#initiate(providerId, dataPayload, paymentRedirectURI, state) for ${providerId}`, async function (done) {
-            const client = new FintectureClient({ app_id: TestConfig.app_id_merchant, app_secret: TestConfig.app_secret_merchant });
+        it(`#initiate(providerId, dataPayload, paymentRedirectURI, state) for ${providerId}`, async (done) => {
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant });
 
             const token: any = await client.getAccessToken();
             

@@ -1,15 +1,15 @@
 /**
  * Options to be passed to connect
  *
- * @interface ConnectConfig
- * @interface State
- * @interface Payload
- * @interface Data
- * @interface Attributes
- * @interface Meta
+ * @interface IConnectConfig
+ * @interface IState
+ * @interface IPayload
+ * @interface IData
+ * @interface IAttributes
+ * @interface IMeta
  */
 
-export interface ConnectConfig {
+export interface IConnectConfig {
   amount: number;
   currency: string;
   communication: string;
@@ -23,7 +23,7 @@ export interface ConnectConfig {
   state?: string;
 }
 
-export interface State {
+export interface IState {
   app_id: string;
   access_token: string;
   signature_type: string;
@@ -31,29 +31,29 @@ export interface State {
   redirect_uri: string;
   origin_uri: string;
   state: string;
-  payload: Payload;
+  payload: IPayload;
   version?: string;
   order_id?: string;
 }
 
-export interface Payload {
-  data: Data;
-  meta: Meta;
+export interface IPayload {
+  data: IData;
+  meta: IMeta;
 }
 
-export interface Data {
+export interface IData {
   type: string;
-  attributes: Attributes;
+  attributes: IAttributes;
 }
 
-export interface Attributes {
+export interface IAttributes {
   amount: number;
   currency: string;
   communication: string;
   end_to_end_id: string;
 }
 
-export interface Meta {
+export interface IMeta {
   psu_local_id?: string;
   psu_name?: string;
   psu_email?: string;
