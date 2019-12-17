@@ -9,3 +9,4 @@ Dockerfile
 docker-compose.yml
 .nycrc
 readme.txt
+/lib

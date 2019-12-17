@@ -1,16 +1,17 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "outDir": "./dist",
+        "outDir": "lib",
         "removeComments": false,
-        "declaration": true
+        "declaration": true,
+        "lib": ["es2017"],
     },
     "include": [
-        "src/**/*",
-        "spec/**/*"
+        "src",
+        "spec"
     ],
 }

@@ -10,93 +10,100 @@ import * as apiService from './services/ApiService';
  * @class PIS
  */
 export class PIS {
+  private axiosInstance;
 
-    private axiosInstance;
+  /**
+   * Creates an instance of PIS.
+   *
+   * @param {Config} config
+   */
+  constructor(config: Config) {
+    this.axiosInstance = this._getAxiosInstance(config.env);
+  }
 
-    /**
-     * Creates an instance of PIS.
-     *
-     * @param {Config} config
-     */
-    constructor(config:Config){
-        this.axiosInstance = this._getAxiosInstance(config.env); 
-    }
+  /**
+   * Initiate
+   *
+   * @param {string} accessToken
+   * @param {string} providerId
+   * @param {object} payload
+   * @param {string} redirectUri
+   * @param {string} state (optional)
+   * @returns {Promise<object>}
+   */
+  async initiate(
+    accessToken: string,
+    providerId: string,
+    payload: object,
+    redirectUri: string,
+    state?: string,
+  ): Promise<object> {
+    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-    /**
-     * Initiate
-     *
-     * @param {string} accessToken
-     * @param {string} providerId
-     * @param {object} payload
-     * @param {string} redirectUri
-     * @param {string} state (optional)
-     * @returns {Promise<object>}
-     */
-    async initiate(accessToken: string, providerId: string, payload: object, redirectUri: string, state?: string): Promise<object> {
+    const response = await this.axiosInstance.post(
+      `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${state ? '&state=' + state : ''}`,
+      payload,
+    );
+    return response.data;
+  }
 
-        this.axiosInstance.defaults.headers['Content-Type'] = 'application/json' ;
-        this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+  /**
+   * Confirm
+   *
+   * @param {string} accessToken
+   * @param {string} customerId
+   * @param {Confirmation} resource
+   * @returns {Promise<object>}
+   */
+  async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-        const response = await this.axiosInstance.post(`${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${state?'&state='+state:''}`, payload);
-        return response.data;
-    }
+    const response = await this.axiosInstance.put(
+      `${Endpoints.PISCUSTOMER}/${customerId}/confirm`,
+      this._buildConfirmation(sessionId),
+    );
 
-    /**
-     * Confirm
-     *
-     * @param {string} accessToken
-     * @param {string} customerId
-     * @param {Confirmation} resource
-     * @returns {Promise<object>}
-     */
-    async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+    return response.data;
+  }
 
-        this.axiosInstance.defaults.headers['Content-Type'] = 'application/json' ;
-        this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+  /**
+   * This endpoint returns the details of all transfers or of a specific transfer
+   *
+   * @param {string} accessToken
+   * @param {string} customerId
+   * @param {string} sessionId
+   * @returns {Promise<object>}
+   */
+  async getPayments(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-        const response =  await this.axiosInstance.put(`${Endpoints.PISCUSTOMER}/${customerId}/confirm`, this._buildConfirmation(sessionId));
+    const response = await this.axiosInstance.get(`${Endpoints.PISCUSTOMER}/${customerId}/payments/${sessionId}`);
 
-        return response.data;
-    }
+    return response.data;
+  }
 
-    /**
-     * This endpoint returns the details of all transfers or of a specific transfer
-     *
-     * @param {string} accessToken
-     * @param {string} customerId
-     * @param {string} sessionId
-     * @returns {Promise<object>}
-     */
-    async getPayments(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+  /**
+   * Private function that creates an instance of api
+   * axios. This instance of axios include all the common headers
+   * params.
+   *
+   * @param {string} appSecret
+   * @returns {axios}
+   */
+  _getAxiosInstance(env) {
+    let axiosInstance = apiService.getInstance(env);
+    return axiosInstance;
+  }
 
-        this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+  _buildConfirmation(sessionId) {
+    let confirm: Confirmation = {
+      meta: {
+        session_id: sessionId,
+      },
+    };
 
-        const response = await this.axiosInstance.get(`${Endpoints.PISCUSTOMER}/${customerId}/payments/${sessionId}`);
-
-        return response.data;
-    }
-
-    /**
-     * Private function that creates an instance of api
-     * axios. This instance of axios include all the common headers
-     * params.
-     *
-     * @param {string} appSecret
-     * @returns {axios}
-     */
-    _getAxiosInstance(env) {
-        let axiosInstance = apiService.getInstance(env);
-        return axiosInstance;
-    }
-
-    _buildConfirmation(sessionId) {
-        let confirm: Confirmation = {
-            meta: {
-                session_id: sessionId
-            }
-        }
-
-        return confirm;
-    }
-
+    return confirm;
+  }
 }

@@ -1,10 +1,10 @@
 /**
- * 
+ *
  * @interface Confirmation
  */
 
 export interface Confirmation {
-    meta: {
-        session_id: string
-    };
+  meta: {
+    session_id: string;
+  };
 }
