@@ -1,13 +1,8 @@
-import axios from 'axios';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
 import { IConfig } from './interfaces/ConfigInterface';
 import * as authService from './services/AuthenticationService';
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 /**
  * Class responsible for performing authentication with Fintecture

@@ -1,10 +1,5 @@
-import path from 'path';
-import dotenv from 'dotenv';
-
 import { FintectureClient } from '../fintecture-client';
 import { TestConfig } from './constants/config';
-
-dotenv.config({path: path.join(__dirname, '.env')});
 
 describe('Resources',  () => {
 

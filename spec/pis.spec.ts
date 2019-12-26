@@ -1,15 +1,9 @@
-import path from 'path';
-import dotenv from 'dotenv';
-
 import { FintectureClient } from '../fintecture-client';
 import * as UtilsCrypto from '../src/utils/Crypto';
 import { BaseUrls } from '../src/utils/URLBuilders/BaseUrls';
 import { TestConfig } from './constants/config';
 
-dotenv.config({path: path.join(__dirname, '.env')});
-
-// const PISproviderIdTest = process.env.PIS_PROVIDER_ID_TEST || 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr';
-const PISproviderIdTest = '';
+const PISproviderIdTest = process.env.PIS_PROVIDER_ID_TEST || 'cmcifr2a, cmbrfr';
 const paymentRedirectURI = "http://www.fintecture.com";
 
 PISproviderIdTest.split(',').forEach( (providerId) => {

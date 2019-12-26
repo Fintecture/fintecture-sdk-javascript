@@ -1,10 +1,10 @@
-import { AIS } from './src/AIS';
+import { AIS } from './src/Ais';
 import { Authentication } from './src/Authentication';
 import { IConfig } from './src/interfaces/ConfigInterface'
 
 import { Constants } from './src/utils/Constants';
 import { Connect } from './src/Connect';
-import { PIS } from './src/PIS';
+import { PIS } from './src/Pis';
 import { Resources } from './src/Resources';
 /**
  * Class responsible to centralize and dispatch all calls to the different Fintecture services

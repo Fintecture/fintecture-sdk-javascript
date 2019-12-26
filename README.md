@@ -8,22 +8,22 @@ Fintecture APIs enable to connect to both Production and Sandbox environments of
 
 ## Installation
 
-```
+```javascript
 npm install 'fintecture-client'
 ```
 
 ## Usage
 
-The SDK enables multiple use cases. Essentially, it runs down to whether you want / need to go through our bank selection module ( which is mandatory if you're not an Agent or a licensed TPP. )
+The SDK enables multiple use cases. Essentially, it runs down to whether you want / need to go through our bank selection module "Fintecture Connect" ( which is mandatory if you're not an Agent or a licensed TPP. )
 
 This section is divided based on the following use cases:
 
 - First Steps
 - Use Cases
- - AIS without Connect
- - AIS with Connect
- - PIS without Connect
- - PIS with Connect
+  - AIS without Connect
+  - AIS with Connect
+  - PIS without Connect
+  - PIS with Connect
 
 ### First Steps
 
@@ -32,7 +32,7 @@ Independantly of the use case, the first step is to create a developer account o
 You are now ready to start coding. Next step is
 import the Fintecture Client library and instantiate the client object:
 
-```
+```javascript
 const { FintectureClient } = require('fintecture-client');
 
 let client = new FintectureClient({ 
@@ -52,27 +52,27 @@ To access the PSU's account information, you have to go through the following st
 
 1. Select a Bank
 
-```
+```javascript
 let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_supported_types]': 'retail', 'sort[full_name]': 'asc'}
-        let providers = await client.getProviders(options);
+let providers = await client.getProviders(options);
 ```
 
 2. Get the bank's authentication URL and redirect your PSU to his bank
 
-```
+```javascript
 let providerAuth = await client.getProviderAuthUrl(null, providerId, redirectUri, state);
 windows.href.location = providerAuth.url;
 ```
 
 3. Authenticate your app to Fintecture and get your **access_token** and **refresh_token**
 
-```
+```javascript
 let tokens = await client.getAccessToken(code);
 ```
 
 4. Request any AIS API
 
-```
+```javascript
 let accounts = await client.getAccounts(accessToken, customerId);
 
 let account accounts.data[0].id
@@ -80,7 +80,7 @@ let transactions = await client.getTransactions(accessToken, customerId, account
 ```
 
 
-Note that the **code** and **customer_id** are returned as query parameters when the PSU is redirected back to your environment.
+> Note that the **code** and **customer_id** are returned as query parameters when the PSU is redirected back to your environment.
 
 #### AIS with Connect
 
@@ -92,20 +92,20 @@ The initiate a payment on behalf of a PSU, you have to go through the following 
 
 1. Select a Bank
 
-```
-let options = {'filter[pis]': 'SEPA', 'filter[country]': 'DE', 'filter[psu_supported_types]': 'retail', 'sort[full_name]': 'asc'}
-        let providers = await client.getProviders(options);
+```javascript
+let options = {'filter[pis]': 'SEPA', 'filter[country]': 'FR', 'filter[psu_supported_types]': 'retail', 'sort[full_name]': 'asc'}
+let providers = await client.getProviders(options);
 ```
 
 2. Authenticate your app to Fintecture and get your **access_token**
 
-```
+```javascript
 let token = await client.getAccessToken();
 ```
 
 3. Initiate a payment
 
-```
+```javascript
 let payment = {
             data: {
                 type: "PIS",
@@ -132,7 +132,7 @@ let response = await client.paymentInitiate(accessToken, providerId, payment, re
 
 The initiate a payment on behalf of a PSU using Fintecture Connect, just do:
 
-```
+```javascript
 let connectConfig = {
     amount: 125,
     currency: 'EUR',
