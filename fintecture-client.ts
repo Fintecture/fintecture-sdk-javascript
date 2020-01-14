@@ -56,8 +56,16 @@ export class FintectureClient {
         return this.resources.testAccounts(options);
     }
 
-    public async getProviderAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
+    public async getRedirectAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
         return this.ais.authorize(accessToken, providerId, redirectUri, state);
+    }
+
+    public async getDecoupledAuthUrl(accessToken: string, providerId: string, psuId: string, psuIpAddress): Promise<object> {
+        return this.ais.authorize(accessToken, providerId, null, null, Constants.DECOUPLEDMODEL, psuId, psuIpAddress);
+    }
+
+    public async getDecoupledAuthStatus(accessToken: string, providerId: string, pollingId: string): Promise<object> {
+        return this.ais.decoupled(accessToken, providerId, pollingId);
     }
 
     public async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {

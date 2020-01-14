@@ -27,7 +27,7 @@ describe('Authentication', () => {
 
     it('#accessToken(authCode) && #refreshToken(refreshToken)', async (done) => {
 
-        const providerAuth: any = await clientOBanking.getProviderAuthUrl(null,AISproviderIdTest.split(',')[0], redirectUri);
+        const providerAuth: any = await clientOBanking.getRedirectAuthUrl(null,AISproviderIdTest.split(',')[0], redirectUri);
 
         request({
             url: providerAuth.url,

@@ -1,0 +1,176 @@
+[33mcommit 5732c7f6c1d85d344506e091368f3165f9f574f4[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Thu Dec 26 12:25:40 2019 +0100
+
+    FIXed library reference in fintecture-client and removed some unnecessary library references
+
+[33mcommit 573134a713ff0a0d957fae6c7a9959d6352a4f4c[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Dec 17 17:00:43 2019 +0100
+
+    1.0.7
+
+[33mcommit 3f6e28f77b45b7f3e397a22ffc10a167bdad3a66[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Dec 17 16:58:09 2019 +0100
+
+    Fix: Adding dotenv dependecy
+
+[33mcommit a88605e669d09feb6bb8978bdb839bd50dafe526[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Dec 17 15:47:36 2019 +0100
+
+    Feat: Adding TsLint and PrettierRc
+
+[33mcommit b0b94b0216dead65aef252da029bc7b0b2103316[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Dec 17 09:15:09 2019 +0100
+
+    Fix: Payment verification
+
+[33mcommit e2bc9581d4afa5fbf9828e75b52d23286318f29d[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Thu Dec 12 12:42:09 2019 +0100
+
+    Added readme
+
+[33mcommit 03ec11cdf9ce8bac88fb7a7cf5244db204f066cf[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Wed Dec 11 10:11:13 2019 +0100
+
+    FIX issue with private key format
+
+[33mcommit 72b5bf4dbb0e33b8c8ed0dcad1c61dbffd68c03d[m
+Merge: 3bed1b9 9311daa
+Author: Anjan Som <anjan@fintecture.com>
+Date:   Wed Dec 11 08:59:49 2019 +0000
+
+    Merged in FIN-178_as_a_developer_i_want_to_use_fintecture_npm_package_to_call_the_apis (pull request #1)
+    
+    FIN-178 as a developer i want to use fintecture npm package to call the apis
+
+[33mcommit 9311daa9a11521d1ebc14db112d3d2be15b6c175[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Wed Dec 11 09:58:23 2019 +0100
+
+    Added production OBAAS signature functionality
+
+[33mcommit 147942ef86f06aa64b6e61287badc3fafe2acc01[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Mon Dec 9 13:54:29 2019 +0100
+
+    FIX env variable
+
+[33mcommit 7c6003800254b79bb15bc21ba2810a4193e69eda[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Mon Dec 9 12:58:27 2019 +0100
+
+    forgot console.logs
+
+[33mcommit a05dea1664bfc951309f685b6e8e3af14e4b09a3[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Mon Dec 9 12:52:48 2019 +0100
+
+    replaced ressource filter by options
+
+[33mcommit 730da13948c1e2d5b49f077637e4c574ce762b24[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Sun Dec 8 23:53:23 2019 +0100
+
+    updated package.json info
+
+[33mcommit 687137dfa47305e33c125f7cc406440ea7e2c977[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Sun Dec 8 23:45:41 2019 +0100
+
+    updated package.json info
+
+[33mcommit 6232890919db9a55d8f2b90cf74d484df73f9330[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Sun Dec 8 20:14:35 2019 +0100
+
+    package.json modified for npm readiness
+
+[33mcommit aece3a24649e08dacebf1c4744c8938819bca9aa[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Sun Dec 8 20:03:02 2019 +0100
+
+    added new providerAuth method and removed old auth method
+
+[33mcommit f5070c30fd0f95a3a64c6d0c9b0fcfbda27050fc[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Thu Dec 5 18:20:38 2019 +0100
+
+    add LICENSE
+
+[33mcommit 3211f7a44ddbea9378d93d02c277177fa616d470[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Thu Dec 5 16:38:55 2019 +0100
+
+    Changed setup for v1.0.1
+
+[33mcommit 9e7ab0c6c6ef7a2a00e65876b082a4a19072f1ed[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Dec 3 08:55:31 2019 +0100
+
+    Feat: FIN-178 PIS and AIS implementation and some Tests
+
+[33mcommit e403245c1a02b93c2688ea64ff34da736bb6dd7d[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Fri Nov 22 17:13:03 2019 +0100
+
+    Feat - Test: Authentication
+
+[33mcommit bfac9447c477a322c06eb4a2aa48b0a5d6e8d39e[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Fri Nov 22 14:51:34 2019 +0100
+
+    Feature & Test: Connect payment verification
+
+[33mcommit 1b9eddabf795ff2e7cb02dfd84cff9d3c0dbfc39[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Thu Nov 21 19:45:37 2019 +0100
+
+    Feature && Test: Connect generates URL, all test 100%
+
+[33mcommit ddcc4cfe5611d4c3db95cab8e8757c278f9175d7[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Wed Nov 20 19:37:14 2019 +0100
+
+    test: 100% coverage
+
+[33mcommit 0e1c903b1c2dfbcf1090d04f25879a4fd5aac062[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Wed Nov 20 19:13:56 2019 +0100
+
+    Test: Authentication
+
+[33mcommit bba4c7ae8d5989a6044560d95385fa6ef34e4783[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Wed Nov 20 18:41:14 2019 +0100
+
+    Test: Application tests
+
+[33mcommit c4001245191082c55e7dff27a97714250ea5f8e8[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Wed Nov 20 18:04:45 2019 +0100
+
+    Refactor - Fix: Change all JS files to Ts files and stabilize tests
+
+[33mcommit 7176bcae7b39084aaba0be8a89eb3ae64d894011[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Nov 19 13:20:42 2019 +0100
+
+    Performance: installing types/jasmine
+
+[33mcommit 579188095efdb1dcdc120b3b55629b2ffba78485[m
+Author: Álvaro Fernández-Alonso Araluce <alvaro.fernandez@nazaries.com>
+Date:   Tue Nov 19 13:19:07 2019 +0100
+
+    Performance: installing typescript
+
+[33mcommit 3bed1b94e5152077606068f3d0f7107bf09bdad1[m
+Author: anjan <anjan.som@gmail.com>
+Date:   Thu Nov 14 16:09:40 2019 +0100
+
+    init commit

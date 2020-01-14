@@ -1,6 +1,7 @@
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
+import { Constants } from './utils/Constants';
 import { IConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
@@ -40,11 +41,40 @@ export class AIS {
     providerId: string,
     redirectUri: string,
     state?: string,
+    model?: string,
+    psuId?: string,
+    psuIpAddress?: string
   ): Promise<object> {
     if (accessToken) {
-      return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri, state);
+      return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri, state, model, psuId, psuIpAddress);
     } else {
-      return await this._authorizeWithAppId(providerId, redirectUri, state);
+      return await this._authorizeWithAppId(providerId, redirectUri, state, model, psuId, psuIpAddress);
+    }
+  }
+
+
+  /**
+   * This API is used to poll the authentication status within 
+   * the decoupled model. Once the decoupled authentication flow
+   * as initiated, the status is "PENDING". Once the PSU has 
+   * successfully authenticated, the status becomes "COMPLETED". 
+   * If the authentication times out, is cancelled or failed, 
+   * the status becomes "FAILED".
+   *
+   * @param {string} accessToken
+   * @param {string} providerId
+   *  @param {string} pollingId
+   * @returns {Promise<object>}
+   */
+  public async decoupled(
+    accessToken: string,
+    providerId: string,
+    pollingId: string
+  ): Promise<object> {
+    if (accessToken) {
+      return await this._decoupledWithAccesToken(accessToken, providerId, pollingId);
+    } else {
+      return await this._decoupledWithAppId(providerId, pollingId);
     }
   }
 
@@ -111,7 +141,7 @@ export class AIS {
     return await this.axiosInstance
       .get(
         `${Endpoints.AISCUSTOMER}/${customerId}/accountholders${
-          queryParameters ? '?' + qs.stringify(queryParameters) : ''
+        queryParameters ? '?' + qs.stringify(queryParameters) : ''
         }`,
         { headers },
       )
@@ -137,6 +167,9 @@ export class AIS {
     providerId: string,
     redirectUri: string,
     state?: string,
+    model?: string, 
+    psuId?: string, 
+    psuIpAddress?: string
   ): Promise<object> {
     const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
 
@@ -150,11 +183,24 @@ export class AIS {
       queryParameters['state'] = state;
     }
 
+    if (model == Constants.DECOUPLEDMODEL) {
+      queryParameters['model'] = model;
+      headers["x-psu-id"] = psuId;
+      headers["x-psu-ip-address"] = psuIpAddress
+    }
+
     const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
     return response.data;
   }
 
-  private async _authorizeWithAppId(providerId: string, redirectUri: string, state?: string): Promise<object> {
+  private async _authorizeWithAppId(
+    providerId: string,
+    redirectUri: string,
+    state?: string,
+    model?: string,
+    psuId?: string, 
+    psuIpAddress?: string
+  ): Promise<object> {
     const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
 
     const headers = apiService.getHeaders('get', url, null, this.config);
@@ -168,7 +214,38 @@ export class AIS {
       queryParameters['state'] = state;
     }
 
+    if (model == Constants.DECOUPLEDMODEL) {
+      queryParameters['model'] = model;
+      headers["x-psu-id"] = psuId;
+      headers["x-psu-ip-address"] = psuIpAddress
+    }
+
     const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
+    return response.data;
+  }
+
+  private async _decoupledWithAccesToken(
+    accessToken: string,
+    providerId: string,
+    pollingId: string
+  ): Promise<object> {
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize/decoupled/${pollingId}`;
+
+    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+    const response = await this.axiosInstance.get(url, { headers });
+    return response.data;
+  }
+
+  private async _decoupledWithAppId(
+    providerId: string,
+    pollingId: string
+  ): Promise<object> {
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize/decoupled/${pollingId}`;
+
+    const headers = apiService.getHeaders('get', url, null, this.config);
+
+    const response = await this.axiosInstance.get(url, { headers });
     return response.data;
   }
 }

@@ -18,7 +18,7 @@ AISproviderIdTest.split(',').forEach( (providerId) => {
 
         beforeAll(async (done) => {
 
-            const providerAuth: any = await client.getProviderAuthUrl(null, providerId, redirectUri);
+            const providerAuth: any = await client.getRedirectAuthUrl(null, providerId, redirectUri);
             request({
                 url: providerAuth.url,
                 method: 'GET',

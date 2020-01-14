@@ -50,17 +50,19 @@ let client = new FintectureClient({
 
 To access the PSU's account information, you have to go through the following steps:
 
+##### Scenario 1: Redirect Model
+
 1. Select a Bank
 
 ```javascript
-let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_supported_types]': 'retail', 'sort[full_name]': 'asc'}
+let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'filter[auth_model]': 'redirect', 'sort[full_name]': 'asc'}
 let providers = await client.getProviders(options);
 ```
 
 2. Get the bank's authentication URL and redirect your PSU to his bank
 
 ```javascript
-let providerAuth = await client.getProviderAuthUrl(null, providerId, redirectUri, state);
+let providerAuth = await client.getRedirectAuthUrl(null, providerId, redirectUri, state);
 windows.href.location = providerAuth.url;
 ```
 
@@ -75,10 +77,58 @@ let tokens = await client.getAccessToken(code);
 ```javascript
 let accounts = await client.getAccounts(accessToken, customerId);
 
-let account accounts.data[0].id
+let account = accounts.data[0].id
 let transactions = await client.getTransactions(accessToken, customerId, account);
 ```
 
+> Note that the **code** and **customer_id** are returned as query parameters when the PSU is redirected back to your environment.
+
+##### Scenario 2: Decoupled Model
+
+
+1. Select a Bank
+
+```javascript
+let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'filter[auth_model]': 'decoupled', 'sort[full_name]': 'asc'}
+let providers = await client.getProviders(options);
+```
+
+2. Get the provider's decoupled auth polling URL
+
+```javascript
+let providerAuth = await client.getDecoupledAuthUrl(null, providerId, psuId, psuIpAddress);
+let pollingId = providerAuth.polling_id;
+```
+
+3. Keep polling the provider's decoupled auth polling URL until authentication either COMPLETED or FAILED
+
+```javascript
+let customerId = null;
+let code = null;
+var loop = setInterval(function(){
+    let auth = await client.getDecoupledAuthStatus(null, providerId, pollingId);
+    if (auth.status != 'PENDING') {
+        customerId = auth.customer_id;
+        code = auth.code;
+        clearInterval(loop);
+    }
+}, 2000);
+```
+
+4. Authenticate your app to Fintecture and get your **access_token** and **refresh_token**
+
+```javascript
+let tokens = await client.getAccessToken(code);
+```
+
+5. Request any AIS API
+
+```javascript
+let accounts = await client.getAccounts(accessToken, customerId);
+
+let account = accounts.data[0].id
+let transactions = await client.getTransactions(accessToken, customerId, account);
+```
 
 > Note that the **code** and **customer_id** are returned as query parameters when the PSU is redirected back to your environment.
 
