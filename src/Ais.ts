@@ -183,7 +183,7 @@ export class AIS {
       queryParameters['state'] = state;
     }
 
-    if (model == Constants.DECOUPLEDMODEL) {
+    if (model === Constants.DECOUPLEDMODEL) {
       queryParameters['model'] = model;
       headers["x-psu-id"] = psuId;
       headers["x-psu-ip-address"] = psuIpAddress
@@ -214,7 +214,7 @@ export class AIS {
       queryParameters['state'] = state;
     }
 
-    if (model == Constants.DECOUPLEDMODEL) {
+    if (model === Constants.DECOUPLEDMODEL) {
       queryParameters['model'] = model;
       headers["x-psu-id"] = psuId;
       headers["x-psu-ip-address"] = psuIpAddress
