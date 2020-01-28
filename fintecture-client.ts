@@ -1,6 +1,7 @@
 import { AIS } from './src/Ais';
 import { Authentication } from './src/Authentication';
 import { IConfig } from './src/interfaces/ConfigInterface'
+import { IConnect } from './src/interfaces/connect/ConnectInterface'
 
 import { Constants } from './src/utils/Constants';
 import { Connect } from './src/Connect';
@@ -80,6 +81,10 @@ export class FintectureClient {
         return this.ais.getAccountHolders(accessToken, customerId, options);
     }
 
+    public async preparePayment(accessToken: string, payload: any): Promise<object> {
+        return this.pis.prepare(accessToken, payload);
+    }
+
     public async paymentInitiate(accessToken: string, providerId: string, payload: any, redirectUri: string, state?: string): Promise<object> {
         return this.pis.initiate(accessToken, providerId, payload, redirectUri, state);
     }
@@ -88,12 +93,12 @@ export class FintectureClient {
         return this.pis.confirm(accessToken, customerId, sessionId);
     }
 
-    public async getPayment(accessToken: string, customerId: string, sessionId: string): Promise<object> {
-        return this.pis.getPayments(accessToken, customerId, sessionId);
+    public async getPayments(accessToken: string, sessionId: string): Promise<object> {
+        return this.pis.getPayments(accessToken, sessionId);
     }
 
-    public async getPisConnectUrl(accessToken: string, connectConfig: any): Promise<string> {
-        return this.connect.getPisConnectUrl(accessToken, connectConfig);
+    public async getPisConnect(accessToken: string, connectConfig: any): Promise<IConnect> {
+        return this.connect.getPisConnect(accessToken, connectConfig);
     }
 
     public verifyConnectUrlParameters(queryString): boolean {

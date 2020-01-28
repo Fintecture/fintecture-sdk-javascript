@@ -187,8 +187,6 @@ let connectConfig = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
-    end_to_end_id: '1234567890',
-    customer_id: '9',
     customer_full_name: 'Bob Smith',
     customer_email: 'bob.smith@gmail.com',
     customer_ip: '127.0.0.1',
@@ -198,9 +196,25 @@ let connectConfig = {
 };
 
 let tokens = await client.getAccessToken();
-let connectUrl = await client.getPisConnectUrl(tokens.access_token, connectConfig);
-window.href.location = connectUrl;
+let connect = await client.getPisConnect(tokens.access_token, connectConfig);
+window.href.location = connect.url;
+
+// and at any time
+let payment = await client.getPayments(tokens.access_token, connect.session_id);
+console.log("PAYMENT STATUS:", payment.meta.status);
+
 ```
+
+Description of Connect fields:
+* amount: [mandatory] The amount of the payment initiation request. Min 1.00 and Max is variable based on bank's policy.
+* currency: [mandatory] The currency of the payment initiation request. Currently, only EUR and GBP is supported.
+* communication: [optional] A message sent to the beneficiary of the payment and visible on his bank statement. In the context of ecommerce payment collection, the order reference is inputted here.
+* customer_full_name: [mandatory] the full name of the payer
+* customer_email: [mandatory] the email of the payer
+* customer_ip: [mandatory] the ip address of the payer
+* redirect_uri: [mandatory] the callback URL to which the customer is redirected after authentication with his bank
+* origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
+* state: [optional] A state parameter which is sent back on callback
 
 ## Contributing
 

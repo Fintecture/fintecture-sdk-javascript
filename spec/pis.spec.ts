@@ -62,6 +62,20 @@ PISproviderIdTest.split(',').forEach( (providerId) => {
             done();
         });
 
+        it(`#prepare(dataPayload) + #getpayment`, async (done) => {
+            const prepare: any = await client.preparePayment(accessToken, dataPayload());
+            sessionId = prepare.meta.session_id;
+            status = prepare.meta.status;
+            expect(prepare.meta.code).toEqual(201);
+            expect(typeof sessionId).toEqual('string');
+            expect(typeof status).toEqual('string');
+            const payment: any = await client.getPayments(accessToken, sessionId);
+            expect(sessionId).toEqual(payment.meta.session_id);
+            expect(status).toEqual(payment.meta.status);
+
+            done();
+        });
+
         it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async (done) => {
             const response: any = await client.paymentInitiate(accessToken, providerId, dataPayload(), paymentRedirectURI, state);
             customerId = response.meta.customer_id;

@@ -1,12 +1,15 @@
 import * as UtilsCrypto from './utils/Crypto.js';
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
 import * as connectService from './services/ConnectService';
-import { IConnectConfig, IState, IPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { IConnectConfig, IState, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { ISessionPayload } from './interfaces/pis/PisInterface';
 import { IConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
+import { PIS } from './Pis';
 import { eventNames } from 'cluster';
 
 export class Connect {
+  public pis: PIS;
   public axios: any;
   public config: IConfig;
   public connectConfig: IConnectConfig;
@@ -15,6 +18,7 @@ export class Connect {
 
   // constructor(app_id: string, app_secret: string, private_key: string, redirect_uri: string, origin_uri: string, state?: string, version?: string){
   constructor(config: IConfig) {
+    this.pis = new PIS(config);
     this.axios = connectService;
     this.config = config;
     this.signatureType = 'rsa-sha256';
@@ -25,26 +29,26 @@ export class Connect {
    *
    * @param {payment} State
    */
-  public async getPisConnectUrl(accessToken: string, connectConfig: any) {
+  public async getPisConnect(accessToken: string, connectConfig: any) {
     this.config = this._validateConfigIntegrity(this.config);
     this.connectConfig = this._validateConnectConfigIntegrity(connectConfig);
 
-    if (!connectConfig.end_to_end_id) {
-      connectConfig.end_to_end_id = UtilsCrypto.generateUUID();
-    }
+    const paymentPayload: IPaymentPayload = this._buildPaymentPayload(connectConfig);
 
-    const payload: IPayload = this._buildPayload(connectConfig);
+    const prepare: any = await this.pis.prepare(accessToken, paymentPayload);
+
+    const sessionPayload: ISessionPayload = this._buildSessionPayload(prepare.meta.session_id);
 
     const state: IState = {
       app_id: this.config.app_id,
       access_token: accessToken,
       signature_type: this.signatureType,
-      signature: this._buildSignature(payload, this.config.private_key, this.signatureType),
+      signature: this._buildSignature(sessionPayload, this.config.private_key, this.signatureType),
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
       state: connectConfig.state ? connectConfig.state : '',
-      order_id: connectConfig.communication,
-      payload,
+      communication: connectConfig.communication,
+      payload: sessionPayload
     };
 
     const url = `${
@@ -53,7 +57,12 @@ export class Connect {
         : BaseUrls.FINTECTURECONNECTURL_PRD
     }/pis`;
 
-    return `${url}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`;
+    const connect = {
+      url: `${url}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`,
+      session_id: prepare.meta.session_id
+    }
+
+    return connect;
   }
 
   public verifyUrlParameters(queryString: any) {
@@ -109,7 +118,7 @@ export class Connect {
       throw Error('customer ip must be set');
     }
 
-    connectConfig.order_id = connectConfig.communication;
+    connectConfig.communication = connectConfig.communication;
 
     return connectConfig as IConnectConfig;
   }
@@ -143,16 +152,15 @@ export class Connect {
     return UtilsCrypto.signPayload(payment, privateKey, algorithm);
   }
 
-  private _buildPayload(payment: any) {
+  private _buildPaymentPayload(payment: any) {
     const attributes: IAttributes = {
       amount: payment.amount,
       currency: payment.currency,
-      communication: `${payment.order_id}`,
+      communication: `${payment.communication}`,
       end_to_end_id: payment.end_to_end_id,
     };
 
     const meta: IMeta = {
-      psu_local_id: payment.customer_id,
       psu_name: payment.customer_full_name,
       psu_email: payment.customer_email,
       psu_ip: payment.customer_ip,
@@ -163,12 +171,20 @@ export class Connect {
       attributes,
     };
 
-    const payload: IPayload = {
+    const payload: IPaymentPayload = {
       data,
       meta,
     };
 
     return payload;
+  }
+
+  private _buildSessionPayload(sessionId) {
+    return {
+      meta: {
+        session_id: sessionId,
+      },
+    } as ISessionPayload;
   }
 
   private _validateConfigIntegrity(config) {

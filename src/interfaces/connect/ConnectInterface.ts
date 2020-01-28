@@ -1,9 +1,11 @@
+import { ISessionPayload } from '../pis/PisInterface';
+
 /**
  * Options to be passed to connect
  *
  * @interface IConnectConfig
  * @interface IState
- * @interface IPayload
+ * @interface IPaymentPayload
  * @interface IData
  * @interface IAttributes
  * @interface IMeta
@@ -14,7 +16,6 @@ export interface IConnectConfig {
   currency: string;
   communication: string;
   end_to_end_id?: string;
-  customer_id?: string;
   customer_full_name?: string;
   customer_email?: string;
   customer_ip?: string;
@@ -31,12 +32,12 @@ export interface IState {
   redirect_uri: string;
   origin_uri: string;
   state: string;
-  payload: IPayload;
+  payload: ISessionPayload;
   version?: string;
-  order_id?: string;
+  communication?: string;
 }
 
-export interface IPayload {
+export interface IPaymentPayload {
   data: IData;
   meta: IMeta;
 }
@@ -50,7 +51,7 @@ export interface IAttributes {
   amount: number;
   currency: string;
   communication: string;
-  end_to_end_id: string;
+  end_to_end_id?: string;
 }
 
 export interface IMeta {
@@ -58,4 +59,10 @@ export interface IMeta {
   psu_name?: string;
   psu_email?: string;
   psu_ip?: string;
+}
+
+
+export interface IConnect {
+  url: string,
+  session_id: string
 }

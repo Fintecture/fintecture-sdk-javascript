@@ -1,3 +1,5 @@
+import * as pjson from '../../package.json';
+
 /**
  * Project wide constants
  *
@@ -5,7 +7,7 @@
  */
 
 export class Constants {
-  public static readonly FINTECTURESDKVERSION: string = '1.0.6';
+  public static readonly FINTECTURESDKVERSION: string = pjson.version;
   public static readonly DEFAULTENVIRONMENT: string = 'sandbox';
   public static readonly SANDBOXENVIRONMENT: string = 'sandbox';
   public static readonly PRODUCTIONENVIRONMENT: string = 'production';

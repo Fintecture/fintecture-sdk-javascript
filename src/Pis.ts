@@ -1,5 +1,5 @@
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { IConfirmation } from './interfaces/pis/ConfirmationInterface';
+import { ISessionPayload } from './interfaces/pis/PisInterface';
 import { IConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
@@ -19,6 +19,27 @@ export class PIS {
    */
   constructor(config: IConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
+  }
+
+    /**
+   * Initiate
+   *
+   * @param {string} accessToken
+   * @param {object} payload
+   * @returns {Promise<object>}
+   */
+  public async prepare(
+    accessToken: string,
+    payload: object,
+  ): Promise<object> {
+    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
+    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+
+    const response = await this.axiosInstance.post(
+      `${Endpoints.PIS}/prepare`,
+      payload,
+    );
+    return response.data;
   }
 
   /**
@@ -62,7 +83,7 @@ export class PIS {
 
     const response = await this.axiosInstance.put(
       `${Endpoints.PISCUSTOMER}/${customerId}/confirm`,
-      this._buildConfirmation(sessionId),
+      this._buildSessionPayload(sessionId),
     );
 
     return response.data;
@@ -72,14 +93,13 @@ export class PIS {
    * This endpoint returns the details of all transfers or of a specific transfer
    *
    * @param {string} accessToken
-   * @param {string} customerId
    * @param {string} sessionId
    * @returns {Promise<object>}
    */
-  public async getPayments(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+  public async getPayments(accessToken: string, sessionId: string): Promise<object> {
     this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-    const response = await this.axiosInstance.get(`${Endpoints.PISCUSTOMER}/${customerId}/payments/${sessionId}`);
+    const response = await this.axiosInstance.get(`${Endpoints.PIS}/payments/${sessionId}`);
 
     return response.data;
   }
@@ -96,11 +116,11 @@ export class PIS {
     return apiService.getInstance(env);
   }
 
-  private _buildConfirmation(sessionId) {
+  private _buildSessionPayload(sessionId) {
     return {
       meta: {
         session_id: sessionId,
       },
-    } as IConfirmation;
+    } as ISessionPayload;
   }
 }

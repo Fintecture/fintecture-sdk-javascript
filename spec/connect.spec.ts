@@ -19,8 +19,6 @@ const connectConfigFull: IConnectConfig = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
-    end_to_end_id: '1234567890',
-    customer_id: '9',
     customer_full_name: 'Bob Smith',
     customer_email: 'bob.smith@gmail.com',
     customer_ip: '123.456.789.123',
@@ -32,14 +30,16 @@ const connectConfigFull: IConnectConfig = {
 const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
 
 describe('Connect', () => {
-    it('#PIS getPisConnectUrl', async (done) => {
+    it('#PIS getPisConnect', async (done) => {
         const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/pis?state=';
         const tokens: any = await client.getAccessToken();
-        const connectUrlMin = await client.getPisConnectUrl(tokens.access_token, connectConfigMin);
-        expect(connectUrlMin).toContain(mockConnectUrl);
-        const connectUrlFull = await client.getPisConnectUrl(tokens.access_token, connectConfigFull);
-        expect(connectUrlFull).toContain(mockConnectUrl);
-        expect(connectUrlFull.length).toBeGreaterThan(connectUrlMin.length)
+        const connectMin = await client.getPisConnect(tokens.access_token, connectConfigMin);
+        expect(connectMin.url).toContain(mockConnectUrl);
+        expect(!!connectMin.session_id).toBe(true);
+        const connectFull = await client.getPisConnect(tokens.access_token, connectConfigFull);
+        expect(connectFull.url).toContain(mockConnectUrl);
+        expect(!!connectFull.session_id).toBe(true);
+        expect(connectFull.url.length).toBeGreaterThan(connectMin.url.length)
         done();
     });
 /*
@@ -61,7 +61,7 @@ describe('Connect', () => {
 
         try {
             const tokens: any = await client.getAccessToken();
-            await client.getPisConnectUrl(tokens.access_token, ConnectUrlFulltemp);
+            await client.getPisConnect(tokens.access_token, ConnectUrlFulltemp);
         } catch (error) {
             errorMessage = error.message;
         }
@@ -78,7 +78,7 @@ describe('Connect', () => {
 
         try {
             const tokens: any = await client.getAccessToken();
-            await client.getPisConnectUrl(tokens.access_token, ConnectUrlFulltemp);
+            await client.getPisConnect(tokens.access_token, ConnectUrlFulltemp);
         } catch (error) {
             errorMessage = error.message;
         }
