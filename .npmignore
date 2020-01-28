@@ -1,7 +1,4 @@
-/node_modules
-/coverage/
-/.nyc_output/
-/.idea
+
 /.vscode
 /dist
 .DS_Store
@@ -10,4 +7,8 @@ docker-compose.yml
 .nycrc
 .prettierrc
 readme.txt
-/lib
+/src
+/spec
+/lib/.env
+tsconfig.json
+tslint.json

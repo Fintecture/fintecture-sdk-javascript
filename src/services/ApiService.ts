@@ -37,7 +37,7 @@ export const getHeaders = (method: string, url: string, accessToken: string, con
 
     headers['Date'] = new Date().toUTCString();
     if (payload) {
-      headers['Digest'] = Crypto.hashBase64(payload);
+      headers['Digest'] = "SHA-256="+Crypto.hashBase64(payload);
     }
     headers['X-Request-Id'] = Crypto.generateUUIDv4();
     headers['Signature'] = Crypto.createSignatureHeader(

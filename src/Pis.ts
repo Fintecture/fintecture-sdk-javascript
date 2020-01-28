@@ -11,6 +11,7 @@ import * as apiService from './services/ApiService';
  */
 export class PIS {
   private axiosInstance;
+  private config: IConfig;
 
   /**
    * Creates an instance of PIS.
@@ -19,6 +20,7 @@ export class PIS {
    */
   constructor(config: IConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
+    this.config = config;
   }
 
   /**
@@ -32,13 +34,11 @@ export class PIS {
     accessToken: string,
     payload: object,
   ): Promise<object> {
-    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+    const url = `${Endpoints.PIS}/prepare`;
 
-    const response = await this.axiosInstance.post(
-      `${Endpoints.PIS}/prepare`,
-      payload,
-    );
+    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+    const response = await this.axiosInstance.post(url, payload, { headers });
     return response.data;
   }
 
@@ -59,13 +59,11 @@ export class PIS {
     redirectUri: string,
     state?: string,
   ): Promise<object> {
-    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+    const url = `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${state ? '&state=' + state : ''}`;
 
-    const response = await this.axiosInstance.post(
-      `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${state ? '&state=' + state : ''}`,
-      payload,
-    );
+    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+    const response = await this.axiosInstance.post(url, payload, { headers });
     return response.data;
   }
 
@@ -78,13 +76,14 @@ export class PIS {
    * @returns {Promise<object>}
    */
   public async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
-    this.axiosInstance.defaults.headers['Content-Type'] = 'application/json';
-    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+    
+    const url = `${Endpoints.PISCUSTOMER}/${customerId}/confirm`;
 
-    const response = await this.axiosInstance.put(
-      `${Endpoints.PISCUSTOMER}/${customerId}/confirm`,
-      this._buildSessionPayload(sessionId),
-    );
+    const payload = this._buildSessionPayload(sessionId);
+    
+    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+    const response = await this.axiosInstance.put(url, payload, { headers });
 
     return response.data;
   }
@@ -97,9 +96,12 @@ export class PIS {
    * @returns {Promise<object>}
    */
   public async getPayments(accessToken: string, sessionId: string): Promise<object> {
-    this.axiosInstance.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
 
-    const response = await this.axiosInstance.get(`${Endpoints.PIS}/payments/${sessionId}`);
+    const url = `${Endpoints.PIS}/payments/${sessionId}`;
+    
+    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+    const response = await this.axiosInstance.get(url, {headers});
 
     return response.data;
   }

@@ -105,9 +105,6 @@ export class Connect {
     if (!connectConfig.currency) {
       throw Error('currency not set');
     }
-    if (!connectConfig.customer_id && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
-      throw Error('customer identifier must be set');
-    }
     if (!connectConfig.customer_full_name && this.config.env === Constants.PRODUCTIONENVIRONMENT) {
       throw Error('customer full name must be set');
     }
