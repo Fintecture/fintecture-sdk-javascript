@@ -21,8 +21,8 @@ export class PIS {
     this.axiosInstance = this._getAxiosInstance(config.env);
   }
 
-    /**
-   * Initiate
+  /**
+   * Prepare
    *
    * @param {string} accessToken
    * @param {object} payload
