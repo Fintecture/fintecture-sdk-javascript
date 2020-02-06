@@ -2,7 +2,7 @@ import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
 import { Constants } from './utils/Constants';
-import { IConfig } from './interfaces/ConfigInterface';
+import { IFintectureConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
 /**
@@ -13,12 +13,12 @@ import * as apiService from './services/ApiService';
  */
 export class AIS {
   private axiosInstance;
-  private config: IConfig;
+  private config: IFintectureConfig;
 
   /**
    * Creates an instance of Ais.
    */
-  constructor(config: IConfig) {
+  constructor(config: IFintectureConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
     this.config = config;
   }
@@ -46,7 +46,7 @@ export class AIS {
     psuIpAddress?: string
   ): Promise<object> {
     if (accessToken) {
-      return await this._authorizeWithAccesToken(accessToken, providerId, redirectUri, state, model, psuId, psuIpAddress);
+      return await this._authorizeWithAccessToken(accessToken, providerId, redirectUri, state, model, psuId, psuIpAddress);
     } else {
       return await this._authorizeWithAppId(providerId, redirectUri, state, model, psuId, psuIpAddress);
     }
@@ -86,13 +86,13 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  public async getAccounts(accessToken: string, customerId: string, queryParameters?: object): Promise<object> {
-    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts`;
+  public async getAccounts(accessToken: string, customerId: string, queryParameters?: object, headerParameters?: object): Promise<object> {
+    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`;
 
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+    const headers = apiService.getHeaders('get', url, accessToken, this.config, null, headerParameters);
 
     return await this.axiosInstance
-      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers })
+      .get(url, { headers })
       .then(response => {
         return response.data;
       });
@@ -107,18 +107,13 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  public async getTransactions(
-    accessToken: string,
-    customerId: string,
-    accountId: string,
-    queryParameters?: object,
-  ): Promise<object> {
-    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions`;
+  public async getTransactions(accessToken: string, customerId: string, accountId: string, queryParameters?: object, headerParameters?: object): Promise<object> {
+    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions${queryParameters ? '?' + qs.stringify(queryParameters) : ''}` ;
 
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+    const headers = apiService.getHeaders('get', url, accessToken, this.config, null, headerParameters);
 
     return await this.axiosInstance
-      .get(`${url}${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`, { headers })
+      .get(url, { headers })
       .then(response => {
         return response.data;
       });
@@ -133,18 +128,13 @@ export class AIS {
    * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  public async getAccountHolders(accessToken: string, customerId: string, queryParameters: object): Promise<object> {
-    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accountholders`;
+  public async getAccountHolders(accessToken: string, customerId: string, queryParameters: object, headerParameters?: object): Promise<object> {
+    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accountholders${queryParameters ? '?' + qs.stringify(queryParameters) : ''}`;
 
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+    const headers = apiService.getHeaders('get', url, accessToken, this.config, null, headerParameters);
 
     return await this.axiosInstance
-      .get(
-        `${Endpoints.AISCUSTOMER}/${customerId}/accountholders${
-        queryParameters ? '?' + qs.stringify(queryParameters) : ''
-        }`,
-        { headers },
-      )
+      .get(url, { headers },)
       .then(response => {
         return response.data;
       });
@@ -162,7 +152,7 @@ export class AIS {
     return apiService.getInstance(env);
   }
 
-  private async _authorizeWithAccesToken(
+  private async _authorizeWithAccessToken(
     accessToken: string,
     providerId: string,
     redirectUri: string,
@@ -171,9 +161,6 @@ export class AIS {
     psuId?: string, 
     psuIpAddress?: string
   ): Promise<object> {
-    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
-
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
 
     const queryParameters = {
       redirect_uri: redirectUri,
@@ -185,11 +172,20 @@ export class AIS {
 
     if (model === Constants.DECOUPLEDMODEL) {
       queryParameters['model'] = model;
+    }
+
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?${qs.stringify(queryParameters)}`;
+
+    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+    if (model === Constants.DECOUPLEDMODEL) {
       headers["x-psu-id"] = psuId;
       headers["x-psu-ip-address"] = psuIpAddress
     }
 
-    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
+
+
+    const response = await this.axiosInstance.get(url, { headers });
     return response.data;
   }
 
@@ -201,9 +197,6 @@ export class AIS {
     psuId?: string, 
     psuIpAddress?: string
   ): Promise<object> {
-    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?`;
-
-    const headers = apiService.getHeaders('get', url, null, this.config);
 
     const queryParameters = {
       response_type: 'code',
@@ -216,11 +209,18 @@ export class AIS {
 
     if (model === Constants.DECOUPLEDMODEL) {
       queryParameters['model'] = model;
+    }
+
+    const url = `${Endpoints.AISPROVIDER}/${providerId}/authorize?${qs.stringify(queryParameters)}`;
+
+    const headers = apiService.getHeaders('get', url, null, this.config);
+
+    if (model === Constants.DECOUPLEDMODEL) {
       headers["x-psu-id"] = psuId;
       headers["x-psu-ip-address"] = psuIpAddress
     }
 
-    const response = await this.axiosInstance.get(url + qs.stringify(queryParameters), { headers });
+    const response = await this.axiosInstance.get(url, { headers });
     return response.data;
   }
 

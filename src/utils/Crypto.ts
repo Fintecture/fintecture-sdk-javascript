@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
-import { IConfig } from '../interfaces/ConfigInterface';
+import { IFintectureConfig } from '../interfaces/ConfigInterface';
 import { Constants } from './Constants';
 
 export function generateUUID() {
@@ -11,23 +11,41 @@ export function generateUUIDv4() {
   return uuidv4();
 }
 
-export function createSignatureHeader(headers: any, config: IConfig) {
-  let signingString = '';
-  let headerString = '';
-
-  Constants.SIGNEDHEADERPARAMETERLIST.forEach(param => {
-    if (headers[param]) {
-      const p = param.toLowerCase();
-      signingString = signingString ? signingString + '\n' : signingString;
-      signingString = signingString + p + ': ' + headers[param];
-      headerString = headerString ? headerString + ' ' + p : p;
-    }
-  });
-
+export function createSignatureHeader(headers: any, config: IFintectureConfig, signedHeaders: any) {
+  let signingString = buildSigningString(headers, signedHeaders);
+  let headerString = buildHeaderString(headers, signedHeaders);
+  
   const signature = signPayload(signingString, config.private_key);
   return (
     'keyId="' + config.app_id + '",algorithm="rsa-sha256",headers="' + headerString + '",signature="' + signature + '"'
   );
+}
+
+export function buildSigningString(headers, signedHeaders): string {
+  let signingString = '';
+
+  signedHeaders.forEach(param => {
+    if (headers[param]) {
+      const p = param.toLowerCase();
+      signingString = signingString ? signingString + '\n' : signingString;
+      signingString = signingString + p + ': ' + headers[param];
+    }
+  });
+
+  return signingString;
+}
+
+export function buildHeaderString(headers, signedHeaders): string {
+  let headerString = '';
+
+  signedHeaders.forEach(param => {
+    if (headers[param]) {
+      const p = param.toLowerCase();
+      headerString = headerString ? headerString + ' ' + p : p;
+    }
+  });
+
+  return headerString;
 }
 
 export function signPayload(payload: any, privateKey: string, algorithm?: string): string {
@@ -47,21 +65,6 @@ export function signPayload(payload: any, privateKey: string, algorithm?: string
   }
 
   throw new Error('invalid signature algorithm');
-}
-
-export function decryptPrivate(digest: string, privateKey: string): string {
-  const digestBytes = Buffer.from(digest, 'base64');
-  const cryptoConstants: any = crypto['constants'];
-  const key = {
-    key: privateKey, // buffer
-    padding: cryptoConstants.RSA_PKCS1_OAEP_PADDING,
-  };
-
-  try {
-    return crypto.privateDecrypt(key, digestBytes).toString();
-  } catch (error) {
-    throw new Error('an error occurred while decrypting');
-  }
 }
 
 export function hashBase64(plainText: string): string {

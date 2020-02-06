@@ -10,8 +10,7 @@ const AISproviderIdTest = process.env.AIS_PROVIDER_ID_TEST || 'cmmcfr';
 describe('Authentication', () => {
     const redirectUri = TestConfig.appRedirectUri;
     const state = 'somestate';
-    const clientOBanking = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
-    const clientMerchant = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant });
+    const clientOBanking = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking, private_key: TestConfig.appPrivKeyOpenbanking });
 
     beforeEach(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;

@@ -3,15 +3,15 @@ import { ISessionPayload } from '../pis/PisInterface';
 /**
  * Options to be passed to connect
  *
+ * @interface ISetup
  * @interface IConnectConfig
- * @interface IState
  * @interface IPaymentPayload
  * @interface IData
  * @interface IAttributes
  * @interface IMeta
  */
 
-export interface IConnectConfig {
+export interface ISetup {
   amount: number;
   currency: string;
   communication: string;
@@ -24,7 +24,7 @@ export interface IConnectConfig {
   state?: string;
 }
 
-export interface IState {
+export interface IConnectConfig {
   app_id: string;
   access_token: string;
   signature_type: string;
@@ -33,8 +33,10 @@ export interface IState {
   origin_uri: string;
   state: string;
   payload: ISessionPayload;
-  version?: string;
-  communication?: string;
+  psu_type?: string;
+  country?: string;
+  date: string;
+  request_id: string;
 }
 
 export interface IPaymentPayload {

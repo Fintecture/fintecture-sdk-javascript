@@ -5,46 +5,65 @@
  */
 
 export class TestConfig {
-    public static readonly appIdOpenbanking: string = '3f12a5c0-f719-4c14-9eac-08ed99290109';
-    public static readonly appSecretOpenbanking: string = '93ea0128-8258-4b1d-9109-b4899a98677b';
-    public static readonly appRedirectUri: string = 'https://www.fintecture.com';
-    public static readonly appIdMerchant: string = '1b96c253-1944-4986-a467-df2152ddffdb';
-    public static readonly appSecretMerchant: string = 'f03fec5f-4d38-437f-914d-817337550fab';
-    public static readonly appPrivKeyMerchant: string = `-----BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCeEocGuXp9AA+H
-/8o2exRRkCsU49h8COUuCtjHJgEL4Wz9mKb1tZ7w9yzBYZ+vyOSMbMFocvIHZQac
-up1cYX6+5J/XcH8QDJRqfq/dr//3xMwYH+xFBVL8R6C6Hoie3sow4x1k+ihOIZ+Q
-MOoDTR+dSPnWrYjzKLa6rESJHlBrzQ5Qgq8KnwmiInkTMZq1fyOY0fBTdJuikr7/
-xEnQBl44P/gqQzEeiS6kOswoXVn5DhQUSyQSMfTmrhuswnc/Ud5faBbQz1ZegsNc
-eY6S6/b89lI4vcj6SCubuDWUEIVongvijF14p/y/UIU0y1JtQsK/5tmtSNboCnNN
-kuKA079zAgMBAAECggEAI14i3xLOALzsPLIzROhZ/fvjX8uxCuOUn64mnbx3nHhm
-QgGPTcfC1ciAN46Hw7WPyYml5qBdXeExTw0EG4Dm8oBF8VbG30jpRkCtSc1Q2Nes
-ELPH0hOkYzUFlc8yI1XW6IRQdeDw9rZYNNN08KMncTI8UFfInhtccz0LIqDpPo0r
-T/LVe3hN6tyW48VThMhTbf7vOGg1+fxABu8uoKFFq8bs/rp5b3Cu/8nfyNksEaTg
-kz8z5dWTS0BCTMBPjgWMRXiRghWkYwQX84EVjapuPQnsEaH8zKOemITviBlO6wfh
-iD2wyVwNfLTwaBiixzxh3uZGti0wq4Hg0g/31MAWDQKBgQDRlH+Mr+5zzIuSBOKj
-MvIqNli9W2n7yKzpGjQTTG4V2EOwE2vxY3fbB4oxNVRNa4B44YM19P7B7gwLiWnO
-eEuC95pS+vYNcYvCUyAxBEBlBTKKV7VMuavPjNkLgQH9F4Dj/reKsXcqbOzxR/5n
-VjNYgaNWXb4fUYNrqyUuWV0bTQKBgQDBFXdSC4maU7MRMahkWhf/70S0917c4csx
-pUut43gMpjFBDQMnXERXQudqFGPlEvzs5HMLl373SMZHiHr8WDcRwdtHMGTJOVqj
-pD0XONzkP9jrwUIOKrF65VIFj005maFpAeHG5ZakIZ7WjdXQxh7j06SqoK5caJOK
-rXl/qXNlvwKBgHc5RP4hr0LM37Enek5g0wZUeFLwR/BmDodk0q8P0ag3qPnncoaV
-kT9WoLSxo82PFDyv/Vaakrp70vpVJ42/PSW5+V6vSX4IU/suEqgPxRoyxLeSgZ6u
-GSEu/OHgd+Mklbwd0QfjQOkvofL4g68BiKAWz3Z4SYnDc0Gy0Kn3SFIZAoGBAIuk
-oMVfvsc0nZ9j0KuzVQQu4fwXpC4Px0tChvdeOia704d+h7dhzbNmmcNot86m6vHR
-Tzsk+BiUM4LsvDXg/wMCtzpHT70Qk/MiB2TSJT+WxaXMAaAJVI7TZ3zJ5UoxSEGP
-sOCOj2JpRl1Z+zeg8hpHqSIWT8RZhcuYJvUjcmg1AoGADluBhTWky1K+QwmQE0DO
-OHkL0TyG6qQ/31nnuLW5Ej1xQtuElQVWj/KZK5AJrusXSUEUzqPMR7MvMSclURyV
-Mqo3BZADRlcr0AKP2TYSBCNcEBmBHCI9GfIRCPFR1eK+IciRyqjcz7kYlZ0YyfjF
-r3xIiGe3JhVHqyTRE+maKu0=
+    public static readonly appIdOpenbanking: string = '8687cc56-22be-4ef3-946f-4b52b83008b0';
+    public static readonly appSecretOpenbanking: string = '7f493c9a-f512-48d7-849d-29a1a6ad73ea';
+    public static readonly appPrivKeyOpenbanking: string = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCe6S+EFcQGpKKD
+Kyk5jr0OUED6uuK9rnadkPHq6WkFUIIEZ+xjcL9HHIRVzI/PTWvb6SWc7pqXNAht
+GQL43JKjqh5Itm4ml9Rrs08UeEBmo1K4pCQGXGn9UqLHfIGpHznlhwhq2BUV3HaU
+OZ+LKNuCaHdRXnky7i8+6kvwzTuMFHZcHW6WKiFxxm5Y8cXfeB3bCuAkzrpa3dOG
+qQfxm03YIG5XKHs+77gN/AfnCSOQ0mSOl9uIV0ulKWWlV2/+BFmhYSfogXnD1kdF
+TIwXiIzUdhRiG9xdLpP+e/Dt/LLsHjN7iYfzNiGkEt45GNHHtVqMH5MvyKzsK70n
+RJg86h/9AgMBAAECggEAIZjrkuGHMGBee50EekbTcdNF6bzZc4EPUwDyJNh0e8sp
+sgTG1b9gsYg18m3tecbEpxoD+cn4pT87CNXg6vy3hCLThEwNvdsb7ila7tj9xLWD
+J8aMV0vynLx77fFE+JzBgOWrwestihGygGQudx2MS2YK1AlFVp9FHegrZh3+GP9l
+K9D1VoaufeWUmyp6ez4bikeJgvBLwKo8FvAt59ELvhglClwGWjuB+o8X9nKaxc2/
+CIEW3WZSRZdj6oRkC+F+Fb3AnMdGAdF5UczkyVW374wamhmxmhztMGL1uLSgU1ZL
+JRpWCwGODNf2HA81VVGEwXXisqWy9oxGieWy/GlsAQKBgQDR6/HmOrtqhcZ4OqIv
+SzG1dme3mZ1FUPLMJSVWu9nV+y3YsJogXZCOktn/htTGrWCV7Wa3J27gSnfpMO0T
+sKY8xzLil6axGRD1OCMh/4+AW8fi1okYghPgJQlgXwhKCF6+u/up3ocIEtHS4uIO
+ffDsT5bGYexzHNXjyI22YfEb2QKBgQDBys9HxoR/QyFRvoys8KSVK9Kujtrd9pe5
+6K2UY0yiviHTF3XOWVsX7YPVbZuCRpzgi+fXjB6FvT/LpL4LmFnKPiys4Y8OQ3bH
+DaNhZ+O9vcdtvEUZN6h2HbssIWMY7WF6vtyXCQPF8FSAB3udXb4JYLKzOU7R0uWS
+A3CVjGgCxQKBgBQzs7TnZA/tTdtWMTOB9geznGmj4+m+z47r6Dr/mwgnwxK+dCa3
+OmkuIsKflCyGlOv4y9DGf7ogEIgliDtD3cutk+0QkR8r/WDMBT2JXaMJsiPXZ5wv
+MIB6r/tRSfft9EhAyQhg/Pe+7+huozin0B69zhHLbLjrRn5EV7b8l/qJAoGAHpD/
+qsGMKoqLGdqlU63NN94mp/POX85CVkd2AX68GrtEmIgNw9NiQ97puWNFcQH0QpKu
+qdfnBI86HcPJWgjYuMafw1D8gHJxrKnhCD8bs9TYPN3CRFz8DE1aNXa6q7bddj/e
+iVAZsUHcAimr/MFJdS80YIJ8hSnvnd0/B8eSrEUCgYAH60rW0KV+w5N52z/OBEfn
+lVy/uQC4ge1dAYhcvxMNNCJ2mszxP5hW5LqCrkHj+9SULrHxvkYZHSKGcMVpiEq8
+IH5SfaI3mb4YDzgCMjdhj8G5m+yUZ+UKncPcQ0+iRT8O2IqQp2c1Ut9qBuSJZh43
+HoxR9hrXXccObKIbRBb1zA==
 -----END PRIVATE KEY-----`;
-    public static readonly appPubKeyMerchant: string = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhKHBrl6fQAPh//KNnsU
-UZArFOPYfAjlLgrYxyYBC+Fs/Zim9bWe8PcswWGfr8jkjGzBaHLyB2UGnLqdXGF+
-vuSf13B/EAyUan6v3a//98TMGB/sRQVS/Eeguh6Int7KMOMdZPooTiGfkDDqA00f
-nUj51q2I8yi2uqxEiR5Qa80OUIKvCp8JoiJ5EzGatX8jmNHwU3SbopK+/8RJ0AZe
-OD/4KkMxHokupDrMKF1Z+Q4UFEskEjH05q4brMJ3P1HeX2gW0M9WXoLDXHmOkuv2
-/PZSOL3I+kgrm7g1lBCFaJ4L4oxdeKf8v1CFNMtSbULCv+bZrUjW6ApzTZLigNO/
-cwIDAQAB
------END PUBLIC KEY-----`;
+    public static readonly appRedirectUri: string = 'https://www.fintecture.com';
+    public static readonly appIdMerchant: string = 'e02a94ed-ca47-4ece-b641-82d2bf658288';
+    public static readonly appSecretMerchant: string = '7ad7b202-dc68-4cd2-ae05-4d338316972d';
+    public static readonly appPrivKeyMerchant: string = `-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDMTItyD1NiVhMu
+LVfy9Bh7bTBbXwGN054wERgzdJOxdOYHdM6uMtds41HnS+nyXmLgZLUg4PvJSo+Y
+nUxjcQNwyh38tFw9Qa6hHw+UlbYX3zyaY2tVUyzYgYxrt3fFctoYRu0c+2+z5BV3
+ZGDj+/kbDwnZhKpzvK5lVclbFRB07TYg8Oejx9Cag4iCdz27pwIWYmCGsK6WgIkb
+0Ule5Nt/iPol4u/Ls6oWfsVbvR4HM/CM/DEZmWmFoLTeWgH+ATJr+j1pG/AmW95/
+DAfe1dK5QEc5V41+CVlUrDd4GtcMnA7nJKN0kxD3foiwTHPHF03BbS9gAKr/jcEP
+DWLDemqDAgMBAAECggEAG8bafMcNqMSYNgKPPyal/34QgZPQw8Y+bz2bwz8553pD
+3kao5TFfbdwYYjDFnaDso6K9p7s/MJaVIIRegvS2KYspeZbSJbf89MYi2apjSCqf
+dERJLyAwbD1s6KZYv/1GHt/h1DtxbA16R7HbpJO5Qk8QoUTy4eqI8Zkw19Ps2WC6
+wfC5KNzZUaWD/in7LMcF4LhfYVOZmFjysDLxoDTnntjfvil6FmmSMhzgFLQ/tJkY
+Qe0gyl+UzYsKZM6LxJVucocfAmLNaOEnvpbry6bkrnghGuBH3z/XcwHXr4cTwDkZ
+DCm03/BnT+/AuyjPTGTF4flMaihlvqW9weRZ5ySMlQKBgQD4R+1X/5eWvFQubKPo
+iyM/KI8hjSMoBsM8XEKbqw7t78QISM0uyB7gXul/vzetK3stpkwcA5EF58jM75gW
+jwBZ7QmjoStU3E/Hk6QdghYJx6NRNeBPIroud4MD0ouP3h6A8QQMWA8Ll3WqXIkj
++uBHP1dMjQvIhFQGgB54x3c1HQKBgQDSppB3GnSvTXJ9gR53fGKlPmfzSzu0VILR
+jJYU4er9/O3/YU8mTij9RKG4i0m+AM3AuzycExshZ4ToCZ82JIPA8+JKwi9UlEFd
+tB/Vt7QRXLIiCtae3EIloAAcse9QoAz7ZsVbSoEyvqB1Ui59oX28m2uXXZW/Ytzc
+fByk2HIsHwKBgQC3cjW86l3wAxDUCHOHM58EYIx5BtZuEakZpTWV3Ws3hQu770aj
+hTvDHn26ZOfXbKQj05aysDPsQBlOysz+BgUFbK3NmBzzI6FS3hTJtL9h1H8oVv14
+mzkjcix8m4mA8GZrcSlDkaD0OKG5EYxG6GvkWLnBFwoYyyVmdC2PohnDRQKBgQDE
+wxDuL6gOlyj6UkFDGsyJzWELwJpkNwx67/bASsZVuIwWn65u+VMQP6tP1ctrzxRh
+koNqxe3xpeBfXZ151WG8OhKGAhxzxIfKHxYdaxqnnQ5G/hi7CsI+otV3+Dyx8s4t
+hjGStGU6IRWAgOMsNkxcgFBfcusNeisTSFr5H7SFwQKBgC4CjsKoosi3K6PfNWom
+E2ZzGuAC+wosigEjivGBAX5SBRunYXle+l2qEugZQMQbCupxrmPsAQEq7yFXGVh/
+he+7PoGeuN+tyU97ysJVpQrjvc29PdhKt4rGpby7c9omr4xlgtYUJo6KXZO1N3g+
+NGIDKuWDm34+VDzlhcjMC5sz
+-----END PRIVATE KEY-----`;
 }

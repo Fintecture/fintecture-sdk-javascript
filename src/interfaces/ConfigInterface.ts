@@ -1,10 +1,10 @@
 /**
  * Config configuration
  *
- * @interface IConfig
+ * @interface IFintectureConfig
  */
 
-export interface IConfig {
+export interface IFintectureConfig {
   app_id: string;
   app_secret: string;
   private_key: string;

@@ -47,7 +47,7 @@ PISproviderIdTest.split(',').forEach( (providerId) => {
 
     describe(`Get the Bank response once the payment is done for ${providerId}`, () => {
         
-        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
+        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking, private_key: TestConfig.appPrivKeyOpenbanking });
         const state = 'somestate';
         let accessToken: string;
         let customerId: string;
@@ -108,7 +108,7 @@ PISproviderIdTest.split(',').forEach( (providerId) => {
         });
 
         it(`#initiate(providerId, dataPayload, paymentRedirectURI) for ${providerId}`, async (done) => {
-            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant });
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
 
             const token: any = await client.getAccessToken();
             
@@ -118,7 +118,7 @@ PISproviderIdTest.split(',').forEach( (providerId) => {
         });
 
         it(`#initiate(providerId, dataPayload, paymentRedirectURI, state) for ${providerId}`, async (done) => {
-            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant });
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
 
             const token: any = await client.getAccessToken();
             

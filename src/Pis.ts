@@ -1,6 +1,6 @@
 import { Endpoints } from './utils/URLBuilders/Endpoints';
 import { ISessionPayload } from './interfaces/pis/PisInterface';
-import { IConfig } from './interfaces/ConfigInterface';
+import { IFintectureConfig } from './interfaces/ConfigInterface';
 import * as apiService from './services/ApiService';
 
 /**
@@ -11,14 +11,14 @@ import * as apiService from './services/ApiService';
  */
 export class PIS {
   private axiosInstance;
-  private config: IConfig;
+  private config: IFintectureConfig;
 
   /**
    * Creates an instance of PIS.
    *
    * @param {Config} config
    */
-  constructor(config: IConfig) {
+  constructor(config: IFintectureConfig) {
     this.axiosInstance = this._getAxiosInstance(config.env);
     this.config = config;
   }

@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as UtilsCrypto from '../src/utils/Crypto';
 import { TestConfig } from './constants/config';
 
-const mockSignature = "QVEX1W0EGwsTWGAwdNmh1pY/p/QIaw2Owz/jRuQpvmwl+FN84+fLwZUs8Ts3BYbkON5xaVv3UA/eqO+6JfOfCg4IUSMNzgDK0Ibpy02eqz8WMtSUHjto9D35RbzqxbBhL/UNK0igqkv+fqxzBYsjEJi5UQX1CXyV+Bn6vHQCkLqqYiitxWy8BtdJ+W2YChb74eyhZzmdGfTfwUO5H3OlhSGcRubclkO+yeL6gIr/XWGIfuT9jtK2UYzLffLelIDc9mxBFuhXdl+3iddm/YkYb2pxayZKgXtnzRYsiz1GhlWoMcbNdToNauGuIe0aeYAX77BlLY4P4IT7got224sLig==";
+const mockSignature = "dJcMjG/HsJoq2x/PoZ8YfFzzMFFyfWpqiDnODIOiZ5k9GqmkwrPVJ1fflZLVBD/h1dleIDFJPWAwvBj8VsWCjEEjbvujKV32EJjDFiw3CACvRbx1IYr0JtjorKsjDABlJNbj+LBSEk1YGRDbKYBqURo4CL/xMOAHlZ856kr4fkNH4rlJ9c+kq4KrvMEcZQc6EfN37p2Ap6pjLm9abwH3a+cQNjOGI07/3QY1spfj7Z89svVEHEc9XSSTcM5aE18F4C7ACtEXsGYZMUSRS7/JfE6Ma3gsnKbKUPwhsQjhmrWhsFlqpQ4mcJ+eJWj1eSA7H97QoN5MKaAtDxHYHQyVog==";
 const payload = {payment: 'payment'};
 
 
@@ -61,34 +61,5 @@ describe('Crypto', () => {
         const hashBase64 = UtilsCrypto.hashBase64('test');
 
         expect(hashBase64).toEqual(mockHashed);
-    });
-
-    it('#decryptPrivate(digest, privateKey)', () => {
-        const plainText = 'test';
-        const digest =  crypto.createHash('sha256').update(plainText).digest('base64');
-
-        const key = {
-            key: TestConfig.appPrivKeyMerchant,
-            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
-        }
-        const message = Buffer.from(digest);
-        const encrypted = crypto.publicEncrypt(key, message).toString("base64");
-        const decrypted = UtilsCrypto.decryptPrivate(encrypted, TestConfig.appPrivKeyMerchant);
-
-        expect(decrypted).toEqual(digest);
-    });
-
-    it('#decryptPrivate(digest, privateKey) Error', () => {
-        const plainText = 'test';
-        const digest =  crypto.createHash('sha256').update(plainText).digest('base64');
-
-        const key = {
-            key: TestConfig.appPrivKeyMerchant,
-            padding: crypto.constants.RSA_PKCS1_OAEP_PADDING
-        }
-        const message = Buffer.from(digest);
-        const encrypted = crypto.publicEncrypt(key, message).toString("base64");
-        
-        expect( () => {UtilsCrypto.decryptPrivate(encrypted, '')} ).toThrow(new Error("an error occurred while decrypting"));
     });
 });

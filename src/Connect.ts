@@ -1,23 +1,22 @@
 import * as UtilsCrypto from './utils/Crypto.js';
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
 import * as connectService from './services/ConnectService';
-import { IConnectConfig, IState, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { ISetup, IConnectConfig, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
 import { ISessionPayload } from './interfaces/pis/PisInterface';
-import { IConfig } from './interfaces/ConfigInterface';
+import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
 import { PIS } from './Pis';
-import { eventNames } from 'cluster';
+import * as apiService from './services/ApiService';
 
 export class Connect {
   public pis: PIS;
   public axios: any;
-  public config: IConfig;
-  public connectConfig: IConnectConfig;
+  public config: IFintectureConfig;
+  public connectConfig: ISetup;
 
   private signatureType: string;
 
-  // constructor(app_id: string, app_secret: string, private_key: string, redirect_uri: string, origin_uri: string, state?: string, version?: string){
-  constructor(config: IConfig) {
+  constructor(config: IFintectureConfig) {
     this.pis = new PIS(config);
     this.axios = connectService;
     this.config = config;
@@ -37,18 +36,23 @@ export class Connect {
 
     const prepare: any = await this.pis.prepare(accessToken, paymentPayload);
 
-    const sessionPayload: ISessionPayload = this._buildSessionPayload(prepare.meta.session_id);
+    const sessionPayload: ISessionPayload = this._buildSessionPayload(prepare);
 
-    const state: IState = {
+    const headers: any = this._buildHeaders(accessToken, sessionPayload, this.config.private_key, this.signatureType);
+
+    const config: IConnectConfig = {
       app_id: this.config.app_id,
       access_token: accessToken,
       signature_type: this.signatureType,
-      signature: this._buildSignature(sessionPayload, this.config.private_key, this.signatureType),
+      signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
       state: connectConfig.state ? connectConfig.state : '',
-      communication: connectConfig.communication,
-      payload: sessionPayload
+      payload: sessionPayload,
+      psu_type: connectConfig.psu_type,
+      country: connectConfig.country,
+      date: headers['Date'],
+      request_id: headers['X-Request-ID']
     };
 
     const url = `${
@@ -58,38 +62,11 @@ export class Connect {
     }/pis`;
 
     const connect = {
-      url: `${url}?state=${Buffer.from(JSON.stringify(state)).toString('base64')}`,
+      url: `${url}?config=${Buffer.from(JSON.stringify(config)).toString('base64')}`,
       session_id: prepare.meta.session_id
     }
 
     return connect;
-  }
-
-  public verifyUrlParameters(queryString: any) {
-    this.config = this._validateConfigIntegrity(this.config);
-    this._validatePostPaymentIntegrity(queryString);
-
-    const decrypted: string = UtilsCrypto.decryptPrivate(queryString.s, this.config.private_key);
-
-    const testParams = {
-      app_id: this.config.app_id,
-      app_secret: this.config.app_secret,
-      session_id: queryString.session_id,
-      status: queryString.status,
-      customer_id: queryString.customer_id,
-      provider: queryString.provider,
-      state: queryString.state,
-    };
-    const testParamsArr = [];
-    for (const key in testParams) {
-      if (testParams.hasOwnProperty(key)) {
-        testParamsArr.push(key + '=' + testParams[key]);
-      }
-    }
-    const testParamsString = testParamsArr.join('&');
-    const localDigest = UtilsCrypto.hashBase64(testParamsString);
-
-    return decrypted === localDigest;
   }
 
   private _validateConnectConfigIntegrity(connectConfig: any) {
@@ -115,38 +92,14 @@ export class Connect {
       throw Error('customer ip must be set');
     }
 
-    connectConfig.communication = connectConfig.communication;
-
-    return connectConfig as IConnectConfig;
+    return connectConfig as ISetup;
   }
 
-  private _validatePostPaymentIntegrity(queryString: any) {
-    if (typeof queryString !== 'object') {
-      throw new Error(`invalid parameter format, the parameter must be an object instead a ${typeof queryString}`);
-    }
-    if (!queryString.s) {
-      this._trowInvalidPostPaymentParameter();
-    }
-    if (!queryString.status) {
-      this._trowInvalidPostPaymentParameter();
-    }
-    if (!queryString.session_id) {
-      this._trowInvalidPostPaymentParameter();
-    }
-    if (!queryString.customer_id) {
-      this._trowInvalidPostPaymentParameter();
-    }
-    if (!queryString.provider) {
-      this._trowInvalidPostPaymentParameter();
-    }
-  }
-
-  private _trowInvalidPostPaymentParameter() {
-    throw Error('missing query string');
-  }
-
-  private _buildSignature(payment: any, privateKey: string, algorithm: string): string {
-    return UtilsCrypto.signPayload(payment, privateKey, algorithm);
+  private _buildHeaders(accessToken: string, payload: any, privateKey: string, algorithm: string): any {
+    const headers = apiService.getHeaders('post', '', accessToken, this.config, payload);
+    const signingString = UtilsCrypto.buildSigningString(headers, Constants.CONNECTHEADERPARAMETERLIST)
+    headers["Signature"] = UtilsCrypto.signPayload(signingString, this.config.private_key); 
+    return headers;
   }
 
   private _buildPaymentPayload(payment: any) {
@@ -176,11 +129,17 @@ export class Connect {
     return payload;
   }
 
-  private _buildSessionPayload(sessionId) {
+  private _buildSessionPayload(payment) {
     return {
       meta: {
-        session_id: sessionId,
+        session_id: payment.meta.session_id,
       },
+      data: {
+        attributes: {
+          amount: payment.data.attributes.amount,
+          currency: payment.data.attributes.currency
+        }
+      }
     } as ISessionPayload;
   }
 
@@ -189,6 +148,6 @@ export class Connect {
       throw Error('private_key must be set to use this function');
     }
 
-    return config as IConfig;
+    return config as IFintectureConfig;
   }
 }

@@ -25,7 +25,7 @@ This section is divided based on the following use cases:
   - PIS without Connect
   - PIS with Connect
 
-### First Steps
+### Get Started
 
 Independantly of the use case, the first step is to create a developer account on the [Fintecture Console](https://console.fintecture.com/auth/register) and create an application to get your **app_id**, **app_secret** and **private_key**.
 
@@ -199,7 +199,7 @@ let tokens = await client.getAccessToken();
 let connect = await client.getPisConnect(tokens.access_token, connectConfig);
 window.href.location = connect.url;
 
-// and at any time
+// and at any time (ex: to validate a payment on callback)
 let payment = await client.getPayments(tokens.access_token, connect.session_id);
 console.log("PAYMENT STATUS:", payment.meta.status);
 
@@ -214,7 +214,7 @@ Description of Connect fields:
 * customer_ip: [mandatory] the ip address of the payer
 * redirect_uri: [mandatory] the callback URL to which the customer is redirected after authentication with his bank
 * origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
-* state: [optional] A state parameter which is sent back on callback
+* state: [optional] A state parameter which is sent back on callback. In the context of ecommerce, input the orderId here.
 
 ## Contributing
 

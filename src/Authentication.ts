@@ -1,7 +1,7 @@
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { IConfig } from './interfaces/ConfigInterface';
+import { IFintectureConfig } from './interfaces/ConfigInterface';
 import * as authService from './services/AuthenticationService';
 
 /**
@@ -20,7 +20,7 @@ export class Authentication {
    *
    * @param {string} appId
    */
-  constructor(config: IConfig) {
+  constructor(config: IFintectureConfig) {
     this.appId = config.app_id;
     this.appSecret = config.app_secret;
     this.axiosInstance = this._getAxiosInstance(config.env);

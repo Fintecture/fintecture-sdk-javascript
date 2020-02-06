@@ -3,7 +3,7 @@ import { TestConfig } from './constants/config';
 
 describe('Resources',  () => {
 
-    const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
+    const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking, private_key: TestConfig.appPrivKeyOpenbanking });
 
     it('#providers()', async (done) => {
         const body = await client.getProviders();

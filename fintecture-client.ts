@@ -1,6 +1,6 @@
 import { AIS } from './src/Ais';
 import { Authentication } from './src/Authentication';
-import { IConfig } from './src/interfaces/ConfigInterface'
+import { IFintectureConfig } from './src/interfaces/ConfigInterface'
 import { IConnect } from './src/interfaces/connect/ConnectInterface'
 
 import { Constants } from './src/utils/Constants';
@@ -15,7 +15,7 @@ import { Resources } from './src/Resources';
  */
 export class FintectureClient {
 
-    private config: IConfig;
+    private config: IFintectureConfig;
     private connect: Connect;
     private resources: Resources;
     private authentication: Authentication;
@@ -45,16 +45,16 @@ export class FintectureClient {
         return this.authentication.refreshToken(refreshToken);
     }
 
-    public async getProviders(options?: object): Promise<object> {
-        return this.resources.providers(options);
+    public async getProviders(search?: object): Promise<object> {
+        return this.resources.providers(search);
     }
 
     public async getApplication(): Promise<object> {
         return this.resources.application();
     }
 
-    public async getTestAccounts(options?: object): Promise<object> {
-        return this.resources.testAccounts(options);
+    public async getTestAccounts(search?: object): Promise<object> {
+        return this.resources.testAccounts(search);
     }
 
     public async getRedirectAuthUrl(accessToken: string, providerId: string, redirectUri: string, state?: string): Promise<object> {
@@ -69,16 +69,16 @@ export class FintectureClient {
         return this.ais.decoupled(accessToken, providerId, pollingId);
     }
 
-    public async getAccounts(accessToken: string, customerId: string, options?: any): Promise<object> {
-        return this.ais.getAccounts(accessToken, customerId, options);
+    public async getAccounts(accessToken: string, customerId: string, search?: any, headers?: any): Promise<object> {
+        return this.ais.getAccounts(accessToken, customerId, search, headers);
     }
 
-    public async getTransactions(accessToken: string, customerId: string, accountId, options?: any): Promise<object> {
-        return this.ais.getTransactions(accessToken, customerId, accountId, options);
+    public async getTransactions(accessToken: string, customerId: string, accountId, search?: any, headers?: any): Promise<object> {
+        return this.ais.getTransactions(accessToken, customerId, accountId, search, headers);
     }
 
-    public async getAccountHolders(accessToken: string, customerId: string, options?: any): Promise<object> {
-        return this.ais.getAccountHolders(accessToken, customerId, options);
+    public async getAccountHolders(accessToken: string, customerId: string, search?: any, headers?: any): Promise<object> {
+        return this.ais.getAccountHolders(accessToken, customerId, search, headers);
     }
 
     public async preparePayment(accessToken: string, payload: any): Promise<object> {
@@ -101,10 +101,6 @@ export class FintectureClient {
         return this.connect.getPisConnect(accessToken, connectConfig);
     }
 
-    public verifyConnectUrlParameters(queryString): boolean {
-        return this.connect.verifyUrlParameters(queryString);
-    }
-
     private _validateConfigIntegrity(config) {
         if (!config.app_id) {
             throw Error('app_id is not configured');
@@ -114,7 +110,7 @@ export class FintectureClient {
             throw Error('app_secret is not configured');
         }
 
-        if (!config.private_key && config.env === Constants.PRODUCTIONENVIRONMENT) {
+        if (!config.private_key) {
             throw Error('private_key must be a string');
         }
 
@@ -138,7 +134,7 @@ export class FintectureClient {
             config.env = Constants.DEFAULTENVIRONMENT;
         }
 
-        return config as IConfig;
+        return config as IFintectureConfig;
     }
 
 }

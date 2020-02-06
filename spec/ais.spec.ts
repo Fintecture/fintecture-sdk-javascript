@@ -11,7 +11,7 @@ AISproviderIdTest.split(',').forEach( (providerId) => {
     providerId = providerId.trim();
 
     describe(`AIS - get fintecture access token - `, () => {
-        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking });
+        const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking, private_key: TestConfig.appPrivKeyOpenbanking });
         const redirectUri = TestConfig.appRedirectUri;
         let accessToken;
         let customerId;
@@ -47,6 +47,16 @@ AISproviderIdTest.split(',').forEach( (providerId) => {
 
         let account;
 
+        it(`get provider ${providerId} AIS account with PSU IP`, async (done) => {
+            const filters = null;
+            const extras = {'x-psu-ip-address': '172.0.0.1'}
+            const accounts: any = await client.getAccounts(accessToken, customerId, filters, extras);
+            account = accounts.data[0].id
+            expect(accounts.data.length).toBeGreaterThan(0);
+            done();
+        });
+
+        
         it(`get provider ${providerId} AIS account `, async (done) => {
             const accounts: any = await client.getAccounts(accessToken, customerId);
             account = accounts.data[0].id
@@ -56,6 +66,14 @@ AISproviderIdTest.split(',').forEach( (providerId) => {
 
         it(`get provider ${providerId} AIS auth URL with app_id `, async (done) => {
             const transactions: any = await client.getTransactions(accessToken, customerId, account);
+            expect(transactions.data.length).toBeGreaterThan(0);
+            done();
+        });
+
+        it(`get provider ${providerId} AIS auth URL with app_id with PSU IP`, async (done) => {
+            const filters = null;
+            const extras = {'x-psu-ip-address': '172.0.0.1'}
+            const transactions: any = await client.getTransactions(accessToken, customerId, account, filters, extras);
             expect(transactions.data.length).toBeGreaterThan(0);
             done();
         });
