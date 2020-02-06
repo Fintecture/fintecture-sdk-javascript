@@ -12,8 +12,8 @@ export function generateUUIDv4() {
 }
 
 export function createSignatureHeader(headers: any, config: IFintectureConfig, signedHeaders: any) {
-  let signingString = buildSigningString(headers, signedHeaders);
-  let headerString = buildHeaderString(headers, signedHeaders);
+  const signingString = buildSigningString(headers, signedHeaders);
+  const headerString = buildHeaderString(headers, signedHeaders);
   
   const signature = signPayload(signingString, config.private_key);
   return (

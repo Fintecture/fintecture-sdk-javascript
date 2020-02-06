@@ -40,13 +40,15 @@ export const getHeaders = (method: string, url: string, accessToken: string, con
   }
   
   headers['Date'] = new Date().toUTCString();
+  headers['X-Date'] = headers['Date'];
   headers['X-Request-ID'] = Crypto.generateUUIDv4();
   headers['(request-target)'] = method.toLowerCase() + ' ' + pathname + (search ? search : '');
   headers['Signature'] = Crypto.createSignatureHeader(headers, config, Constants.SIGNEDHEADERPARAMETERLIST);
   delete headers['(request-target)'];
 
-  if (extraHeaders) Object.assign(headers, extraHeaders);
-
+  if (extraHeaders) {
+    Object.assign(headers, extraHeaders);
+  }
 
   return headers;
 };
