@@ -1,7 +1,7 @@
 import * as UtilsCrypto from './utils/Crypto.js';
 import { BaseUrls } from './utils/URLBuilders/BaseUrls';
 import * as connectService from './services/ConnectService';
-import { ISetup, IConnectConfig, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { IPisSetup, IPisConnectConfig, IAisConnectConfig, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
 import { ISessionPayload } from './interfaces/pis/PisInterface';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
@@ -12,7 +12,7 @@ export class Connect {
   public pis: PIS;
   public axios: any;
   public config: IFintectureConfig;
-  public connectConfig: ISetup;
+  public connectConfig: IPisSetup;
 
   private signatureType: string;
 
@@ -24,13 +24,59 @@ export class Connect {
   }
 
   /**
-   * Generates a connect URL based on the payment parameters
+ * Generates a connect URL based on the AIS parameters
+ *
+ * @param {string} accessTOken
+ * @param {payment} State
+ */
+  public getAisConnect(accessToken: string, connectConfig: any) {
+    this.config = this._validateConfigIntegrity(this.config);
+
+    const headers: any = this._buildHeaders(accessToken, 'get', null, this.config.private_key, this.signatureType);
+
+    const config: IAisConnectConfig = {
+      app_id: this.config.app_id,
+      signature_type: this.signatureType,
+      signature: headers['Signature'],
+      redirect_uri: connectConfig.redirect_uri,
+      origin_uri: connectConfig.origin_uri,
+      error_redirect_uri: connectConfig.error_redirect_uri ? connectConfig.error_redirect_uri: null,
+      state: connectConfig.state ? connectConfig.state : null,
+      psu_type: connectConfig.psu_type,
+      country: connectConfig.country,
+      date: headers['Date'],
+      request_id: headers['X-Request-ID']
+    };
+
+    if (accessToken)
+      config.access_token = accessToken;
+
+    const psuType = connectConfig.psu_type ? connectConfig.psu_type : 'retail';
+    const country = connectConfig.country ? connectConfig.country : 'fr';
+
+    const url = `${
+      this.config.env === Constants.SANDBOXENVIRONMENT
+        ? BaseUrls.FINTECTURECONNECTURL_SBX
+        : BaseUrls.FINTECTURECONNECTURL_PRD
+      }/ais/${psuType}/${country}`;
+
+    const connect = {
+      url: `${url}?config=${Buffer.from(JSON.stringify(config)).toString('base64')}`,
+    }
+
+    return connect;
+
+  }
+
+  /**
+   * Generates a connect URL based on the PIS parameters
    *
+   * @param {string} accessTOken
    * @param {payment} State
    */
   public async getPisConnect(accessToken: string, connectConfig: any) {
     this.config = this._validateConfigIntegrity(this.config);
-    this.connectConfig = this._validateConnectConfigIntegrity(connectConfig);
+    this.connectConfig = this._validatePisConnectConfigIntegrity(connectConfig);
 
     const paymentPayload: IPaymentPayload = this._buildPaymentPayload(connectConfig);
 
@@ -38,16 +84,17 @@ export class Connect {
 
     const sessionPayload: ISessionPayload = this._buildSessionPayload(prepare);
 
-    const headers: any = this._buildHeaders(accessToken, sessionPayload, this.config.private_key, this.signatureType);
+    const headers: any = this._buildHeaders(accessToken, 'post', sessionPayload, this.config.private_key, this.signatureType);
 
-    const config: IConnectConfig = {
+    const config: IPisConnectConfig = {
       app_id: this.config.app_id,
       access_token: accessToken,
       signature_type: this.signatureType,
       signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
-      state: connectConfig.state ? connectConfig.state : '',
+      error_redirect_uri: connectConfig.error_redirect_uri ? connectConfig.error_redirect_uri: null,
+      state: connectConfig.state ? connectConfig.state : null,
       payload: sessionPayload,
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,
@@ -59,7 +106,7 @@ export class Connect {
       this.config.env === Constants.SANDBOXENVIRONMENT
         ? BaseUrls.FINTECTURECONNECTURL_SBX
         : BaseUrls.FINTECTURECONNECTURL_PRD
-    }/pis`;
+      }/pis`;
 
     const connect = {
       url: `${url}?config=${Buffer.from(JSON.stringify(config)).toString('base64')}`,
@@ -69,7 +116,7 @@ export class Connect {
     return connect;
   }
 
-  private _validateConnectConfigIntegrity(connectConfig: any) {
+  private _validatePisConnectConfigIntegrity(connectConfig: any) {
     if (!connectConfig.amount) {
       throw Error('amount not set');
     }
@@ -92,13 +139,14 @@ export class Connect {
       throw Error('customer ip must be set');
     }
 
-    return connectConfig as ISetup;
+    return connectConfig as IPisSetup;
   }
 
-  private _buildHeaders(accessToken: string, payload: any, privateKey: string, algorithm: string): any {
-    const headers = apiService.getHeaders('post', '', accessToken, this.config, payload);
+
+  private _buildHeaders(accessToken: string, method: string, payload: any, privateKey: string, algorithm: string): any {
+    const headers = apiService.getHeaders(method, '', accessToken, this.config, payload);
     const signingString = UtilsCrypto.buildSigningString(headers, Constants.CONNECTHEADERPARAMETERLIST)
-    headers["Signature"] = UtilsCrypto.signPayload(signingString, this.config.private_key); 
+    headers["Signature"] = UtilsCrypto.signPayload(signingString, this.config.private_key);
     return headers;
   }
 

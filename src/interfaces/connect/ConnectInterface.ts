@@ -3,15 +3,15 @@ import { ISessionPayload } from '../pis/PisInterface';
 /**
  * Options to be passed to connect
  *
- * @interface ISetup
- * @interface IConnectConfig
+ * @interface IPisSetup
+ * @interface IPisConnectConfig
  * @interface IPaymentPayload
  * @interface IData
  * @interface IAttributes
  * @interface IMeta
  */
 
-export interface ISetup {
+export interface IPisSetup {
   amount: number;
   currency: string;
   communication: string;
@@ -21,22 +21,48 @@ export interface ISetup {
   customer_ip?: string;
   redirect_uri: string;
   origin_uri: string;
+  error_redirect_uri?: string;
   state?: string;
 }
 
-export interface IConnectConfig {
+export interface IAisSetup {
+  redirect_uri: string;
+  origin_uri: string;
+  error_redirect_uri?: string;
+  state?: string;
+}
+
+export interface IPisConnectConfig {
   app_id: string;
   access_token: string;
   signature_type: string;
   signature: string;
   redirect_uri: string;
   origin_uri: string;
+  error_redirect_uri?: string;
   state: string;
   payload: ISessionPayload;
   psu_type?: string;
   country?: string;
   date: string;
   request_id: string;
+}
+
+
+export interface IAisConnectConfig {
+  app_id: string;
+  access_token?: string;
+  signature_type: string;
+  signature: string;
+  date: string;
+  request_id: string;
+  redirect_uri: string;
+  origin_uri: string;
+  error_redirect_uri?: string;
+  state?: string;
+  psu_ip?: ISessionPayload;
+  psu_type?: string;
+  country?: string;
 }
 
 export interface IPaymentPayload {
@@ -64,7 +90,12 @@ export interface IMeta {
 }
 
 
-export interface IConnect {
+export interface IPisConnect {
   url: string,
   session_id: string
+}
+
+
+export interface IAisConnect {
+  url: string
 }

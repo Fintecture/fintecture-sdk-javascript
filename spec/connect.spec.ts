@@ -4,10 +4,10 @@ import qs from 'qs';
 
 import { FintectureClient } from '../fintecture-client';
 import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
-import { ISetup } from './../src/interfaces/connect/ConnectInterface';
+import { IPisSetup, IAisSetup } from './../src/interfaces/connect/ConnectInterface';
 import { TestConfig } from './constants/config';
 
-const connectConfigMin: ISetup = {
+const connectPisConfigMin: IPisSetup = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
@@ -15,7 +15,7 @@ const connectConfigMin: ISetup = {
     origin_uri: 'https://www.google.com/shop',
 };
 
-const connectConfigFull: ISetup = {
+const connectPisConfigFull: IPisSetup = {
     amount: 125,
     currency: 'EUR',
     communication: 'Thanks mom!',
@@ -27,36 +27,40 @@ const connectConfigFull: ISetup = {
     state: 'somestate'
 };
 
+const connectAisMin: IAisSetup = {
+    redirect_uri: 'https://www.google.com/callback',
+    origin_uri: 'https://www.google.com/shop',
+    state: 'somestate'
+};
+
+
 const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
 
 describe('Connect', () => {
     it('#PIS getPisConnect', async (done) => {
         const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/pis?config=';
         const tokens: any = await client.getAccessToken();
-        const connectMin = await client.getPisConnect(tokens.access_token, connectConfigMin);
+        const connectMin = await client.getPisConnect(tokens.access_token, connectPisConfigMin);
         expect(connectMin.url).toContain(mockConnectUrl);
         expect(!!connectMin.session_id).toBe(true);
-        const connectFull = await client.getPisConnect(tokens.access_token, connectConfigFull);
+        const connectFull = await client.getPisConnect(tokens.access_token, connectPisConfigFull);
         expect(connectFull.url).toContain(mockConnectUrl);
         expect(!!connectFull.session_id).toBe(true);
         expect(connectFull.url.length).toBeGreaterThan(connectMin.url.length)
         done();
     });
-/*
-    it('#AIS getAisConnectUrl', async (done) => {
-        const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/ais?';
 
-        let connectUrl = await connect.getAisConnectUrl(ConnectConfigMin);
-
-        expect(connectUrl).toContain(mockConnectUrl);
+    it('#AIS getAisConnectUrl', (done) => {
+        let connect = client.getAisConnect(null, connectAisMin);
+        expect(!!connect.url).toBe(true);
         done();
     });
-*/
+
 
     it('#PIS getConnectUrl Error no amount', async (done) => {
         let errorMessage = 'No error thrown.';
 
-        const ConnectUrlFulltemp = Object.assign({}, connectConfigFull);
+        const ConnectUrlFulltemp = Object.assign({}, connectPisConfigFull);
         delete ConnectUrlFulltemp['amount'];
 
         try {
@@ -73,7 +77,7 @@ describe('Connect', () => {
     it('#PIS getConnectUrl Error no currency', async (done) => {
         let errorMessage = 'No error thrown.';
 
-        const ConnectUrlFulltemp = Object.assign({}, connectConfigFull);
+        const ConnectUrlFulltemp = Object.assign({}, connectPisConfigFull);
         delete ConnectUrlFulltemp['currency'];
 
         try {

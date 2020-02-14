@@ -1,7 +1,7 @@
 import { AIS } from './src/Ais';
 import { Authentication } from './src/Authentication';
 import { IFintectureConfig } from './src/interfaces/ConfigInterface'
-import { IConnect } from './src/interfaces/connect/ConnectInterface'
+import { IPisConnect, IAisConnect } from './src/interfaces/connect/ConnectInterface'
 
 import { Constants } from './src/utils/Constants';
 import { Connect } from './src/Connect';
@@ -97,8 +97,12 @@ export class FintectureClient {
         return this.pis.getPayments(accessToken, sessionId);
     }
 
-    public async getPisConnect(accessToken: string, connectConfig: any): Promise<IConnect> {
+    public async getPisConnect(accessToken: string, connectConfig: any): Promise<IPisConnect> {
         return this.connect.getPisConnect(accessToken, connectConfig);
+    }
+
+    public getAisConnect(accessToken: string, connectConfig: any): IAisConnect {
+        return this.connect.getAisConnect(accessToken, connectConfig);
     }
 
     private _validateConfigIntegrity(config) {
