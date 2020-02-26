@@ -34,8 +34,8 @@ export class Authentication {
    * @param {string} authCode (optional)
    * @returns {Promise<object>}
    */
-  public async accessToken(authCode?: string): Promise<object> {
-    const data: string = this._getAccessTokenData(authCode);
+  public async accessToken(authCode?: string, scopes?: string): Promise<object> {
+    const data: string = this._getAccessTokenData(authCode, scopes);
 
     const response = await this.axiosInstance.post(Endpoints.OAUTHACCESSTOKEN, data);
 
@@ -65,12 +65,8 @@ export class Authentication {
    * @param {string} authCode (optional)
    * @returns {string}
    */
-  private _getAccessTokenData(authCode?: string): string {
-    let data: object = {
-      scope: 'PIS',
-      app_id: this.appId,
-      grant_type: 'client_credentials',
-    };
+  private _getAccessTokenData(authCode?: string, scopes?: string): string {
+    let data: object = {};
 
     if (authCode) {
       data = {
@@ -79,6 +75,18 @@ export class Authentication {
         grant_type: 'authorization_code',
       };
     }
+    else {
+      data = {
+        scope: 'PIS',
+        app_id: this.appId,
+        grant_type: 'client_credentials',
+      };
+    }
+
+    if (scopes) {
+      data["scope"] = scopes;
+    }
+    
     return qs.stringify(data);
   }
 

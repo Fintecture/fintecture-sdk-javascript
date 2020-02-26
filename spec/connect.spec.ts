@@ -1,7 +1,3 @@
-import nock from 'nock';
-import * as crypto from 'crypto';
-import qs from 'qs';
-
 import { FintectureClient } from '../fintecture-client';
 import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 import { IPisSetup, IAisSetup } from './../src/interfaces/connect/ConnectInterface';
@@ -51,7 +47,7 @@ describe('Connect', () => {
     });
 
     it('#AIS getAisConnectUrl', (done) => {
-        let connect = client.getAisConnect(null, connectAisMin);
+        const connect = client.getAisConnect(null, connectAisMin);
         expect(!!connect.url).toBe(true);
         done();
     });

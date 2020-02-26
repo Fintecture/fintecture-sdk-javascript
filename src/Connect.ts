@@ -24,11 +24,11 @@ export class Connect {
   }
 
   /**
- * Generates a connect URL based on the AIS parameters
- *
- * @param {string} accessTOken
- * @param {payment} State
- */
+   * Generates a connect URL based on the AIS parameters
+   *
+   * @param {string} accessTOken
+   * @param {payment} State
+   */
   public getAisConnect(accessToken: string, connectConfig: any) {
     this.config = this._validateConfigIntegrity(this.config);
 
@@ -40,16 +40,17 @@ export class Connect {
       signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
-      error_redirect_uri: connectConfig.error_redirect_uri ? connectConfig.error_redirect_uri: null,
-      state: connectConfig.state ? connectConfig.state : null,
+      error_redirect_uri: connectConfig.error_redirect_uri,
+      state: connectConfig.state,
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,
       date: headers['Date'],
       request_id: headers['X-Request-ID']
     };
 
-    if (accessToken)
+    if (accessToken) {
       config.access_token = accessToken;
+    }
 
     const psuType = connectConfig.psu_type ? connectConfig.psu_type : 'retail';
     const country = connectConfig.country ? connectConfig.country : 'fr';
@@ -93,8 +94,8 @@ export class Connect {
       signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
-      error_redirect_uri: connectConfig.error_redirect_uri ? connectConfig.error_redirect_uri: null,
-      state: connectConfig.state ? connectConfig.state : null,
+      error_redirect_uri: connectConfig.error_redirect_uri,
+      state: connectConfig.state,
       payload: sessionPayload,
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,

@@ -1,5 +1,3 @@
-import * as crypto from 'crypto';
-
 import * as UtilsCrypto from '../src/utils/Crypto';
 import { TestConfig } from './constants/config';
 

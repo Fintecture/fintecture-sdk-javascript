@@ -37,8 +37,8 @@ export class FintectureClient {
         this.ais = new AIS(this.config);
     }
 
-    public async getAccessToken(authCode?: string): Promise<object> {
-        return this.authentication.accessToken(authCode);
+    public async getAccessToken(authCode?: string, scopes?: string): Promise<object> {
+        return this.authentication.accessToken(authCode, scopes);
     }
 
     public async refreshAccessToken(refreshToken: string): Promise<object> {

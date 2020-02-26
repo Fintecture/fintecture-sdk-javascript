@@ -19,15 +19,15 @@ export interface IPisSetup {
   customer_full_name?: string;
   customer_email?: string;
   customer_ip?: string;
-  redirect_uri: string;
-  origin_uri: string;
+  redirect_uri?: string;
+  origin_uri?: string;
   error_redirect_uri?: string;
   state?: string;
 }
 
 export interface IAisSetup {
   redirect_uri: string;
-  origin_uri: string;
+  origin_uri?: string;
   error_redirect_uri?: string;
   state?: string;
 }
@@ -37,8 +37,8 @@ export interface IPisConnectConfig {
   access_token: string;
   signature_type: string;
   signature: string;
-  redirect_uri: string;
-  origin_uri: string;
+  redirect_uri?: string;
+  origin_uri?: string;
   error_redirect_uri?: string;
   state: string;
   payload: ISessionPayload;
@@ -57,7 +57,7 @@ export interface IAisConnectConfig {
   date: string;
   request_id: string;
   redirect_uri: string;
-  origin_uri: string;
+  origin_uri?: string;
   error_redirect_uri?: string;
   state?: string;
   psu_ip?: ISessionPayload;

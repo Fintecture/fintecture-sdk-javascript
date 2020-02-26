@@ -17,3 +17,4 @@ coverage
 readme.txt
 fintecture-client-1.0.12.tgz
 .idea
+*.tgz

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import * as crypto from 'crypto';
+import { createHash, createSign } from 'crypto';
 import { IFintectureConfig } from '../interfaces/ConfigInterface';
 import { Constants } from './Constants';
 
@@ -55,7 +55,7 @@ export function signPayload(payload: any, privateKey: string, algorithm?: string
 
   if (!algorithm || algorithm === 'rsa-sha256') {
     try {
-      const signature = crypto.createSign('RSA-SHA256');
+      const signature = createSign('RSA-SHA256');
       signature.update(payload);
       signature.end();
       return signature.sign(privateKey).toString('base64');
@@ -68,8 +68,5 @@ export function signPayload(payload: any, privateKey: string, algorithm?: string
 }
 
 export function hashBase64(plainText: string): string {
-  return crypto
-    .createHash('sha256')
-    .update(plainText)
-    .digest('base64');
+  return createHash('sha256').update(plainText).digest('base64');
 }
