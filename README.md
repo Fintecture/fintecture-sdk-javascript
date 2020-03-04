@@ -190,8 +190,6 @@ let connectConfig = {
     customer_full_name: 'Bob Smith',
     customer_email: 'bob.smith@gmail.com',
     customer_ip: '127.0.0.1',
-    redirect_uri: 'https://www.mywebsite.com/callback',
-    origin_uri: 'https://www.mywebsite.com/shop/checkout',
     state: 'somestate'
 };
 
@@ -212,9 +210,9 @@ Description of Connect fields:
 * customer_full_name: [mandatory] the full name of the payer
 * customer_email: [mandatory] the email of the payer
 * customer_ip: [mandatory] the ip address of the payer
-* redirect_uri: [mandatory] the callback URL to which the customer is redirected after authentication with his bank
+* redirect_uri: [optional] the callback URL to which the customer is redirected after authentication with his bank
 * origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
-* state: [optional] A state parameter which is sent back on callback. In the context of ecommerce, input the orderId here.
+* state: [mandatory] A state parameter which is sent back on callback. In the context of ecommerce, input the order ID here.
 
 ## Contributing
 
