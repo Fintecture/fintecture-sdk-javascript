@@ -141,6 +141,23 @@ export class AIS {
   }
 
   /**
+   * This endpoint deletes all the accounts data of a given customer
+   *
+   * @param {string} accessToken
+   * @param {string} customerId
+   * @returns {Promise<object>}
+   */
+  public async deleteCustomer(accessToken: string, customerId: string): Promise<object> {
+    const url = `${Endpoints.AISCUSTOMER}/${customerId}`;
+
+    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+    return await this.axiosInstance
+      .delete(url, { headers })
+      .then(response => response.data);
+  }
+
+  /**
    * Private function that creates an instance of api
    * axios. This instance of axios include all the common headers
    * params.
