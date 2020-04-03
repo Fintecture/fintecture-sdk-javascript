@@ -1,6 +1,6 @@
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { ISessionPayload } from './interfaces/pis/PisInterface';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
+import { ISessionPayload } from './interfaces/pis/PisInterface';
 import * as apiService from './services/ApiService';
 
 /**
@@ -76,14 +76,32 @@ export class PIS {
    * @returns {Promise<object>}
    */
   public async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
-    
     const url = `${Endpoints.PISCUSTOMER}/${customerId}/confirm`;
 
     const payload = this._buildSessionPayload(sessionId);
-    
+
     const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
 
     const response = await this.axiosInstance.put(url, payload, { headers });
+
+    return response.data;
+  }
+
+  /**
+   * Initiate a refund
+   *
+   * @param {string} accessToken
+   * @param {string} sessionId
+   * @returns {Promise<object>}
+   */
+  public async initiateRefund(accessToken: string, sessionId: string): Promise<object> {
+    const url = `${Endpoints.PIS}/refund`;
+
+    const payload = this._buildSessionPayload(sessionId);
+
+    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+    const response = await this.axiosInstance.post(url, payload, { headers });
 
     return response.data;
   }
@@ -96,9 +114,8 @@ export class PIS {
    * @returns {Promise<object>}
    */
   public async getPayments(accessToken: string, sessionId: string): Promise<object> {
-
     const url = `${Endpoints.PIS}/payments/${sessionId}`;
-    
+
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
 
     const response = await this.axiosInstance.get(url, {headers});
