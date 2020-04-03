@@ -21,5 +21,5 @@ export class BaseUrls {
   public static readonly FINTECTUREAPIURL_PRD: string =
     process.env.FINTECTUREAPIURL_DEV || 'https://api.fintecture.com';
   public static readonly FINTECTURECONNECTURL_PRD: string =
-    process.env.FINTECTUREOAUTHURL_DEV || 'https://connect.fintecture.com';
+    process.env.FINTECTURECONNECTURL_DEV || 'https://connect.fintecture.com';
 }
