@@ -97,6 +97,10 @@ export class FintectureClient {
         return this.pis.getPayments(accessToken, sessionId);
     }
 
+    public async initiateRefund(accessToken: string, sessionId: string) {
+        return this.pis.initiateRefund(accessToken, sessionId);
+    }
+
     public async getPisConnect(accessToken: string, connectConfig: any): Promise<IPisConnect> {
         return this.connect.getPisConnect(accessToken, connectConfig);
     }
