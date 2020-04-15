@@ -105,6 +105,10 @@ export class FintectureClient {
         return this.connect.getAisConnect(accessToken, connectConfig);
     }
 
+    public deleteCustomer(accessToken: string, customerId: string): Promise<object> {
+        return this.ais.deleteCustomer(accessToken, customerId);
+    }
+
     private _validateConfigIntegrity(config) {
         if (!config.app_id) {
             throw Error('app_id is not configured');

@@ -41,7 +41,6 @@ export interface IPisConnectConfig {
   origin_uri?: string;
   error_redirect_uri?: string;
   state: string;
-  communication: string;
   payload: ISessionPayload;
   psu_type?: string;
   country?: string;

@@ -150,7 +150,7 @@ export class AIS {
   public async deleteCustomer(accessToken: string, customerId: string): Promise<object> {
     const url = `${Endpoints.AISCUSTOMER}/${customerId}`;
 
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+    const headers = apiService.getHeaders('delete', url, accessToken, this.config);
 
     return await this.axiosInstance
       .delete(url, { headers })

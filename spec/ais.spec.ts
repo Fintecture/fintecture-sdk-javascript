@@ -77,5 +77,13 @@ AISproviderIdTest.split(',').forEach( (providerId) => {
             expect(transactions.data.length).toBeGreaterThan(0);
             done();
         });
+
+        afterAll(async (done) => {
+            const deletedCustomer: any = await client.deleteCustomer(accessToken, customerId);
+            expect(deletedCustomer.meta.status).toBe(200);
+            expect(deletedCustomer.meta.code).toBe("customer_deleted");
+            done();
+        });
+        
     });
 });
