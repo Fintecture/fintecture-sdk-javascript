@@ -3,7 +3,7 @@ import { Authentication } from './src/Authentication';
 import { IFintectureConfig } from './src/interfaces/ConfigInterface'
 import { IPisConnect, IAisConnect } from './src/interfaces/connect/ConnectInterface'
 
-import { Constants } from './src/utils/Constants';
+import { Constants, environment } from './src/utils/Constants';
 import { Connect } from './src/Connect';
 import { PIS } from './src/Pis';
 import { Resources } from './src/Resources';
@@ -138,8 +138,8 @@ export class FintectureClient {
             throw Error('private_key is in a wrong format');
         }
 
-        if (config.env && !['sandbox', 'production'].includes(config.env)) {
-            throw Error('environment is badly configured.');
+        if (config.env && !Object.keys(environment).includes(config.env)) {
+            throw Error(`environment is badly configured. Environments are ${Object.keys(environment).join(", ")}.`);
         }
 
         if (!config.env) {
