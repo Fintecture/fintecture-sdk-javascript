@@ -143,7 +143,7 @@ The initiate a payment on behalf of a PSU, you have to go through the following 
 1. Select a Bank
 
 ```javascript
-let options = {'filter[pis]': 'SEPA', 'filter[country]': 'FR', 'filter[psu_supported_types]': 'retail', 'sort[full_name]': 'asc'}
+let options = {'filter[pis]': 'SEPA', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'sort[full_name]': 'asc'}
 let providers = await client.getProviders(options);
 ```
 
