@@ -45,7 +45,8 @@ export class Connect {
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,
       date: headers['Date'],
-      request_id: headers['X-Request-ID']
+      request_id: headers['X-Request-ID'],
+      provider: connectConfig.provider
     };
 
     if (accessToken) {
@@ -100,7 +101,8 @@ export class Connect {
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,
       date: headers['Date'],
-      request_id: headers['X-Request-ID']
+      request_id: headers['X-Request-ID'],
+      provider:  connectConfig.provider
     };
 
     const url = `${
@@ -156,6 +158,8 @@ export class Connect {
       amount: payment.amount,
       currency: payment.currency,
       communication: `${payment.communication}`,
+      beneficiary: payment.beneficiary,
+      execution_date: payment.execution_date,
       end_to_end_id: payment.end_to_end_id,
     };
 
@@ -163,6 +167,7 @@ export class Connect {
       psu_name: payment.customer_full_name,
       psu_email: payment.customer_email,
       psu_ip: payment.customer_ip,
+      psu_phone: payment.customer_phone,
     };
 
     const data: IData = {
@@ -179,7 +184,7 @@ export class Connect {
   }
 
   private _buildSessionPayload(payment) {
-    return {
+    const payload = {
       meta: {
         session_id: payment.meta.session_id,
       },
@@ -190,6 +195,16 @@ export class Connect {
         }
       }
     } as ISessionPayload;
+
+    if (payment.data.attributes.beneficiary) {
+      payload.data.attributes.beneficiary = payment.data.attributes.beneficiary;
+    }
+
+    if (payment.data.attributes.execution_date) {
+      payload.data.attributes.execution_date = payment.data.attributes.execution_date;
+    }
+
+    return payload;
   }
 
   private _validateConfigIntegrity(config) {

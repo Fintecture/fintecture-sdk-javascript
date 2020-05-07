@@ -25,7 +25,7 @@ services:
       FINTECTUREOAUTHURL_DEV: 'http://localhost:3000'
       FINTECTUREAPIURL_DEV: 'http://localhost:3000'
       FINTECTURECONNECTURL_DEV: 'http://localhost:4201'
-      PIS_PROVIDER_ID_TEST: 'cmcifr2a, cmbrfr, fegefr, procfr, cmmcfr'
+      PIS_PROVIDER_ID_TEST: 'cmcifrpp, cmbrfr, fegefr, procfr, cmmcfr'
       app_private_key: |
         -----BEGIN PRIVATE KEY-----
         MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCeEocGuXp9AA+H

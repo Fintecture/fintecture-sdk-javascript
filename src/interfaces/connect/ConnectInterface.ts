@@ -46,6 +46,7 @@ export interface IPisConnectConfig {
   country?: string;
   date: string;
   request_id: string;
+  provider?: string;
 }
 
 
@@ -63,6 +64,7 @@ export interface IAisConnectConfig {
   psu_ip?: ISessionPayload;
   psu_type?: string;
   country?: string;
+  provider?: string;
 }
 
 export interface IPaymentPayload {
@@ -79,6 +81,8 @@ export interface IAttributes {
   amount: number;
   currency: string;
   communication: string;
+  execution_date?: string;
+  beneficiary?: IBeneficiary;
   end_to_end_id?: string;
 }
 
@@ -86,7 +90,30 @@ export interface IMeta {
   psu_local_id?: string;
   psu_name?: string;
   psu_email?: string;
+  psu_phone?: string;
   psu_ip?: string;
+  psu_address?: IAddress;
+}
+
+export interface IAddress {
+  name : string,
+  street : string,
+  number : string,
+  city : string,
+  zip : string,
+  country : string
+}
+
+export interface IBeneficiary {
+  name : string,
+  street : string,
+  number : string,
+  city : string,
+  zip : string,
+  country : string,
+  iban : string,
+  swift_bic: string,
+  bank_name: string
 }
 
 
