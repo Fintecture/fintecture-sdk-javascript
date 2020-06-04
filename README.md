@@ -134,7 +134,31 @@ let transactions = await client.getTransactions(accessToken, customerId, account
 
 #### AIS with Connect
 
-> Soon available
+To enable AIS using connect, simply redirect the PSU to the generated URL:
+
+```javascript
+let config = {
+   redirect_uri: 'https://mysite.com/callback',
+   state: "thisisastate",
+   psu_type: 'retail',
+   country: 'fr'
+}
+
+let connect = client.getAisConnect(null, config)
+window.href.location = connect.url;
+```
+
+On callback, exchange the code for an accesstoken, and use the accesstoken coupled with the customer_id to get your PSU AIS resources:
+
+```javascript
+// save querystring parameters
+const code = req.query.code;
+const customerId = req.query.customer_id;
+
+// get the Fintecture access token to request the AIS APIs
+const tokens = await client.getAccessToken(code);
+const accounts = await client.getAccounts(tokens.access_token, customerId);
+```
 
 #### PIS without Connect
 
