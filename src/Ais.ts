@@ -105,10 +105,17 @@ export class AIS {
    * @param {string} customerId
    * @param {string} accountId
    * @param {object} queryParameters (optional)
+   * @param {object} headerParameters (optional)
+   * @param {string} paginationUrl (optional)
    * @returns {Promise<object>}
    */
-  public async getTransactions(accessToken: string, customerId: string, accountId: string, queryParameters?: object, headerParameters?: object): Promise<object> {
-    const url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions${queryParameters ? '?' + qs.stringify(queryParameters) : ''}` ;
+  public async getTransactions(accessToken: string, customerId: string, accountId: string, queryParameters?: object, headerParameters?: object, paginationUrl?: string): Promise<object> {
+
+    let url = paginationUrl;
+
+    if (!url) {
+      url = `${Endpoints.AISCUSTOMER}/${customerId}/accounts/${accountId}/transactions${queryParameters ? '?' + qs.stringify(queryParameters) : ''}` ;
+    }
 
     const headers = apiService.getHeaders('get', url, accessToken, this.config, null, headerParameters);
 

@@ -7,6 +7,8 @@ import { TestConfig } from './constants/config';
 
 const AISproviderIdTest = process.env.AIS_PROVIDER_ID_TEST || 'cmmcfr';
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 AISproviderIdTest.split(',').forEach( (providerId) => {
     providerId = providerId.trim();
 

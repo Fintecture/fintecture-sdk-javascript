@@ -40,7 +40,6 @@ export class Connect {
       signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
-      error_redirect_uri: connectConfig.error_redirect_uri,
       state: connectConfig.state,
       psu_type: connectConfig.psu_type,
       country: connectConfig.country,
@@ -95,7 +94,6 @@ export class Connect {
       signature: headers['Signature'],
       redirect_uri: connectConfig.redirect_uri,
       origin_uri: connectConfig.origin_uri,
-      error_redirect_uri: connectConfig.error_redirect_uri,
       state: connectConfig.state,
       payload: sessionPayload,
       psu_type: connectConfig.psu_type,
@@ -165,9 +163,12 @@ export class Connect {
 
     const meta: IMeta = {
       psu_name: payment.customer_full_name,
+      psu_form: payment.customer_form,
+      psu_incorporation: payment.customer_incorporation,
       psu_email: payment.customer_email,
       psu_ip: payment.customer_ip,
       psu_phone: payment.customer_phone,
+      psu_address: payment.customer_address
     };
 
     const data: IData = {

@@ -127,4 +127,34 @@ PISproviderIdTest.split(',').forEach( (providerId) => {
             done();
         });
     });
+
+    describe(`Get ALL payments`, () => {
+        beforeEach( () => {
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+        });
+
+        it(`#payments(token, null)`, async (done) => {
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
+
+            const token: any = await client.getAccessToken();
+            
+            const response: any = await client.getPayments(token.access_token, null);
+            expect(response.data.length).toBeGreaterThan(1);
+            done();
+        });
+
+        it(`#payments(token, null, options)`, async (done) => {
+            const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secret: TestConfig.appSecretMerchant, private_key: TestConfig.appPrivKeyMerchant });
+
+            const token: any = await client.getAccessToken();
+            
+            const options = {'filter[status]': 'payment_pending'}
+
+            const response1: any = await client.getPayments(token.access_token, null);
+            const response2: any = await client.getPayments(token.access_token, null, options);
+
+            expect(response2.data.length).toBeLessThan(response1.data.length);
+            done();
+        });
+    });
 });

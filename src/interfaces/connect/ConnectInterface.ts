@@ -21,14 +21,12 @@ export interface IPisSetup {
   customer_ip?: string;
   redirect_uri?: string;
   origin_uri?: string;
-  error_redirect_uri?: string;
   state?: string;
 }
 
 export interface IAisSetup {
   redirect_uri: string;
   origin_uri?: string;
-  error_redirect_uri?: string;
   state?: string;
 }
 
@@ -39,7 +37,6 @@ export interface IPisConnectConfig {
   signature: string;
   redirect_uri?: string;
   origin_uri?: string;
-  error_redirect_uri?: string;
   state: string;
   payload: ISessionPayload;
   psu_type?: string;
@@ -59,9 +56,7 @@ export interface IAisConnectConfig {
   request_id: string;
   redirect_uri: string;
   origin_uri?: string;
-  error_redirect_uri?: string;
   state?: string;
-  psu_ip?: ISessionPayload;
   psu_type?: string;
   country?: string;
   provider?: string;
@@ -89,6 +84,8 @@ export interface IAttributes {
 export interface IMeta {
   psu_local_id?: string;
   psu_name?: string;
+  psu_form?: string;
+  psu_incorporation?: string;
   psu_email?: string;
   psu_phone?: string;
   psu_ip?: string;
@@ -106,6 +103,8 @@ export interface IAddress {
 
 export interface IBeneficiary {
   name : string,
+  form?: string,
+  incorporation?: string,
   street : string,
   number : string,
   city : string,

@@ -73,8 +73,8 @@ export class FintectureClient {
         return this.ais.getAccounts(accessToken, customerId, search, headers);
     }
 
-    public async getTransactions(accessToken: string, customerId: string, accountId, search?: any, headers?: any): Promise<object> {
-        return this.ais.getTransactions(accessToken, customerId, accountId, search, headers);
+    public async getTransactions(accessToken: string, customerId: string, accountId, search?: any, headers?: any, paginationUrl?: string): Promise<object> {
+        return this.ais.getTransactions(accessToken, customerId, accountId, search, headers, paginationUrl);
     }
 
     public async getAccountHolders(accessToken: string, customerId: string, search?: any, headers?: any): Promise<object> {
@@ -93,8 +93,8 @@ export class FintectureClient {
         return this.pis.confirm(accessToken, customerId, sessionId);
     }
 
-    public async getPayments(accessToken: string, sessionId: string): Promise<object> {
-        return this.pis.getPayments(accessToken, sessionId);
+    public async getPayments(accessToken: string, sessionId: string, queryParameters?: object): Promise<object> {
+        return this.pis.getPayments(accessToken, sessionId, queryParameters);
     }
 
     public async initiateRefund(accessToken: string, sessionId: string) {

@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import { Endpoints } from './utils/URLBuilders/Endpoints';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { ISessionPayload } from './interfaces/pis/PisInterface';
@@ -111,10 +113,12 @@ export class PIS {
    *
    * @param {string} accessToken
    * @param {string} sessionId
+   * @param {object} queryParameters (optional)
    * @returns {Promise<object>}
    */
-  public async getPayments(accessToken: string, sessionId: string): Promise<object> {
-    const url = `${Endpoints.PIS}/payments/${sessionId}`;
+  public async getPayments(accessToken: string, sessionId: string, queryParameters?: object): Promise<object> {
+    
+    const url = `${Endpoints.PIS}/payments` + (sessionId?('/'+sessionId):'') + (queryParameters ? ('?' + qs.stringify(queryParameters)) : '')
 
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
 

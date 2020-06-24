@@ -214,6 +214,27 @@ Description of Connect fields:
 * origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
 * state: [mandatory] A state parameter which is sent back on callback. In the context of ecommerce, input the order ID here.
 
+## Pagination
+
+Pagination can occur on the transaction endpoint. When requesting the getTransaction() function, you will receive a $.links.next URL. In order to iterate on the pages, supply that URL in the paginationURL field within the getTransactions function:
+
+```javascript
+
+let transactionsPages = [];
+
+let transactions = await client.getTransactions(accessToken, customerId, accountId, headers);
+transactionsPages.push(transactions)
+
+if (transactions.links.next) {
+    while (transactions.links.next) {
+        transactions = await client.getTransactions(accessToken, customerId, accountId, headers,transactions.links.next) ;
+        transactionsPages.push(transactions);
+    }
+}
+
+
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Fintecture/fintecture-sdk-javascript. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
