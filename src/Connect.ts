@@ -198,7 +198,7 @@ export class Connect {
     } as ISessionPayload;
 
     if (payment.data.attributes.beneficiary) {
-      payload.data.attributes.beneficiary = payment.data.attributes.beneficiary;
+      payload.data.attributes.beneficiary = {name: payment.data.attributes.beneficiary.name};
     }
 
     if (payment.data.attributes.execution_date) {
