@@ -249,12 +249,11 @@ let transactionsPages = [];
 let transactions = await client.getTransactions(accessToken, customerId, accountId, headers);
 transactionsPages.push(transactions)
 
-if (transactions.links.next) {
-    while (transactions.links.next) {
-        transactions = await client.getTransactions(accessToken, customerId, accountId, headers,transactions.links.next) ;
-        transactionsPages.push(transactions);
-    }
+while (transactions.links.next) {
+  transactions = await client.getTransactions(accessToken, customerId, accountId, headers,transactions.links.next) ;
+  transactionsPages.push(transactions);
 }
+
 
 
 ```
