@@ -94,12 +94,21 @@ export class PIS {
    *
    * @param {string} accessToken
    * @param {string} sessionId
+   * @param {number} amount (optional)
    * @returns {Promise<object>}
    */
-  public async initiateRefund(accessToken: string, sessionId: string): Promise<object> {
+  public async initiateRefund(accessToken: string, sessionId: string, amount?: number): Promise<object> {
     const url = `${Endpoints.PIS}/refund`;
 
     const payload = this._buildSessionPayload(sessionId);
+
+    if (amount) {
+      payload.data = {
+        attributes: {
+          amount
+        }
+      };
+    }
 
     const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
 
