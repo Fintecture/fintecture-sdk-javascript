@@ -105,7 +105,7 @@ export class FintectureClient {
         return this.connect.getPisConnect(accessToken, connectConfig);
     }
 
-    public getAisConnect(accessToken: string, connectConfig: any): IAisConnect {
+    public async getAisConnect(accessToken: string, connectConfig: any): Promise<IAisConnect> {
         return this.connect.getAisConnect(accessToken, connectConfig);
     }
 

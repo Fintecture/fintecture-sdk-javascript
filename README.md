@@ -144,7 +144,7 @@ let config = {
    country: 'fr'
 }
 
-let connect = client.getAisConnect(null, config)
+let connect = await client.getAisConnect(null, config)
 window.href.location = connect.url;
 ```
 
