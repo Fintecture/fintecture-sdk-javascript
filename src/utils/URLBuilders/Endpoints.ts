@@ -16,4 +16,6 @@ export class Endpoints {
   public static readonly PIS: string = '/pis/v1';
   public static readonly AISPROVIDER: string = '/ais/v1/provider';
   public static readonly AISCUSTOMER: string = '/ais/v1/customer';
+  public static readonly AISCONNECT: string = '/ais/v2/connect';
+  public static readonly PISCONNECT: string = '/pis/v2/connect';
 }

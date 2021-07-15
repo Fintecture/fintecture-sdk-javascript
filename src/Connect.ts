@@ -1,8 +1,7 @@
-import * as UtilsCrypto from './utils/Crypto.js';
-import { BaseUrls } from './utils/URLBuilders/BaseUrls';
-import * as connectService from './services/ConnectService';
-import { IPisSetup, IPisConnectConfig, IAisConnectConfig, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
-import { ISessionPayload } from './interfaces/pis/PisInterface';
+import qs from 'qs';
+
+import { Endpoints } from './utils/URLBuilders/Endpoints';
+import { IPisSetup, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
 import { PIS } from './Pis';
@@ -10,17 +9,14 @@ import * as apiService from './services/ApiService';
 
 export class Connect {
   public pis: PIS;
-  public axios: any;
+  public axiosInstance: any;
   public config: IFintectureConfig;
   public connectConfig: IPisSetup;
 
-  private signatureType: string;
-
   constructor(config: IFintectureConfig) {
     this.pis = new PIS(config);
-    this.axios = connectService;
+    this.axiosInstance = apiService.getInstance(config.env);
     this.config = config;
-    this.signatureType = 'rsa-sha256';
   }
 
   /**
@@ -29,44 +25,30 @@ export class Connect {
    * @param {string} accessTOken
    * @param {payment} State
    */
-  public getAisConnect(accessToken: string, connectConfig: any) {
+  public async getAisConnect(accessToken: string, connectConfig: any) {
     this.config = this._validateConfigIntegrity(this.config);
 
-    const headers: any = this._buildHeaders(accessToken, 'get', null, this.config.private_key, this.signatureType);
-
-    const config: IAisConnectConfig = {
-      app_id: this.config.app_id,
-      signature_type: this.signatureType,
-      signature: headers['Signature'],
+    const queryParameters = qs.stringify({
       redirect_uri: connectConfig.redirect_uri,
-      origin_uri: connectConfig.origin_uri,
-      state: connectConfig.state,
-      psu_type: connectConfig.psu_type,
-      country: connectConfig.country,
-      date: headers['Date'],
-      request_id: headers['X-Request-ID'],
-      provider: connectConfig.provider
+      state: connectConfig.state
+    });
+    const url = `${Endpoints.AISCONNECT}?${queryParameters}`;
+
+    // Extend the headers with Connect specific headers if they are defined
+    const extraHeaders = {
+      'x-provider': connectConfig.provider,
+      'x-psu-type': connectConfig.psu_type,
+      'x-country': connectConfig.country,
+      'x-language': connectConfig.language,
     };
 
-    if (accessToken) {
-      config.access_token = accessToken;
-    }
+    const headers = apiService.getHeaders('get', url, null, this.config, null, extraHeaders);
 
-    const psuType = connectConfig.psu_type ? connectConfig.psu_type : 'retail';
-    const country = connectConfig.country ? connectConfig.country : 'fr';
+    const { data } = await this.axiosInstance.get(url, { headers });
 
-    const url = `${
-      this.config.env === Constants.SANDBOXENVIRONMENT
-        ? BaseUrls.FINTECTURECONNECTURL_SBX
-        : BaseUrls.FINTECTURECONNECTURL_PRD
-      }/ais/${psuType}/${country}`;
-
-    const connect = {
-      url: `${url}?config=${Buffer.from(JSON.stringify(config)).toString('base64')}`,
-    }
-
-    return connect;
-
+    return {
+      url: data.meta.url
+    };
   }
 
   /**
@@ -81,40 +63,29 @@ export class Connect {
 
     const paymentPayload: IPaymentPayload = this._buildPaymentPayload(connectConfig);
 
-    const prepare: any = await this.pis.prepare(accessToken, paymentPayload);
-
-    const sessionPayload: ISessionPayload = this._buildSessionPayload(prepare);
-
-    const headers: any = this._buildHeaders(accessToken, 'post', sessionPayload, this.config.private_key, this.signatureType);
-
-    const config: IPisConnectConfig = {
-      app_id: this.config.app_id,
-      access_token: accessToken,
-      signature_type: this.signatureType,
-      signature: headers['Signature'],
-      redirect_uri: connectConfig.redirect_uri,
+    const queryParameters = qs.stringify({
       origin_uri: connectConfig.origin_uri,
-      state: connectConfig.state,
-      payload: sessionPayload,
-      psu_type: connectConfig.psu_type,
-      country: connectConfig.country,
-      date: headers['Date'],
-      request_id: headers['X-Request-ID'],
-      provider:  connectConfig.provider
+      redirect_uri: connectConfig.redirect_uri,
+      state: connectConfig.state
+    });
+    const url = `${Endpoints.PISCONNECT}?${queryParameters}`;
+
+    // Extend the headers with Connect specific headers if they are defined
+    const extraHeaders = {
+      'x-provider': connectConfig.provider,
+      'x-psu-type': connectConfig.psu_type,
+      'x-country': connectConfig.country,
+      'x-language': connectConfig.language,
     };
 
-    const url = `${
-      this.config.env === Constants.SANDBOXENVIRONMENT
-        ? BaseUrls.FINTECTURECONNECTURL_SBX
-        : BaseUrls.FINTECTURECONNECTURL_PRD
-      }/pis`;
+    const headers = apiService.getHeaders('post', url, accessToken, this.config, paymentPayload, extraHeaders);
 
-    const connect = {
-      url: `${url}?config=${Buffer.from(JSON.stringify(config)).toString('base64')}`,
-      session_id: prepare.meta.session_id
-    }
+    const { data } = await this.axiosInstance.post(url, paymentPayload, { headers });
 
-    return connect;
+    return {
+      session_id: data.meta.session_id,
+      url: data.meta.url,
+    };
   }
 
   private _validatePisConnectConfigIntegrity(connectConfig: any) {
@@ -141,14 +112,6 @@ export class Connect {
     }
 
     return connectConfig as IPisSetup;
-  }
-
-
-  private _buildHeaders(accessToken: string, method: string, payload: any, privateKey: string, algorithm: string): any {
-    const headers = apiService.getHeaders(method, '', accessToken, this.config, payload);
-    const signingString = UtilsCrypto.buildSigningString(headers, Constants.CONNECTHEADERPARAMETERLIST)
-    headers["Signature"] = UtilsCrypto.signPayload(signingString, this.config.private_key);
-    return headers;
   }
 
   private _buildPaymentPayload(payment: any) {
@@ -180,30 +143,6 @@ export class Connect {
       data,
       meta,
     };
-
-    return payload;
-  }
-
-  private _buildSessionPayload(payment) {
-    const payload = {
-      meta: {
-        session_id: payment.meta.session_id,
-      },
-      data: {
-        attributes: {
-          amount: payment.data.attributes.amount,
-          currency: payment.data.attributes.currency
-        }
-      }
-    } as ISessionPayload;
-
-    if (payment.data.attributes.beneficiary) {
-      payload.data.attributes.beneficiary = {name: payment.data.attributes.beneficiary.name};
-    }
-
-    if (payment.data.attributes.execution_date) {
-      payload.data.attributes.execution_date = payment.data.attributes.execution_date;
-    }
 
     return payload;
   }

@@ -46,8 +46,14 @@ export const getHeaders = (method: string, url: string, accessToken: string, con
   headers['Signature'] = Crypto.createSignatureHeader(headers, config, Constants.SIGNEDHEADERPARAMETERLIST);
   delete headers['(request-target)'];
 
+  // Extend with extra headers in case they are not undefined. `undefined` as value of a header
+  // is not allowed by Node.js
   if (extraHeaders) {
-    Object.assign(headers, extraHeaders);
+    Object.entries(extraHeaders).forEach(([headerName, headerValue]) => {
+      if (headerValue !== undefined) {
+        headers[headerName] = headerValue;
+      }
+    })
   }
 
   return headers;

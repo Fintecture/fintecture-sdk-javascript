@@ -1,5 +1,4 @@
 import { FintectureClient } from '../fintecture-client';
-import { BaseUrls } from './../src/utils/URLBuilders/BaseUrls';
 import { IPisSetup, IAisSetup } from './../src/interfaces/connect/ConnectInterface';
 import { TestConfig } from './constants/config';
 
@@ -34,20 +33,17 @@ const client = new FintectureClient({ app_id: TestConfig.appIdMerchant, app_secr
 
 describe('Connect', () => {
     it('#PIS getPisConnect', async (done) => {
-        const mockConnectUrl = BaseUrls.FINTECTURECONNECTURL_SBX + '/pis?config=';
         const tokens: any = await client.getAccessToken();
         const connectMin = await client.getPisConnect(tokens.access_token, connectPisConfigMin);
-        expect(connectMin.url).toContain(mockConnectUrl);
         expect(!!connectMin.session_id).toBe(true);
         const connectFull = await client.getPisConnect(tokens.access_token, connectPisConfigFull);
-        expect(connectFull.url).toContain(mockConnectUrl);
         expect(!!connectFull.session_id).toBe(true);
         expect(connectFull.url.length).toBeGreaterThan(connectMin.url.length)
         done();
     });
 
-    it('#AIS getAisConnectUrl', (done) => {
-        const connect = client.getAisConnect(null, connectAisMin);
+    it('#AIS getAisConnectUrl', async (done) => {
+        const connect = await client.getAisConnect(null, connectAisMin);
         expect(!!connect.url).toBe(true);
         done();
     });
