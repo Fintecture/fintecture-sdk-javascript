@@ -95,8 +95,8 @@ export class Connect {
     if (isNaN(connectConfig.amount)) {
       throw Error('amount must be a number');
     }
-    if (!(connectConfig.amount >= 1)) {
-      throw Error('amount must be greater than 1');
+    if (!(connectConfig.amount >= 0.01)) {
+      throw Error('amount must be greater than 0.01');
     }
     if (!connectConfig.currency) {
       throw Error('currency not set');
