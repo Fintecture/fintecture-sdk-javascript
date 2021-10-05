@@ -1,6 +1,6 @@
 {
   "name": "fintecture-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Fintecture Open Banking API Gateway enabling secure bank connections and payments",
   "main": "lib/fintecture-client.js",
   "types": "lib/fintecture-client.d.ts",
