@@ -7,6 +7,8 @@ import { Constants, environment } from './src/utils/Constants';
 import { Connect } from './src/Connect';
 import { PIS } from './src/Pis';
 import { Resources } from './src/Resources';
+import { Validation } from './src/Validation';
+
 /**
  * Class responsible to centralize and dispatch all calls to the different Fintecture services
  *
@@ -14,6 +16,7 @@ import { Resources } from './src/Resources';
  * @class FintectureClient
  */
 export class FintectureClient {
+    public validation: Validation;
 
     private config: IFintectureConfig;
     private connect: Connect;
@@ -35,6 +38,7 @@ export class FintectureClient {
         this.authentication = new Authentication(this.config);
         this.pis = new PIS(this.config);
         this.ais = new AIS(this.config);
+        this.validation = new Validation(this.config);
     }
 
     public async getAccessToken(authCode?: string, scopes?: string): Promise<object> {
