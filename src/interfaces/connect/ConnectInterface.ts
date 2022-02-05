@@ -79,6 +79,7 @@ export interface IAttributes {
   execution_date?: string;
   beneficiary?: IBeneficiary;
   end_to_end_id?: string;
+  scheme?: string;
 }
 
 export interface IMeta {
@@ -106,7 +107,7 @@ export interface IBeneficiary {
   form?: string,
   incorporation?: string,
   street : string,
-  number : string,
+  number? : string,
   city : string,
   zip : string,
   country : string,

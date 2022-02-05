@@ -8,7 +8,7 @@
         "outDir": "lib",
         "removeComments": false,
         "declaration": true,
-        "lib": ["es2017"],
+        "lib": ["es2018", "DOM"],
     },
     "include": [
         "src",
