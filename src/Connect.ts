@@ -122,6 +122,7 @@ export class Connect {
       beneficiary: payment.beneficiary,
       execution_date: payment.execution_date,
       end_to_end_id: payment.end_to_end_id,
+      scheme: payment.scheme,
     };
 
     const meta: IMeta = {
