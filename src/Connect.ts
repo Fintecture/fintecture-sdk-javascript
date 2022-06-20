@@ -125,6 +125,11 @@ export class Connect {
       scheme: payment.scheme,
     };
 
+    if (payment.debited_account_id) {
+      attributes.debited_account_id = payment.debited_account_id;
+      attributes.debited_account_type = payment.debited_account_type;
+    }
+
     const meta: IMeta = {
       psu_name: payment.customer_full_name,
       psu_form: payment.customer_form,

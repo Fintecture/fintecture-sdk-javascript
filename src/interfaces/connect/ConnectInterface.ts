@@ -80,6 +80,8 @@ export interface IAttributes {
   beneficiary?: IBeneficiary;
   end_to_end_id?: string;
   scheme?: string;
+  debited_account_id?: string;
+  debited_account_type?: string;
 }
 
 export interface IMeta {
