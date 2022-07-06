@@ -39,7 +39,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/uuid": "^3.4.6",
-    "axios": "^0.25.0",
+    "axios": "^0.21.2",
     "dotenv": "^8.2.0",
     "qs": "^6.9.0",
     "uuid": "^3.3.3"
