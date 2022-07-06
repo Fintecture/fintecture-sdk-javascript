@@ -46,7 +46,6 @@ export interface IPisConnectConfig {
   provider?: string;
 }
 
-
 export interface IAisConnectConfig {
   app_id: string;
   access_token?: string;
@@ -96,35 +95,33 @@ export interface IMeta {
 }
 
 export interface IAddress {
-  name : string,
-  street : string,
-  number : string,
-  city : string,
-  zip : string,
-  country : string
+  name: string;
+  street: string;
+  number: string;
+  city: string;
+  zip: string;
+  country: string;
 }
 
 export interface IBeneficiary {
-  name : string,
-  form?: string,
-  incorporation?: string,
-  street : string,
-  number? : string,
-  city : string,
-  zip : string,
-  country : string,
-  iban : string,
-  swift_bic: string,
-  bank_name: string
+  name: string;
+  form?: string;
+  incorporation?: string;
+  street: string;
+  number?: string;
+  city: string;
+  zip: string;
+  country: string;
+  iban: string;
+  swift_bic: string;
+  bank_name: string;
 }
-
 
 export interface IPisConnect {
-  url: string,
-  session_id: string
+  url: string;
+  session_id: string;
 }
 
-
 export interface IAisConnect {
-  url: string
+  url: string;
 }

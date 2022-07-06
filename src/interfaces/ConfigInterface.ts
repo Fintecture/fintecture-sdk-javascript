@@ -4,8 +4,7 @@
  * @interface IFintectureConfig
  */
 
-import { environment } from "../utils/Constants";
-
+import { environment } from '../utils/Constants';
 
 export interface IFintectureConfig {
   app_id: string;

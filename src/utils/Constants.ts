@@ -5,10 +5,9 @@ import * as pjson from '../../package.json';
  */
 
 export enum environment {
-  sandbox = "sandbox",
-  production = "production"
+  sandbox = 'sandbox',
+  production = 'production',
 }
-
 
 /**
  * Project wide constants

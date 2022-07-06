@@ -30,7 +30,7 @@ export class Connect {
 
     const queryParameters = qs.stringify({
       redirect_uri: connectConfig.redirect_uri,
-      state: connectConfig.state
+      state: connectConfig.state,
     });
     const url = `${Endpoints.AISCONNECT}?${queryParameters}`;
 
@@ -47,7 +47,7 @@ export class Connect {
     const { data } = await this.axiosInstance.get(url, { headers });
 
     return {
-      url: data.meta.url
+      url: data.meta.url,
     };
   }
 
@@ -66,7 +66,7 @@ export class Connect {
     const queryParameters = qs.stringify({
       origin_uri: connectConfig.origin_uri,
       redirect_uri: connectConfig.redirect_uri,
-      state: connectConfig.state
+      state: connectConfig.state,
     });
     const url = `${Endpoints.PISCONNECT}?${queryParameters}`;
 
@@ -137,7 +137,7 @@ export class Connect {
       psu_email: payment.customer_email,
       psu_ip: payment.customer_ip,
       psu_phone: payment.customer_phone,
-      psu_address: payment.customer_address
+      psu_address: payment.customer_address,
     };
 
     const data: IData = {

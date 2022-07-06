@@ -14,7 +14,7 @@ export function generateUUIDv4() {
 export function createSignatureHeader(headers: any, config: IFintectureConfig, signedHeaders: any) {
   const signingString = buildSigningString(headers, signedHeaders);
   const headerString = buildHeaderString(headers, signedHeaders);
-  
+
   const signature = signPayload(signingString, config.private_key);
   return (
     'keyId="' + config.app_id + '",algorithm="rsa-sha256",headers="' + headerString + '",signature="' + signature + '"'
@@ -68,5 +68,7 @@ export function signPayload(payload: any, privateKey: string, algorithm?: string
 }
 
 export function hashBase64(plainText: string): string {
-  return createHash('sha256').update(plainText).digest('base64');
+  return createHash('sha256')
+    .update(plainText)
+    .digest('base64');
 }

@@ -74,8 +74,7 @@ export class Authentication {
         code: authCode,
         grant_type: 'authorization_code',
       };
-    }
-    else {
+    } else {
       data = {
         scope: 'PIS',
         app_id: this.appId,
@@ -84,9 +83,9 @@ export class Authentication {
     }
 
     if (scopes) {
-      data["scope"] = scopes;
+      data['scope'] = scopes;
     }
-    
+
     return qs.stringify(data);
   }
 

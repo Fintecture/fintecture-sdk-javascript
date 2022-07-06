@@ -15,7 +15,14 @@ export const getInstance = (env: string) => {
   });
 };
 
-export const getHeaders = (method: string, url: string, accessToken: string, config: IFintectureConfig, body?: any, extraHeaders?: any) => {
+export const getHeaders = (
+  method: string,
+  url: string,
+  accessToken: string,
+  config: IFintectureConfig,
+  body?: any,
+  extraHeaders?: any,
+) => {
   const headers = {
     Accept: 'application/json',
     'User-Agent': 'Fintecture NodeJS SDK v' + Constants.FINTECTURESDKVERSION,
@@ -36,9 +43,9 @@ export const getHeaders = (method: string, url: string, accessToken: string, con
   const search = URL.parse(url).search;
 
   if (body) {
-    headers['Digest'] = "SHA-256=" + Crypto.hashBase64(payload);
+    headers['Digest'] = 'SHA-256=' + Crypto.hashBase64(payload);
   }
-  
+
   headers['Date'] = new Date().toUTCString();
   headers['X-Date'] = headers['Date'];
   headers['X-Request-ID'] = Crypto.generateUUIDv4();
@@ -53,7 +60,7 @@ export const getHeaders = (method: string, url: string, accessToken: string, con
       if (headerValue !== undefined) {
         headers[headerName] = headerValue;
       }
-    })
+    });
   }
 
   return headers;

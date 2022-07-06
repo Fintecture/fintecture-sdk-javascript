@@ -32,10 +32,7 @@ export class PIS {
    * @param {object} payload
    * @returns {Promise<object>}
    */
-  public async prepare(
-    accessToken: string,
-    payload: object,
-  ): Promise<object> {
+  public async prepare(accessToken: string, payload: object): Promise<object> {
     const url = `${Endpoints.PIS}/prepare`;
 
     const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
@@ -61,7 +58,9 @@ export class PIS {
     redirectUri: string,
     state?: string,
   ): Promise<object> {
-    const url = `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${state ? '&state=' + state : ''}`;
+    const url = `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${
+      state ? '&state=' + state : ''
+    }`;
 
     const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
 
@@ -105,8 +104,8 @@ export class PIS {
     if (amount) {
       payload.data = {
         attributes: {
-          amount
-        }
+          amount,
+        },
       };
     }
 
@@ -126,12 +125,14 @@ export class PIS {
    * @returns {Promise<object>}
    */
   public async getPayments(accessToken: string, sessionId: string, queryParameters?: object): Promise<object> {
-    
-    const url = `${Endpoints.PIS}/payments` + (sessionId?('/'+sessionId):'') + (queryParameters ? ('?' + qs.stringify(queryParameters)) : '')
+    const url =
+      `${Endpoints.PIS}/payments` +
+      (sessionId ? '/' + sessionId : '') +
+      (queryParameters ? '?' + qs.stringify(queryParameters) : '');
 
     const headers = apiService.getHeaders('get', url, accessToken, this.config);
 
-    const response = await this.axiosInstance.get(url, {headers});
+    const response = await this.axiosInstance.get(url, { headers });
 
     return response.data;
   }
