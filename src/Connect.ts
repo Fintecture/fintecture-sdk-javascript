@@ -138,6 +138,7 @@ export class Connect {
       psu_ip: payment.customer_ip,
       psu_phone: payment.customer_phone,
       psu_address: payment.customer_address,
+      expiry: payment.expiry,
     };
 
     const data: IData = {
