@@ -92,6 +92,7 @@ export interface IMeta {
   psu_phone?: string;
   psu_ip?: string;
   psu_address?: IAddress;
+  expiry?: string | number;
 }
 
 export interface IAddress {
