@@ -11,7 +11,8 @@ export const getInstance = (config: IHttpConfig) => {
       Authorization: `Basic ${config.clientToken}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    baseURL: config.env === Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREOAUTHURL_SBX : BaseUrls.FINTECTUREOAUTHURL_PRD,
+    baseURL:
+      config.env === Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREOAUTHURL_SBX : BaseUrls.FINTECTUREOAUTHURL_PRD,
     timeout: config.timeout || 0,
   });
 };
