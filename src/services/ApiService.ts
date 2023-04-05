@@ -3,15 +3,17 @@ import * as URL from 'url';
 import { Constants } from '../utils/Constants';
 import { BaseUrls } from '../utils/URLBuilders/BaseUrls';
 import * as Crypto from '../utils/Crypto';
-import { IFintectureConfig } from '../interfaces/ConfigInterface';
+import { IFintectureConfig, IHttpConfig } from '../interfaces/ConfigInterface';
 
-export const getInstance = (env: string) => {
+export const getInstance = (config: IHttpConfig) => {
   return axios.create({
     headers: {
       Accept: 'application/json',
       'User-Agent': 'Fintecture NodeJS SDK v' + Constants.FINTECTURESDKVERSION,
     },
-    baseURL: env === Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREAPIURL_SBX : BaseUrls.FINTECTUREAPIURL_PRD,
+    baseURL:
+      config.env === Constants.SANDBOXENVIRONMENT ? BaseUrls.FINTECTUREAPIURL_SBX : BaseUrls.FINTECTUREAPIURL_PRD,
+    timeout: config.timeout || 0,
   });
 };
 

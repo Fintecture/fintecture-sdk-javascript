@@ -19,7 +19,7 @@ export class AIS {
    * Creates an instance of Ais.
    */
   constructor(config: IFintectureConfig) {
-    this.axiosInstance = this._getAxiosInstance(config.env);
+    this.axiosInstance = this._getAxiosInstance(config);
     this.config = config;
   }
 
@@ -186,11 +186,11 @@ export class AIS {
    * axios. This instance of axios include all the common headers
    * params.
    *
-   * @param {string} appSecret
+   * @param {IFintectureConfig} config
    * @returns {axios}
    */
-  private _getAxiosInstance(env) {
-    return apiService.getInstance(env);
+  private _getAxiosInstance(config: IFintectureConfig) {
+    return apiService.getInstance({ env: config.env, timeout: config.timeout });
   }
 
   private async _authorizeWithAccessToken(

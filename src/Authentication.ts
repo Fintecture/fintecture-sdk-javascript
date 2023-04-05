@@ -23,7 +23,7 @@ export class Authentication {
   constructor(config: IFintectureConfig) {
     this.appId = config.app_id;
     this.appSecret = config.app_secret;
-    this.axiosInstance = this._getAxiosInstance(config.env);
+    this.axiosInstance = this._getAxiosInstance(config);
   }
 
   /**
@@ -108,13 +108,13 @@ export class Authentication {
    * axios. This instance of axios include all the common headers
    * params.
    *
-   * @param {string} appSecret
+   * @param {IFintectureConfig} config
    * @returns {axios}
    */
-  private _getAxiosInstance(env) {
-    const clienToken = this._getClientToken();
+  private _getAxiosInstance(config: IFintectureConfig) {
+    const clientToken = this._getClientToken();
 
-    return authService.getInstance(env, clienToken);
+    return authService.getInstance({ env: config.env, clientToken, timeout: config.timeout });
   }
 
   /**

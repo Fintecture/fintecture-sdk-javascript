@@ -1,6 +1,7 @@
 import { ResourcesURLBuilder } from './utils/URLBuilders/ResourcesURLBuilder';
 import * as apiService from './services/ApiService';
 import { Constants } from './utils/Constants';
+import { IFintectureConfig } from './interfaces/ConfigInterface';
 
 export class Resources {
   private axiosInstance;
@@ -8,7 +9,7 @@ export class Resources {
   private config;
 
   constructor(config) {
-    this.axiosInstance = this._getAxiosInstance(config.env);
+    this.axiosInstance = this._getAxiosInstance(config);
     this.appId = config.app_id;
     this.config = config;
   }
@@ -38,7 +39,7 @@ export class Resources {
     return response.data;
   }
 
-  private _getAxiosInstance(env) {
-    return apiService.getInstance(env);
+  private _getAxiosInstance(config: IFintectureConfig) {
+    return apiService.getInstance({ env: config.env, timeout: config.timeout });
   }
 }

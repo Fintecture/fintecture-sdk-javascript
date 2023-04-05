@@ -15,7 +15,7 @@ export class Connect {
 
   constructor(config: IFintectureConfig) {
     this.pis = new PIS(config);
-    this.axiosInstance = apiService.getInstance(config.env);
+    this.axiosInstance = apiService.getInstance({ env: config.env, timeout: config.timeout });
     this.config = config;
   }
 
