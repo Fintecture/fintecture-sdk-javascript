@@ -3,6 +3,7 @@ import qs from 'qs';
 import { Endpoints } from './utils/URLBuilders/Endpoints';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
 import * as authService from './services/AuthenticationService';
+import { AxiosInstance } from 'axios';
 
 /**
  * Class responsible for performing authentication with Fintecture
@@ -11,7 +12,7 @@ import * as authService from './services/AuthenticationService';
  * @class Authentication
  */
 export class Authentication {
-  private axiosInstance: any;
+  private axiosInstance: AxiosInstance;
   private appId: string;
   private appSecret: string;
 

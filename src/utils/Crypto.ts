@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createHash, createSign } from 'crypto';
 import { IFintectureConfig } from '../interfaces/ConfigInterface';
-import { Constants } from './Constants';
 
 export function generateUUID() {
   return uuidv4().replace(/-/g, '');
