@@ -63,7 +63,6 @@ export class Validation {
 
     let result = null;
 
-    // tslint:disable-next-line
     while ((result = pattern.exec(signature)) !== null) {
       signatureComponents.set(result[1], result[2]);
     }
