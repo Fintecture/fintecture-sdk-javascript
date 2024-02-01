@@ -6,10 +6,11 @@ import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
 import { PIS } from './Pis';
 import * as apiService from './services/ApiService';
+import { AxiosInstance } from 'axios';
 
 export class Connect {
   public pis: PIS;
-  public axiosInstance: any;
+  private axiosInstance: AxiosInstance;
   public config: IFintectureConfig;
   public connectConfig: IPisSetup;
 
