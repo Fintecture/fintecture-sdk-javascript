@@ -4,10 +4,13 @@
   "description": "Fintecture Open Banking API Gateway enabling secure bank connections and payments",
   "main": "lib/fintecture-client.js",
   "types": "lib/fintecture-client.d.ts",
+  "homepage": "https://www.fintecture.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/Fintecture/fintecture-sdk-javascript.git"
   },
+  "author": "Fintecture",
+  "license": "MIT",
   "keywords": [
     "Fintecture",
     "Fintech",
@@ -35,8 +38,6 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "eslint -c .eslintrc.json --ext .ts src"
   },
-  "author": "Fintecture.com",
-  "license": "MIT",
   "dependencies": {
     "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
