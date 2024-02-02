@@ -4,7 +4,7 @@
  */
 
 export interface IConfirmation {
-  meta: {
-    session_id: string;
-  };
+    meta: {
+        session_id: string;
+    };
 }
