@@ -10,6 +10,8 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "ignorePatterns": ["dist", "coverage"]
+    "ignorePatterns": ["dist", "coverage"],
+    "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+    }
 }
-

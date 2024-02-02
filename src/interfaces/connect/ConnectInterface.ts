@@ -72,7 +72,7 @@ export interface IData {
 }
 
 export interface IAttributes {
-    amount: number;
+    amount: string;
     currency: string;
     communication: string;
     execution_date?: string;
