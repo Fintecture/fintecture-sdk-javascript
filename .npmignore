@@ -10,6 +10,7 @@ readme.txt
 /src
 /spec
 /lib/.env
+tsconfig.json
 .eslintrc.json
 coverage
 .nyc_output
