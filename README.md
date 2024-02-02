@@ -69,7 +69,7 @@ windows.href.location = providerAuth.url;
 3. Authenticate your app to Fintecture and get your **access_token** and **refresh_token**
 
 ```javascript
-let tokens = await client.getAccessToken(code);
+let token = await client.getAccessToken(code);
 ```
 
 4. Request any AIS API
@@ -118,7 +118,7 @@ var loop = setInterval(function(){
 4. Authenticate your app to Fintecture and get your **access_token** and **refresh_token**
 
 ```javascript
-let tokens = await client.getAccessToken(code);
+let token = await client.getAccessToken(code);
 ```
 
 5. Request any AIS API
@@ -156,8 +156,8 @@ const code = req.query.code;
 const customerId = req.query.customer_id;
 
 // get the Fintecture access token to request the AIS APIs
-const tokens = await client.getAccessToken(code);
-const accounts = await client.getAccounts(tokens.access_token, customerId);
+const token = await client.getAccessToken(code);
+const accounts = await client.getAccounts(token.access_token, customerId);
 ```
 
 #### PIS without Connect
@@ -184,7 +184,7 @@ let payment = {
             data: {
                 type: "PIS",
                 attributes: {
-                    amount: 1,
+                    amount: "1",
                     currency: "EUR",
                     communication: "Thanks Mom!",
                     beneficiary : {
@@ -208,7 +208,7 @@ The initiate a payment on behalf of a PSU using Fintecture Connect, just do:
 
 ```javascript
 let connectConfig = {
-    amount: 125,
+    amount: "125",
     currency: 'EUR',
     communication: 'Thanks mom!',
     customer_full_name: 'Bob Smith',
@@ -217,12 +217,12 @@ let connectConfig = {
     state: 'somestate'
 };
 
-let tokens = await client.getAccessToken();
-let connect = await client.getPisConnect(tokens.access_token, connectConfig);
+let token = await client.getAccessToken();
+let connect = await client.getPisConnect(token.access_token, connectConfig);
 window.href.location = connect.url;
 
 // and at any time (ex: to validate a payment on callback)
-let payment = await client.getPayments(tokens.access_token, connect.session_id);
+let payment = await client.getPayments(token.access_token, connect.session_id);
 console.log("PAYMENT STATUS:", payment.meta.status);
 
 ```
