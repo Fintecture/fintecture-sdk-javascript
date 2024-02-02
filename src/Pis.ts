@@ -12,148 +12,148 @@ import * as apiService from './services/ApiService';
  * @class PIS
  */
 export class PIS {
-  private axiosInstance;
-  private config: IFintectureConfig;
+    private axiosInstance;
+    private config: IFintectureConfig;
 
-  /**
-   * Creates an instance of PIS.
-   *
-   * @param {Config} config
-   */
-  constructor(config: IFintectureConfig) {
-    this.axiosInstance = this._getAxiosInstance(config);
-    this.config = config;
-  }
-
-  /**
-   * Prepare
-   *
-   * @param {string} accessToken
-   * @param {object} payload
-   * @returns {Promise<object>}
-   */
-  public async prepare(accessToken: string, payload: object): Promise<object> {
-    const url = `${Endpoints.PIS}/prepare`;
-
-    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
-
-    const response = await this.axiosInstance.post(url, payload, { headers });
-    return response.data;
-  }
-
-  /**
-   * Initiate
-   *
-   * @param {string} accessToken
-   * @param {string} providerId
-   * @param {object} payload
-   * @param {string} redirectUri
-   * @param {string} state (optional)
-   * @returns {Promise<object>}
-   */
-  public async initiate(
-    accessToken: string,
-    providerId: string,
-    payload: object,
-    redirectUri: string,
-    state?: string,
-  ): Promise<object> {
-    const url = `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${
-      state ? '&state=' + state : ''
-    }`;
-
-    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
-
-    const response = await this.axiosInstance.post(url, payload, { headers });
-    return response.data;
-  }
-
-  /**
-   * Confirm
-   *
-   * @param {string} accessToken
-   * @param {string} customerId
-   * @param {Confirmation} resource
-   * @returns {Promise<object>}
-   */
-  public async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
-    const url = `${Endpoints.PISCUSTOMER}/${customerId}/confirm`;
-
-    const payload = this._buildSessionPayload(sessionId);
-
-    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
-
-    const response = await this.axiosInstance.put(url, payload, { headers });
-
-    return response.data;
-  }
-
-  /**
-   * Initiate a refund
-   *
-   * @param {string} accessToken
-   * @param {string} sessionId
-   * @param {number} amount (optional)
-   * @returns {Promise<object>}
-   */
-  public async initiateRefund(accessToken: string, sessionId: string, amount?: number): Promise<object> {
-    const url = `${Endpoints.PIS}/refund`;
-
-    const payload = this._buildSessionPayload(sessionId);
-
-    if (amount) {
-      payload.data = {
-        attributes: {
-          amount,
-        },
-      };
+    /**
+     * Creates an instance of PIS.
+     *
+     * @param {Config} config
+     */
+    constructor(config: IFintectureConfig) {
+        this.axiosInstance = this._getAxiosInstance(config);
+        this.config = config;
     }
 
-    const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+    /**
+     * Prepare
+     *
+     * @param {string} accessToken
+     * @param {object} payload
+     * @returns {Promise<object>}
+     */
+    public async prepare(accessToken: string, payload: object): Promise<object> {
+        const url = `${Endpoints.PIS}/prepare`;
 
-    const response = await this.axiosInstance.post(url, payload, { headers });
+        const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
 
-    return response.data;
-  }
+        const response = await this.axiosInstance.post(url, payload, { headers });
+        return response.data;
+    }
 
-  /**
-   * This endpoint returns the details of all transfers or of a specific transfer
-   *
-   * @param {string} accessToken
-   * @param {string} sessionId
-   * @param {object} queryParameters (optional)
-   * @returns {Promise<object>}
-   */
-  public async getPayments(accessToken: string, sessionId: string, queryParameters?: object): Promise<object> {
-    const url =
-      `${Endpoints.PIS}/payments` +
-      (sessionId ? '/' + sessionId : '') +
-      (queryParameters ? '?' + qs.stringify(queryParameters) : '');
+    /**
+     * Initiate
+     *
+     * @param {string} accessToken
+     * @param {string} providerId
+     * @param {object} payload
+     * @param {string} redirectUri
+     * @param {string} state (optional)
+     * @returns {Promise<object>}
+     */
+    public async initiate(
+        accessToken: string,
+        providerId: string,
+        payload: object,
+        redirectUri: string,
+        state?: string
+    ): Promise<object> {
+        const url = `${Endpoints.PISPROVIDER}/${providerId}/initiate?redirect_uri=${redirectUri}${
+            state ? '&state=' + state : ''
+        }`;
 
-    const headers = apiService.getHeaders('get', url, accessToken, this.config);
+        const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
 
-    const response = await this.axiosInstance.get(url, { headers });
+        const response = await this.axiosInstance.post(url, payload, { headers });
+        return response.data;
+    }
 
-    return response.data;
-  }
+    /**
+     * Confirm
+     *
+     * @param {string} accessToken
+     * @param {string} customerId
+     * @param {Confirmation} resource
+     * @returns {Promise<object>}
+     */
+    public async confirm(accessToken: string, customerId: string, sessionId: string): Promise<object> {
+        const url = `${Endpoints.PISCUSTOMER}/${customerId}/confirm`;
 
-  /**
-   * Private function that creates an instance of api
-   * axios. This instance of axios include all the common headers
-   * params.
-   *
-   * @param {IFintectureConfig} config
-   * @returns {axios}
-   */
-  private _getAxiosInstance(config: IFintectureConfig) {
-    return apiService.getInstance({ env: config.env, timeout: config.timeout });
-  }
+        const payload = this._buildSessionPayload(sessionId);
 
-  private _buildSessionPayload(sessionId) {
-    return {
-      meta: {
-        session_id: sessionId,
-      },
-    } as ISessionPayload;
-  }
+        const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+        const response = await this.axiosInstance.put(url, payload, { headers });
+
+        return response.data;
+    }
+
+    /**
+     * Initiate a refund
+     *
+     * @param {string} accessToken
+     * @param {string} sessionId
+     * @param {number} amount (optional)
+     * @returns {Promise<object>}
+     */
+    public async initiateRefund(accessToken: string, sessionId: string, amount?: number): Promise<object> {
+        const url = `${Endpoints.PIS}/refund`;
+
+        const payload = this._buildSessionPayload(sessionId);
+
+        if (amount) {
+            payload.data = {
+                attributes: {
+                    amount,
+                },
+            };
+        }
+
+        const headers = apiService.getHeaders('post', url, accessToken, this.config, payload);
+
+        const response = await this.axiosInstance.post(url, payload, { headers });
+
+        return response.data;
+    }
+
+    /**
+     * This endpoint returns the details of all transfers or of a specific transfer
+     *
+     * @param {string} accessToken
+     * @param {string} sessionId
+     * @param {object} queryParameters (optional)
+     * @returns {Promise<object>}
+     */
+    public async getPayments(accessToken: string, sessionId: string, queryParameters?: object): Promise<object> {
+        const url =
+            `${Endpoints.PIS}/payments` +
+            (sessionId ? '/' + sessionId : '') +
+            (queryParameters ? '?' + qs.stringify(queryParameters) : '');
+
+        const headers = apiService.getHeaders('get', url, accessToken, this.config);
+
+        const response = await this.axiosInstance.get(url, { headers });
+
+        return response.data;
+    }
+
+    /**
+     * Private function that creates an instance of api
+     * axios. This instance of axios include all the common headers
+     * params.
+     *
+     * @param {IFintectureConfig} config
+     * @returns {axios}
+     */
+    private _getAxiosInstance(config: IFintectureConfig) {
+        return apiService.getInstance({ env: config.env, timeout: config.timeout });
+    }
+
+    private _buildSessionPayload(sessionId) {
+        return {
+            meta: {
+                session_id: sessionId,
+            },
+        } as ISessionPayload;
+    }
 }
