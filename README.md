@@ -18,12 +18,12 @@ The SDK enables multiple use cases. Essentially, it runs down to whether you wan
 
 This section is divided based on the following use cases:
 
-- First Steps
-- Use Cases
-  - AIS without Connect
-  - AIS with Connect
-  - PIS without Connect
-  - PIS with Connect
+-   First Steps
+-   Use Cases
+    -   AIS without Connect
+    -   AIS with Connect
+    -   PIS without Connect
+    -   PIS with Connect
 
 ### Get Started
 
@@ -35,13 +35,12 @@ import the Fintecture Client library and instantiate the client object:
 ```javascript
 const { FintectureClient } = require('fintecture-client');
 
-let client = new FintectureClient({ 
-        app_id: process.env.APP_ID
-        ,app_secret: process.env.APP_SECRET
-        ,private_key: process.env.APP_PRIV_KEY
-        ,env: process.env.FINTECTURE_ENV 
-        });
-
+let client = new FintectureClient({
+    app_id: process.env.APP_ID,
+    app_secret: process.env.APP_SECRET,
+    private_key: process.env.APP_PRIV_KEY,
+    env: process.env.FINTECTURE_ENV,
+});
 ```
 
 ### Use Cases
@@ -55,7 +54,13 @@ To access the PSU's account information, you have to go through the following st
 1. Select a Bank
 
 ```javascript
-let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'filter[auth_model]': 'redirect', 'sort[full_name]': 'asc'}
+let options = {
+    'filter[ais]': 'accounts',
+    'filter[country]': 'FR',
+    'filter[psu_type]': 'retail',
+    'filter[auth_model]': 'redirect',
+    'sort[full_name]': 'asc',
+};
 let providers = await client.getProviders(options);
 ```
 
@@ -77,7 +82,7 @@ let token = await client.getAccessToken(code);
 ```javascript
 let accounts = await client.getAccounts(accessToken, customerId);
 
-let account = accounts.data[0].id
+let account = accounts.data[0].id;
 let transactions = await client.getTransactions(accessToken, customerId, account);
 ```
 
@@ -85,11 +90,16 @@ let transactions = await client.getTransactions(accessToken, customerId, account
 
 ##### Scenario 2: Decoupled Model
 
-
 1. Select a Bank
 
 ```javascript
-let options = {'filter[ais]': 'accounts', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'filter[auth_model]': 'decoupled', 'sort[full_name]': 'asc'}
+let options = {
+    'filter[ais]': 'accounts',
+    'filter[country]': 'FR',
+    'filter[psu_type]': 'retail',
+    'filter[auth_model]': 'decoupled',
+    'sort[full_name]': 'asc',
+};
 let providers = await client.getProviders(options);
 ```
 
@@ -126,7 +136,7 @@ let token = await client.getAccessToken(code);
 ```javascript
 let accounts = await client.getAccounts(accessToken, customerId);
 
-let account = accounts.data[0].id
+let account = accounts.data[0].id;
 let transactions = await client.getTransactions(accessToken, customerId, account);
 ```
 
@@ -138,13 +148,13 @@ To enable AIS using connect, simply redirect the PSU to the generated URL:
 
 ```javascript
 let config = {
-   redirect_uri: 'https://mysite.com/callback',
-   state: "thisisastate",
-   psu_type: 'retail',
-   country: 'fr'
-}
+    redirect_uri: 'https://mysite.com/callback',
+    state: 'thisisastate',
+    psu_type: 'retail',
+    country: 'fr',
+};
 
-let connect = await client.getAisConnect(null, config)
+let connect = await client.getAisConnect(null, config);
 window.href.location = connect.url;
 ```
 
@@ -167,7 +177,12 @@ The initiate a payment on behalf of a PSU, you have to go through the following 
 1. Select a Bank
 
 ```javascript
-let options = {'filter[pis]': 'SEPA', 'filter[country]': 'FR', 'filter[psu_type]': 'retail', 'sort[full_name]': 'asc'}
+let options = {
+    'filter[pis]': 'SEPA',
+    'filter[country]': 'FR',
+    'filter[psu_type]': 'retail',
+    'sort[full_name]': 'asc',
+};
 let providers = await client.getProviders(options);
 ```
 
@@ -181,26 +196,25 @@ let token = await client.getAccessToken();
 
 ```javascript
 let payment = {
-            data: {
-                type: "PIS",
-                attributes: {
-                    amount: "1",
-                    currency: "EUR",
-                    communication: "Thanks Mom!",
-                    beneficiary : {
-                        name : "Bob Smith",
-                        address : "8 road of somewhere, 80330 Lisboa",
-                        country : "ES",
-                        iban : "PT07BARC20325388680799",
-                        swift_bic: "DEUTPTFF"
-                    }
-                }
-            }
-        }
+    data: {
+        type: 'PIS',
+        attributes: {
+            amount: '1',
+            currency: 'EUR',
+            communication: 'Thanks Mom!',
+            beneficiary: {
+                name: 'Bob Smith',
+                address: '8 road of somewhere, 80330 Lisboa',
+                country: 'ES',
+                iban: 'PT07BARC20325388680799',
+                swift_bic: 'DEUTPTFF',
+            },
+        },
+    },
+};
 
 let response = await client.paymentInitiate(accessToken, providerId, payment, redirectUri, state);
 ```
-
 
 #### PIS with Connect
 
@@ -208,13 +222,13 @@ The initiate a payment on behalf of a PSU using Fintecture Connect, just do:
 
 ```javascript
 let connectConfig = {
-    amount: "125",
+    amount: '125',
     currency: 'EUR',
     communication: 'Thanks mom!',
     customer_full_name: 'Bob Smith',
     customer_email: 'bob.smith@gmail.com',
     customer_ip: '127.0.0.1',
-    state: 'somestate'
+    state: 'somestate',
 };
 
 let token = await client.getAccessToken();
@@ -223,39 +237,35 @@ window.href.location = connect.url;
 
 // and at any time (ex: to validate a payment on callback)
 let payment = await client.getPayments(token.access_token, connect.session_id);
-console.log("PAYMENT STATUS:", payment.meta.status);
-
+console.log('PAYMENT STATUS:', payment.meta.status);
 ```
 
 Description of Connect fields:
-* amount: [mandatory] The amount of the payment initiation request. Min 1.00 and Max is variable based on bank's policy.
-* currency: [mandatory] The currency of the payment initiation request. Currently, only EUR and GBP is supported.
-* communication: [optional] A message sent to the beneficiary of the payment and visible on his bank statement. In the context of ecommerce payment collection, the order reference is inputted here.
-* customer_full_name: [mandatory] the full name of the payer
-* customer_email: [mandatory] the email of the payer
-* customer_ip: [mandatory] the ip address of the payer
-* redirect_uri: [optional] the callback URL to which the customer is redirected after authentication with his bank
-* origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
-* state: [mandatory] A state parameter which is sent back on callback. In the context of ecommerce, input the order ID here.
+
+-   amount: [mandatory] The amount of the payment initiation request. Min 1.00 and Max is variable based on bank's policy.
+-   currency: [mandatory] The currency of the payment initiation request. Currently, only EUR and GBP is supported.
+-   communication: [optional] A message sent to the beneficiary of the payment and visible on his bank statement. In the context of ecommerce payment collection, the order reference is inputted here.
+-   customer_full_name: [mandatory] the full name of the payer
+-   customer_email: [mandatory] the email of the payer
+-   customer_ip: [mandatory] the ip address of the payer
+-   redirect_uri: [optional] the callback URL to which the customer is redirected after authentication with his bank
+-   origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
+-   state: [mandatory] A state parameter which is sent back on callback. In the context of ecommerce, input the order ID here.
 
 ## Pagination
 
 Pagination can occur on the transaction endpoint. When requesting the getTransaction() function, you will receive a $.links.next URL. In order to iterate on the pages, supply that URL in the paginationURL field within the getTransactions function:
 
 ```javascript
-
 let transactionsPages = [];
 
 let transactions = await client.getTransactions(accessToken, customerId, accountId, headers);
-transactionsPages.push(transactions)
+transactionsPages.push(transactions);
 
 while (transactions.links.next) {
-  transactions = await client.getTransactions(accessToken, customerId, accountId, headers,transactions.links.next) ;
-  transactionsPages.push(transactions);
+    transactions = await client.getTransactions(accessToken, customerId, accountId, headers, transactions.links.next);
+    transactionsPages.push(transactions);
 }
-
-
-
 ```
 
 ## Contributing
