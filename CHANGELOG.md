@@ -8,3 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - switch from TSLint to ESLint
 - prettier formatting
 - fix type error on amount field on README.md
+
+# [2.5.0] - 2024-11-12
+- feat: Add support for payment_methods to Connect API

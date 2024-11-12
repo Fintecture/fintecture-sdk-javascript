@@ -251,6 +251,8 @@ Description of Connect fields:
 -   redirect_uri: [optional] the callback URL to which the customer is redirected after authentication with his bank
 -   origin_uri: [optional] a URL to which the customer will be redirected if he wants to exit Fintecture Connect
 -   state: [mandatory] A state parameter which is sent back on callback. In the context of ecommerce, input the order ID here.
+-   expiry: [optional] The time in seconds which the link is valid before it expires (Default: no expiry)
+-   payment_methods: [optional] A list of payment methods to be added to the selector on Connect. Example: ['immediate_transfer', 'smart_transfer']. Available values can be found on [docs](https://doc.fintecture.com/reference/createpisv2connect) in meta section.
 
 ## Pagination
 

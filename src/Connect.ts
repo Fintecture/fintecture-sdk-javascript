@@ -142,6 +142,12 @@ export class Connect {
             expiry: payment.expiry,
         };
 
+        if (Array.isArray(payment.payment_methods) && payment.payment_methods.length > 0) {
+            meta.payment_methods = payment.payment_methods.map((payment_method, index) => {
+                return { id: payment_method, order: index };
+            });
+        }
+
         const data: IData = {
             type: 'SEPA',
             attributes,

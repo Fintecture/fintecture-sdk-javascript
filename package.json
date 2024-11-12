@@ -35,7 +35,7 @@
     "clean": "rm -rf build",
     "test": "ts-node node_modules/jasmine/bin/jasmine --config=spec/support/jasmine.json",
     "coverage": "nyc -r text -r lcov -r text-summary -e .ts npm run test",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint -c .eslintrc.json --ext .ts src"
   },
   "dependencies": {

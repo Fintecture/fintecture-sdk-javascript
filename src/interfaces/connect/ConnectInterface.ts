@@ -93,6 +93,12 @@ export interface IMeta {
     psu_ip?: string;
     psu_address?: IAddress;
     expiry?: string | number;
+    payment_methods?: IPaymentMethod[];
+}
+
+export interface IPaymentMethod {
+    id: 'immediate_transfer' | 'smart_transfer' | 'bnpl';
+    order?: number;
 }
 
 export interface IAddress {
