@@ -12,7 +12,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 AISproviderIdTest.split(',').forEach( (providerId) => {
     providerId = providerId.trim();
 
-    describe(`AIS - get fintecture access token - `, () => {
+    describe(`AIS - get Fintecture access token - `, () => {
         const client = new FintectureClient({ app_id: TestConfig.appIdOpenbanking, app_secret: TestConfig.appSecretOpenbanking, private_key: TestConfig.appPrivKeyOpenbanking });
         const redirectUri = TestConfig.appRedirectUri;
         let accessToken;

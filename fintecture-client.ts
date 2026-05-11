@@ -26,7 +26,7 @@ export class FintectureClient {
     private ais: AIS;
 
     /**
-     * Create an instance of the fintecture client
+     * Create an instance of the Fintecture client
      * @param {Object=} config - configuration parameters
      */
     constructor(config: object) {
