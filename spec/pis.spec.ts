@@ -4,7 +4,7 @@ import { BaseUrls } from '../src/utils/URLBuilders/BaseUrls';
 import { TestConfig } from './constants/config';
 
 const PISproviderIdTest = process.env.PIS_PROVIDER_ID_TEST || 'cmcifrpp, cmbrfr';
-const paymentRedirectURI = "http://www.fintecture.com";
+const paymentRedirectURI = "https://www.fintecture.com";
 
 PISproviderIdTest.split(',').forEach( (providerId) => {
 

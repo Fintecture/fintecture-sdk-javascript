@@ -22,6 +22,7 @@ export interface IPisSetup {
     redirect_uri?: string;
     origin_uri?: string;
     state?: string;
+    external_reference?: string;
 }
 
 export interface IAisSetup {
@@ -81,6 +82,7 @@ export interface IAttributes {
     scheme?: string;
     debited_account_id?: string;
     debited_account_type?: string;
+    external_reference?: string;
 }
 
 export interface IMeta {

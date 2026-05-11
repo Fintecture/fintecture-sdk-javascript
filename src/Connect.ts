@@ -131,6 +131,10 @@ export class Connect {
             attributes.debited_account_type = payment.debited_account_type;
         }
 
+        if (payment.external_reference) {
+            attributes.external_reference = payment.external_reference;
+        }
+
         const meta: IMeta = {
             psu_name: payment.customer_full_name,
             psu_form: payment.customer_form,

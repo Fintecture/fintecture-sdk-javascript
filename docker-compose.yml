@@ -1,9 +1,10 @@
-version: "3.1"
 services:
-  sdk:
+  fintecture-sdk-javascript:
+    container_name: 'fintecture-sdk-javascript'
+    command: tail -f /dev/null
     build: .
     volumes:
-      - .:/fintecture_sdk
+      - .:/app
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       redirect_uri: 'https://www.fintecture.com'
@@ -15,7 +16,7 @@ services:
     build: .
     command: 'bash -c "npm install typescript -g && tsc --build && npm run coverage"'
     volumes:
-      - .:/fintecture_sdk
+      - .:/app
     environment:
       app_id: '3f12a5c0-f719-4c14-9eac-08ed99290109'
       app_secret: '93ea0128-8258-4b1d-9109-b4899a98677b'

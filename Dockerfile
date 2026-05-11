@@ -1,5 +1,9 @@
-FROM node
+FROM node:20-alpine
 
-RUN mkdir fintecture_sdk
+RUN apk add --no-cache make gcc g++ python3 jq rsync zip
 
-WORKDIR /fintecture_sdk
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
