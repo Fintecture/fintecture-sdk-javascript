@@ -1,7 +1,7 @@
 import qs from 'qs';
 
 import { Endpoints } from './utils/URLBuilders/Endpoints';
-import { IPisSetup, IPaymentPayload, IData, IAttributes, IMeta } from './interfaces/connect/ConnectInterface';
+import { IPisSetup, IPaymentPayload, IData, IAttributes, IMeta, IAddress } from './interfaces/connect/ConnectInterface';
 import { IFintectureConfig } from './interfaces/ConfigInterface';
 import { Constants } from './utils/Constants.js';
 import { PIS } from './Pis';
@@ -142,7 +142,7 @@ export class Connect {
             psu_email: payment.customer_email,
             psu_ip: payment.customer_ip,
             psu_phone: payment.customer_phone,
-            psu_address: payment.customer_address,
+            psu_address: payment.psu_address ?? payment.customer_address ?? this._buildPsuAddressFromFlat(payment),
             expiry: payment.expiry,
         };
 
@@ -150,6 +150,18 @@ export class Connect {
             meta.payment_methods = payment.payment_methods.map((payment_method, index) => {
                 return { id: payment_method, order: index };
             });
+        }
+
+        if (payment.psu_phone_prefix) {
+            meta.psu_phone_prefix = payment.psu_phone_prefix;
+        }
+
+        if (payment.custom !== undefined && payment.custom !== null && payment.custom !== '') {
+            meta.custom = payment.custom;
+        }
+
+        if (payment.target_env) {
+            meta.target_env = payment.target_env;
         }
 
         const data: IData = {
@@ -171,5 +183,25 @@ export class Connect {
         }
 
         return config as IFintectureConfig;
+    }
+
+    private _buildPsuAddressFromFlat(payment: any): IAddress | undefined {
+        const hasAny =
+            payment.psu_address_street ||
+            payment.psu_address_number ||
+            payment.psu_address_complement ||
+            payment.psu_address_zip ||
+            payment.psu_address_city ||
+            payment.psu_address_country;
+        if (!hasAny) {
+            return undefined;
+        }
+        return {
+            street: payment.psu_address_street,
+            number: payment.psu_address_number,
+            city: payment.psu_address_city,
+            zip: payment.psu_address_zip,
+            country: payment.psu_address_country,
+        } as IAddress;
     }
 }
