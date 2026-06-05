@@ -194,14 +194,26 @@ describe('Connect._buildPaymentPayload (unit, offline)', () => {
         expect(payload.meta.psu_phone_prefix).toBeUndefined();
     });
 
-    it('forwards scheduled_expiration_policy to meta when set', () => {
-        const payload = build({ ...basePayment, scheduled_expiration_policy: 'extend' });
-        expect(payload.meta.scheduled_expiration_policy).toBe('extend');
+    it('forwards expiry (seconds) to meta when set', () => {
+        const payload = build({ ...basePayment, expiry: 3600 });
+        expect(payload.meta.expiry).toBe(3600);
     });
 
-    it('omits scheduled_expiration_policy from meta when not set', () => {
-        const payload = build(basePayment);
-        expect(payload.meta.scheduled_expiration_policy).toBeUndefined();
+    it('forwards custom (string) to meta when set', () => {
+        const payload = build({ ...basePayment, custom: 'order-ref-42' });
+        expect(payload.meta.custom).toBe('order-ref-42');
+    });
+
+    it('forwards custom (object) to meta when set', () => {
+        const reconciliation = { order_id: 42, source: 'pos' };
+        const payload = build({ ...basePayment, custom: reconciliation });
+        expect(payload.meta.custom).toEqual(reconciliation);
+    });
+
+    it('omits custom from meta when not set, null, or empty string', () => {
+        expect(build(basePayment).meta.custom).toBeUndefined();
+        expect(build({ ...basePayment, custom: null }).meta.custom).toBeUndefined();
+        expect(build({ ...basePayment, custom: '' }).meta.custom).toBeUndefined();
     });
 
     it('forwards target_env to meta when set', () => {

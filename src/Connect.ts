@@ -156,8 +156,8 @@ export class Connect {
             meta.psu_phone_prefix = payment.psu_phone_prefix;
         }
 
-        if (payment.scheduled_expiration_policy) {
-            meta.scheduled_expiration_policy = payment.scheduled_expiration_policy;
+        if (payment.custom !== undefined && payment.custom !== null && payment.custom !== '') {
+            meta.custom = payment.custom;
         }
 
         if (payment.target_env) {

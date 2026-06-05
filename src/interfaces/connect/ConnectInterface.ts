@@ -32,7 +32,8 @@ export interface IPisSetup {
     origin_uri?: string;
     state?: string;
     external_reference?: string;
-    scheduled_expiration_policy?: string;
+    expiry?: string | number;
+    custom?: string | Record<string, unknown>;
     target_env?: string;
 }
 
@@ -108,7 +109,7 @@ export interface IMeta {
     psu_address?: IAddress;
     expiry?: string | number;
     payment_methods?: IPaymentMethod[];
-    scheduled_expiration_policy?: string;
+    custom?: string | Record<string, unknown>;
     target_env?: string;
 }
 
