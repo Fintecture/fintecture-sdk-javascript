@@ -147,19 +147,19 @@ describe('Connect._buildPaymentPayload (unit, offline)', () => {
         expect(payload.meta.payment_methods).toBeUndefined();
     });
 
-    it('uses nested customer_address as meta.psu_address when provided', () => {
+    it('uses nested psu_address as meta.psu_address when provided', () => {
         const address = { name: 'Bob', street: 'Main', number: '1', city: 'Paris', zip: '75001', country: 'FR' };
-        const payload = build({ ...basePayment, customer_address: address });
+        const payload = build({ ...basePayment, psu_address: address });
         expect(payload.meta.psu_address).toEqual(address);
     });
 
-    it('assembles meta.psu_address from flat customer_address_* fields when nested not provided', () => {
+    it('assembles meta.psu_address from flat psu_address_* fields when nested not provided', () => {
         const payload = build({
             ...basePayment,
-            customer_address_street: 'Main',
-            customer_address_zip: '75001',
-            customer_address_city: 'Paris',
-            customer_address_country: 'FR',
+            psu_address_street: 'Main',
+            psu_address_zip: '75001',
+            psu_address_city: 'Paris',
+            psu_address_country: 'FR',
         });
         expect(payload.meta.psu_address).toEqual(jasmine.objectContaining({
             street: 'Main',
@@ -169,12 +169,12 @@ describe('Connect._buildPaymentPayload (unit, offline)', () => {
         }) as any);
     });
 
-    it('prefers nested customer_address over flat fields when both present', () => {
+    it('prefers nested psu_address over flat fields when both present', () => {
         const nested = { name: 'X', street: 'Nested', number: '9', city: 'Nice', zip: '06000', country: 'FR' };
         const payload = build({
             ...basePayment,
-            customer_address: nested,
-            customer_address_street: 'Flat',
+            psu_address: nested,
+            psu_address_street: 'Flat',
         });
         expect(payload.meta.psu_address).toEqual(nested);
     });

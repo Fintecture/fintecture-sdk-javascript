@@ -142,7 +142,7 @@ export class Connect {
             psu_email: payment.customer_email,
             psu_ip: payment.customer_ip,
             psu_phone: payment.customer_phone,
-            psu_address: payment.customer_address ?? this._buildPsuAddressFromFlat(payment),
+            psu_address: payment.psu_address ?? payment.customer_address ?? this._buildPsuAddressFromFlat(payment),
             expiry: payment.expiry,
         };
 
@@ -187,21 +187,21 @@ export class Connect {
 
     private _buildPsuAddressFromFlat(payment: any): IAddress | undefined {
         const hasAny =
-            payment.customer_address_street ||
-            payment.customer_address_number ||
-            payment.customer_address_complement ||
-            payment.customer_address_zip ||
-            payment.customer_address_city ||
-            payment.customer_address_country;
+            payment.psu_address_street ||
+            payment.psu_address_number ||
+            payment.psu_address_complement ||
+            payment.psu_address_zip ||
+            payment.psu_address_city ||
+            payment.psu_address_country;
         if (!hasAny) {
             return undefined;
         }
         return {
-            street: payment.customer_address_street,
-            number: payment.customer_address_number,
-            city: payment.customer_address_city,
-            zip: payment.customer_address_zip,
-            country: payment.customer_address_country,
+            street: payment.psu_address_street,
+            number: payment.psu_address_number,
+            city: payment.psu_address_city,
+            zip: payment.psu_address_zip,
+            country: payment.psu_address_country,
         } as IAddress;
     }
 }
