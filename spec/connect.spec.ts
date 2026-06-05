@@ -1,5 +1,7 @@
 import { FintectureClient } from '../fintecture-client';
 import { IPisSetup, IAisSetup } from './../src/interfaces/connect/ConnectInterface';
+import { Connect } from './../src/Connect';
+import { IFintectureConfig } from './../src/interfaces/ConfigInterface';
 import { TestConfig } from './constants/config';
 
 const connectPisConfigMin: IPisSetup = {
@@ -83,4 +85,132 @@ describe('Connect', () => {
         done();
     });
 
+});
+
+describe('Connect._buildPaymentPayload (unit, offline)', () => {
+    const buildConnect = () => new Connect({ env: 'sandbox' } as unknown as IFintectureConfig);
+    const build = (payment: any) => (buildConnect() as any)._buildPaymentPayload(payment);
+
+    const basePayment = {
+        amount: 125,
+        currency: 'EUR',
+        communication: 'Thanks mom!',
+        customer_full_name: 'Bob Smith',
+        customer_email: 'bob.smith@gmail.com',
+        customer_ip: '127.0.0.1',
+    };
+
+    it('builds attributes + meta from minimal payment', () => {
+        const payload = build(basePayment);
+        expect(payload.data.type).toBe('SEPA');
+        expect(payload.data.attributes.amount).toBe(125);
+        expect(payload.data.attributes.currency).toBe('EUR');
+        expect(payload.data.attributes.communication).toBe('Thanks mom!');
+        expect(payload.meta.psu_name).toBe('Bob Smith');
+        expect(payload.meta.psu_email).toBe('bob.smith@gmail.com');
+        expect(payload.meta.psu_ip).toBe('127.0.0.1');
+    });
+
+    it('forwards external_reference to attributes when set', () => {
+        const payload = build({ ...basePayment, external_reference: 'invoice-42' });
+        expect(payload.data.attributes.external_reference).toBe('invoice-42');
+    });
+
+    it('omits external_reference from attributes when not set', () => {
+        const payload = build(basePayment);
+        expect(payload.data.attributes.external_reference).toBeUndefined();
+    });
+
+    it('forwards debited_account_id and type to attributes when set', () => {
+        const payload = build({
+            ...basePayment,
+            debited_account_id: 'FR7612345',
+            debited_account_type: 'IBAN',
+        });
+        expect(payload.data.attributes.debited_account_id).toBe('FR7612345');
+        expect(payload.data.attributes.debited_account_type).toBe('IBAN');
+    });
+
+    it('maps payment_methods string array to meta {id, order} objects', () => {
+        const payload = build({
+            ...basePayment,
+            payment_methods: ['immediate_transfer', 'smart_transfer'],
+        });
+        expect(payload.meta.payment_methods).toEqual([
+            { id: 'immediate_transfer', order: 0 },
+            { id: 'smart_transfer', order: 1 },
+        ]);
+    });
+
+    it('omits payment_methods from meta when empty array', () => {
+        const payload = build({ ...basePayment, payment_methods: [] });
+        expect(payload.meta.payment_methods).toBeUndefined();
+    });
+
+    it('uses nested customer_address as meta.psu_address when provided', () => {
+        const address = { name: 'Bob', street: 'Main', number: '1', city: 'Paris', zip: '75001', country: 'FR' };
+        const payload = build({ ...basePayment, customer_address: address });
+        expect(payload.meta.psu_address).toEqual(address);
+    });
+
+    it('assembles meta.psu_address from flat customer_address_* fields when nested not provided', () => {
+        const payload = build({
+            ...basePayment,
+            customer_address_street: 'Main',
+            customer_address_zip: '75001',
+            customer_address_city: 'Paris',
+            customer_address_country: 'FR',
+        });
+        expect(payload.meta.psu_address).toEqual(jasmine.objectContaining({
+            street: 'Main',
+            zip: '75001',
+            city: 'Paris',
+            country: 'FR',
+        }) as any);
+    });
+
+    it('prefers nested customer_address over flat fields when both present', () => {
+        const nested = { name: 'X', street: 'Nested', number: '9', city: 'Nice', zip: '06000', country: 'FR' };
+        const payload = build({
+            ...basePayment,
+            customer_address: nested,
+            customer_address_street: 'Flat',
+        });
+        expect(payload.meta.psu_address).toEqual(nested);
+    });
+
+    it('leaves meta.psu_address undefined when neither nested nor flat are set', () => {
+        const payload = build(basePayment);
+        expect(payload.meta.psu_address).toBeUndefined();
+    });
+
+    it('forwards psu_phone_prefix to meta when set', () => {
+        const payload = build({ ...basePayment, psu_phone_prefix: '+33' });
+        expect(payload.meta.psu_phone_prefix).toBe('+33');
+    });
+
+    it('omits psu_phone_prefix from meta when not set', () => {
+        const payload = build(basePayment);
+        expect(payload.meta.psu_phone_prefix).toBeUndefined();
+    });
+
+    it('forwards scheduled_expiration_policy to meta when set', () => {
+        const payload = build({ ...basePayment, scheduled_expiration_policy: 'extend' });
+        expect(payload.meta.scheduled_expiration_policy).toBe('extend');
+    });
+
+    it('omits scheduled_expiration_policy from meta when not set', () => {
+        const payload = build(basePayment);
+        expect(payload.meta.scheduled_expiration_policy).toBeUndefined();
+    });
+
+    it('forwards target_env to meta when set', () => {
+        const payload = build({ ...basePayment, target_env: 'production' });
+        expect(payload.meta.target_env).toBe('production');
+    });
+
+    it('omits target_env from meta when not set', () => {
+        const payload = build(basePayment);
+        expect(payload.meta.target_env).toBeUndefined();
+    });
 });

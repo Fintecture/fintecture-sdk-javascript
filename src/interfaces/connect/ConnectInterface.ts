@@ -19,10 +19,21 @@ export interface IPisSetup {
     customer_full_name?: string;
     customer_email?: string;
     customer_ip?: string;
+    customer_phone?: string;
+    psu_phone_prefix?: string;
+    customer_address?: IAddress;
+    customer_address_street?: string;
+    customer_address_number?: string;
+    customer_address_complement?: string;
+    customer_address_zip?: string;
+    customer_address_city?: string;
+    customer_address_country?: string;
     redirect_uri?: string;
     origin_uri?: string;
     state?: string;
     external_reference?: string;
+    scheduled_expiration_policy?: string;
+    target_env?: string;
 }
 
 export interface IAisSetup {
@@ -92,10 +103,13 @@ export interface IMeta {
     psu_incorporation?: string;
     psu_email?: string;
     psu_phone?: string;
+    psu_phone_prefix?: string;
     psu_ip?: string;
     psu_address?: IAddress;
     expiry?: string | number;
     payment_methods?: IPaymentMethod[];
+    scheduled_expiration_policy?: string;
+    target_env?: string;
 }
 
 export interface IPaymentMethod {
